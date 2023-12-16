@@ -2,6 +2,9 @@ use bevy::{ prelude::*, utils::HashMap};
 
 pub struct MapPlugin;
 
+const CELL_LENGTH : f32 = 32.;
+const CELL_GAP : f32 = 8.;
+
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(PreStartup, create_map)
@@ -10,13 +13,13 @@ impl Plugin for MapPlugin {
 }
 
 fn create_map(mut commands: Commands) {
-    commands.spawn(Map::new(50.));
+    commands.spawn(Map::new(CELL_LENGTH));
 }
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Vec2i {
-    x: i32,
-    y: i32,
+    pub x: i32,
+    pub y: i32,
 }
 impl Vec2i {
     pub fn from(x: i32, y: i32) -> Vec2i {
@@ -33,13 +36,13 @@ pub struct CellSpawned(pub Entity);
 #[derive(Component)]
 pub struct Cell;
 
-pub struct CellBundle {
+pub struct CellData {
     id: Entity,
 }
 
 #[derive(Component)]
 pub struct Map {
-    cells: HashMap<Vec2i, CellBundle>,
+    cells: HashMap<Vec2i, CellData>,
     cell_length: f32,
 }
 
@@ -63,8 +66,28 @@ impl Map {
         }
     }
 
-    pub fn spawn_cell(& mut self, pos: Vec2i, id: Entity) {
-        self.cells.insert(pos, CellBundle {
+    pub fn spawn_cell(& mut self, commands: &mut Commands, pos: Vec2i) {
+        let cell_pos = self.map_to_local(Vec2i::from(pos.x, pos.y));
+        let id = commands.spawn((
+            SpriteBundle {
+                sprite: Sprite {
+                    color: Color::rgb(0.25, 0.25, 0.75),
+                    custom_size: Some(Vec2::new(
+                        self.get_cell_length() - CELL_GAP,
+                        self.get_cell_length() - CELL_GAP,
+                    )),
+                    ..default()
+                },
+                transform: Transform::from_translation(Vec3::new(
+                    cell_pos.x + CELL_GAP / 2.,
+                    cell_pos.y + CELL_GAP / 2.,
+                    0.,
+                )),
+                ..default()
+            },
+            Cell,
+        )).id();
+        self.cells.insert(pos, CellData {
             id: id,
         });
     }
