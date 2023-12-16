@@ -81,12 +81,13 @@ fn check_levels_loaded_system(
     level_example
         .map
         .iter()
+        .rev()
         .enumerate()
-        .for_each(|(x, map_slice)| {
+        .for_each(|(y, map_slice)| {
             map_slice
                 .iter()
                 .enumerate()
-                .for_each(|(y, background_type)| {
+                .for_each(|(x, background_type)| {
                     map.spawn_cell(
                         &mut commands,
                         Vec2i {
