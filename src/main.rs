@@ -1,25 +1,20 @@
 // #![allow(dead_code, unused)]
 mod constantes;
+mod items;
 mod map;
 mod math;
 mod player;
 mod time;
 
+use crate::constantes::PLAYER_START_TRANSFORM;
+use crate::items::{on_enter_system, PressurePlate};
 use crate::math::vec2i::Vec2i;
-use crate::player::{ghost_actions_system, GhostActions, PlayerPlugin};
+use crate::player::{ghost_actions_system, GhostActions, Player, PlayerPlugin, RewindEvent};
 use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
 use map::*;
+use std::any::Any;
 
-<<<<<<< HEAD
-#[derive(Resource)]
-pub struct StartTime(pub Option<f32>);
-
-#[derive(Resource)]
-pub struct ElapsedTimeFromStartRewind(pub Option<f32>);
-
-=======
->>>>>>> 522e1371b57c640a25740d7c4217221b5339598d
 fn elapsed_time_from_start_rewind_system(
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     start_time: Res<StartTime>,
@@ -41,6 +36,8 @@ fn main() {
                 cursor_grab_system,
                 move_camera,
                 ghost_actions_system,
+                on_pressure_plate_enter,
+                on_enter_system,
             ),
         ) // TODO: mettre un ordre
         .add_systems(Startup, setup)
@@ -56,11 +53,33 @@ fn main() {
 fn setup(mut commands: Commands, mut map_query: Query<&mut Map>) {
     commands.spawn(Camera2dBundle::default());
 
+    commands.spawn((
+        SpriteBundle {
+            sprite: Sprite {
+                color: Color::MAROON,
+                custom_size: Some(Vec2::new(10., 10.)),
+                ..default()
+            },
+            transform: PLAYER_START_TRANSFORM,
+            ..default()
+        },
+        PressurePlate { level: 1 },
+    ));
+
     let mut map = map_query.single_mut();
     for i in 0..30 {
         for j in 0..30 {
             map.spawn_cell(&mut commands, Vec2i { x: i, y: j })
         }
+    }
+}
+
+fn on_pressure_plate_enter(
+    mut rewind_event: EventReader<RewindEvent>,
+    plaque_query: Query<&Player>,
+) {
+    for _ in rewind_event.read() {
+        println!("listen1 {:?}", plaque_query.single().type_id());
     }
 }
 

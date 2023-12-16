@@ -1,11 +1,13 @@
 use super::actions::{Action, ActionType};
-use super::events::RewindEvent;
+use super::events::{OnEnterEvent, RewindEvent};
 use super::ghost::Ghost;
 use super::move_direction::MoveDirection;
 use super::GhostActions;
 use crate::constantes::*;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
+use crate::map::Map;
+use crate::math::vec2i::Vec2i;
 
 #[derive(Component, Default)]
 pub struct Player {
@@ -89,6 +91,7 @@ fn player_input_system(
     mut start_time: ResMut<StartTime>,
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut rewind_event: EventWriter<RewindEvent>,
+    mut on_enter_event: EventWriter<OnEnterEvent>,
 ) {
     // move actions
     let move_key = key_inputs.get_just_pressed().find(|key_code| {
@@ -99,7 +102,8 @@ fn player_input_system(
     });
     if let Some(move_key) = move_key {
         let move_direction = MoveDirection::from_key_code(*move_key);
-        player_transform_query.single_mut().translation += CELL_LENGTH * move_direction.to_vec3();
+        let mut player_transform = player_transform_query.single_mut();
+        player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity_query.single(),
             action_type: ActionType::Move(move_direction),
@@ -109,6 +113,11 @@ fn player_input_system(
             start_time.0 = Some(time.elapsed_seconds());
             elapsed_time_from_start_rewind.0 = Some(0.);
         }
+
+        /*
+        TODO : OnEnterEvent
+         */
+        on_enter_event.send(OnEnterEvent(Vec2i::from(player_transform.translation.x as i32, player_transform.translation.y as i32)));
         return;
     }
 
@@ -134,6 +143,8 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, create_player_system)
             .add_systems(Update, (player_input_system, on_player_rewind_system))
-            .add_event::<RewindEvent>();
+            .add_event::<RewindEvent>()
+            .add_event::<OnEnterEvent>()
+        ;
     }
 }

@@ -1,4 +1,4 @@
-#[derive(PartialEq, Eq, Hash, Clone, Copy, Default)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Debug)]
 pub struct Vec2i {
     pub x: i32,
     pub y: i32,
