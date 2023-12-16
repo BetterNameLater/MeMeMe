@@ -1,9 +1,9 @@
 use super::actions::{Action, ActionType};
 use super::events::RewindEvent;
+use super::ghost::Ghost;
 use super::move_direction::MoveDirection;
 use super::GhostActions;
 use crate::constantes::*;
-use crate::player::ghost::Ghost;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
 
