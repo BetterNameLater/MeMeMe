@@ -17,7 +17,6 @@ pub fn actions_system(ghost_actions: Res<GhostActions>) {
 }
 
 #[derive(Debug)]
-
 pub struct Action {
     pub ghost_id: Entity,
     pub timestamp_seconds: f32,

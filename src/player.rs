@@ -1,6 +1,6 @@
 use super::math::vec2i::Vec2i;
 use crate::constantes::*;
-use crate::ghost_actions::{Action, ActionType, MoveDirection, GhostActions};
+use crate::ghost_actions::{Action, ActionType, GhostActions, MoveDirection};
 use crate::map::Map;
 use crate::StartTime;
 use bevy::transform::commands;
@@ -15,7 +15,7 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-fn create_player_system(mut commands: Commands) {
+fn create_player(commands: &mut Commands) {
     let size = CELL_LENGTH / 2.;
     commands.spawn((
         Player::default(),
@@ -31,26 +31,24 @@ fn create_player_system(mut commands: Commands) {
     ));
 }
 
+fn create_player_system(mut commands: Commands) {
+    create_player(&mut commands);
+}
+
 #[derive(Component, Default)]
 pub struct Player {
     actions: Vec<Action>,
 }
 
-#[derive(Component)]
-pub struct Ghost;
-
-#[derive(Component)]
-pub struct MapPosition(Vec2i);
-
 fn player_control_system(
-    commands: Commands,
+    mut commands: Commands,
     mut player_trans_query: Query<&mut Transform, With<Player>>,
     mut player_query: Query<&mut Player>,
     player_entity_query: Query<Entity, With<Player>>,
     key_inputs: Res<Input<KeyCode>>,
     time: Res<Time>,
     mut start_time: ResMut<StartTime>,
-    mut ghost_actions: ResMut<GhostActions>
+    mut ghost_actions: ResMut<GhostActions>,
 ) {
     let mut player_transform = player_trans_query.single_mut();
     let mut player = player_query.single_mut();
@@ -91,9 +89,19 @@ fn player_control_system(
         if action_key == &INPUT_PLAYER_REWIND {
             start_time.0 = None;
             *player_transform = PLAYER_START_TRANSFORM;
+            ghost_actions.list.append(&mut player.actions);
+            ghost_actions.list.sort_by(|a, b| {
+                a.timestamp_seconds
+                    .partial_cmp(&b.timestamp_seconds)
+                    .unwrap()
+            });
+            player.actions.clear();
+
+            // player_entity_query.single()
+            create_player(&mut commands);
+            commands
+                .entity(player_entity_query.single())
+                .remove::<Player>();
         }
-        ghost_actions.list.append(&mut player.actions);
-        ghost_actions.list.sort_by(|a, b| a.timestamp_seconds.partial_cmp(&b.timestamp_seconds).unwrap());
-        player.actions.clear();
     }
 }

@@ -4,6 +4,7 @@ mod ghost_actions;
 mod map;
 mod math;
 mod player;
+mod ghost;
 
 use crate::ghost_actions::{actions_system, GhostActions};
 use crate::math::vec2i::Vec2i;
