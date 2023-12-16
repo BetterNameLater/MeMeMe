@@ -3,9 +3,9 @@ use super::events::RewindEvent;
 use super::move_direction::MoveDirection;
 use super::GhostActions;
 use crate::constantes::*;
+use crate::player::ghost::Ghost;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
-use crate::player::ghost::Ghost;
 
 #[derive(Component, Default)]
 pub struct Player {
@@ -91,9 +91,12 @@ fn player_input_system(
     mut rewind_event: EventWriter<RewindEvent>,
 ) {
     // move actions
-    let move_key = key_inputs
-        .get_just_pressed()
-        .find(|key_code| matches!(**key_code, INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT));
+    let move_key = key_inputs.get_just_pressed().find(|key_code| {
+        matches!(
+            **key_code,
+            INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT
+        )
+    });
     if let Some(move_key) = move_key {
         let move_direction = MoveDirection::from_key_code(*move_key);
         player_transform_query.single_mut().translation += CELL_LENGTH * move_direction.to_vec3();
