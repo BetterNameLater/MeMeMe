@@ -8,7 +8,7 @@ mod player;
 
 use crate::ghost_actions::{actions_system, GhostActions};
 use crate::math::vec2i::Vec2i;
-use crate::player::PlayerPlugin;
+use crate::player::{on_player_rewind_system, PlayerPlugin};
 use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
 use map::*;
 
@@ -39,6 +39,7 @@ fn main() {
                 cursor_grab_system,
                 move_camera,
                 actions_system,
+                on_player_rewind_system
             ),
         ) // TODO: mettre un ordre
         .add_systems(Startup, setup)

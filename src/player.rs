@@ -43,11 +43,50 @@ pub struct Player {
 }
 
 #[derive(Event)]
-struct RewindEvent;
+pub struct RewindEvent;
+
+pub fn on_player_rewind_system(
+    mut commands: Commands,
+    mut player_query: Query<&mut Player>,
+    player_entity_query: Query<Entity, With<Player>>,
+    mut start_time: ResMut<StartTime>,
+    mut ghost_actions: ResMut<GhostActions>,
+    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
+    mut rewind_event: EventReader<RewindEvent>,
+    mut player_transform_query: Query<&mut Transform, With<Player>>,
+    mut ghost_transform_query: Query<&mut Transform, With<Ghost>>
+) {
+    for ev in rewind_event.read() {
+        let mut player = player_query.single_mut();
+        ghost_actions.list.append(&mut player.actions);
+        ghost_actions.list.sort_by(|a, b| {
+            a.timestamp_seconds
+                .partial_cmp(&b.timestamp_seconds)
+                .unwrap()
+        });
+        ghost_actions.index = 0;
+        player.actions.clear();
+
+        start_time.0 = None;
+        elapsed_time_from_start_rewind.0 = None;
+
+        // reset the position of the current player, before turning im to a ghost
+        *player_transform_query.single_mut() = PLAYER_START_TRANSFORM;
+        commands
+            .entity(player_entity_query.single())
+            .remove::<Player>()
+            .insert(Ghost);
+
+        // insert a new player to replace
+        create_player(&mut commands);
+
+        // ghost_transform_query.
+    }
+}
 
 fn player_control_system(
     mut commands: Commands,
-    mut player_trans_query: Query<&mut Transform, With<Player>>,
+    mut player_transform_query: Query<&mut Transform, With<Player>>,
     /*     mut player_sprite_query: Query<&mut Sprite, With<Player>>, */
     mut player_query: Query<&mut Player>,
     player_entity_query: Query<Entity, With<Player>>,
@@ -58,7 +97,7 @@ fn player_control_system(
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut ev_rewind: EventWriter<RewindEvent>,
 ) {
-    let mut player_transform = player_trans_query.single_mut();
+    let mut player_transform = player_transform_query.single_mut();
     let mut player = player_query.single_mut();
     let mut movement = Vec3::ZERO;
 
@@ -93,28 +132,12 @@ fn player_control_system(
         });
 
     if let Some(action_key) = action_key {
-        // TODO match
-        if action_key == &INPUT_PLAYER_REWIND {
-            ev_rewind.send(RewindEvent);
-            start_time.0 = None;
-            *player_transform = PLAYER_START_TRANSFORM;
-            ghost_actions.list.append(&mut player.actions);
-            ghost_actions.list.sort_by(|a, b| {
-                a.timestamp_seconds
-                    .partial_cmp(&b.timestamp_seconds)
-                    .unwrap()
-            });
-            player.actions.clear();
-
-            // player_entity_query.single()
-            create_player(&mut commands);
-            commands
-                .entity(player_entity_query.single())
-                .remove::<Player>()
-                .insert(Ghost);
-            start_time.0 = None;
-            elapsed_time_from_start_rewind.0 = None;
-            ghost_actions.index = 0;
+        match action_key {
+            &INPUT_PLAYER_REWIND => {
+                ev_rewind.send(RewindEvent);
+                println!("send RewindEvent")
+            }
+            _ => unreachable!(),
         }
     }
 }
