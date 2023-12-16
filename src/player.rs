@@ -43,6 +43,7 @@ pub struct Player {
 fn player_control_system(
     mut commands: Commands,
     mut player_trans_query: Query<&mut Transform, With<Player>>,
+    mut player_sprite_query: Query<&mut Sprite, With<Player>>,
     mut player_query: Query<&mut Player>,
     player_entity_query: Query<Entity, With<Player>>,
     key_inputs: Res<Input<KeyCode>>,
