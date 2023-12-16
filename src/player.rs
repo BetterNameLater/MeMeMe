@@ -1,8 +1,9 @@
 use super::math::vec2i::Vec2i;
 use crate::constantes::*;
-use crate::ghost_actions::{Action, ActionType, MoveDirection};
+use crate::ghost_actions::{Action, ActionType, MoveDirection, GhostActions};
 use crate::map::Map;
 use crate::StartTime;
+use bevy::transform::commands;
 use bevy::{prelude::*, utils::HashMap};
 
 pub struct PlayerPlugin;
@@ -42,11 +43,14 @@ pub struct Ghost;
 pub struct MapPosition(Vec2i);
 
 fn player_control_system(
+    commands: Commands,
     mut player_trans_query: Query<&mut Transform, With<Player>>,
     mut player_query: Query<&mut Player>,
+    player_entity_query: Query<Entity, With<Player>>,
     key_inputs: Res<Input<KeyCode>>,
     time: Res<Time>,
     mut start_time: ResMut<StartTime>,
+    mut ghost_actions: ResMut<GhostActions>
 ) {
     let mut player_transform = player_trans_query.single_mut();
     let mut player = player_query.single_mut();
@@ -64,6 +68,7 @@ fn player_control_system(
         if let Some(start) = start_time.0 {
             let action_time = time.elapsed_seconds() - start;
             player.actions.push(Action {
+                ghost_id: player_entity_query.single(),
                 action_type: ActionType::Move(move_direction),
                 timestamp_seconds: action_time,
             });
@@ -87,6 +92,8 @@ fn player_control_system(
             start_time.0 = None;
             *player_transform = PLAYER_START_TRANSFORM;
         }
-        println!("action !");
+        ghost_actions.list.append(&mut player.actions);
+        ghost_actions.list.sort_by(|a, b| a.timestamp_seconds.partial_cmp(&b.timestamp_seconds).unwrap());
+        player.actions.clear();
     }
 }

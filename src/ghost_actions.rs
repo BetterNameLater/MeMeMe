@@ -1,6 +1,7 @@
 use crate::constantes::{
     INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP,
 };
+use bevy::ecs::entity::Entity;
 use bevy::input::Input;
 use bevy::math::Vec3;
 use bevy::prelude::{KeyCode, MouseButton, Res, Resource};
@@ -12,12 +13,13 @@ pub struct GhostActions {
 }
 
 pub fn actions_system(ghost_actions: Res<GhostActions>) {
-    // println!("{:?}", ghost_actions);
+    println!("{:?}", ghost_actions);
 }
 
 #[derive(Debug)]
 
 pub struct Action {
+    pub ghost_id: Entity,
     pub timestamp_seconds: f32,
     pub action_type: ActionType,
 }
