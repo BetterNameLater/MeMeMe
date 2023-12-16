@@ -9,3 +9,7 @@ mod player;
 
 pub use ghost_actions::{ghost_actions_system, GhostActions};
 pub use player::PlayerPlugin;
+
+
+pub use events::{RewindEvent, OnEnterEvent};
+pub use player::Player;

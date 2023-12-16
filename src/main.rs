@@ -1,31 +1,39 @@
 #![allow(dead_code, unused)]
 mod constantes;
+mod items;
 mod map;
 mod map_parser;
 mod math;
 mod player;
 mod time;
 
+use crate::constantes::PLAYER_START_TRANSFORM;
+use crate::items::{on_enter_system, PressurePlate};
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
-use crate::player::{ghost_actions_system, GhostActions, PlayerPlugin};
+use crate::player::{ghost_actions_system, GhostActions, Player, PlayerPlugin, RewindEvent};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
-use bevy::ecs::schedule::{ScheduleBuildSettings, ScheduleLabel};
 use bevy::{prelude::*, window::CursorGrabMode};
 use map::*;
+use std::any::Any;
 
 fn main() {
     App::new()
         .insert_resource(State::default())
         .insert_resource(GhostActions::default())
+        .add_systems(
+            Update,
+            (
+                elapsed_time_from_start_rewind_system,
+                ghost_actions_system,
+                // on_pressure_plate_enter,
+                on_enter_system,
+            ),
+        )
         .insert_resource(StartTime(None))
         .insert_resource(ElapsedTimeFromStartRewind(None))
         .add_plugins((DefaultPlugins, PlayerPlugin))
         .add_systems(SpawnScene, check_levels_loaded_system)
-        .add_systems(
-            Update,
-            (elapsed_time_from_start_rewind_system, ghost_actions_system),
-        )
         .add_systems(Startup, load_levels)
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()
