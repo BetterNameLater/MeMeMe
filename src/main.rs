@@ -13,10 +13,10 @@ use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
 use map::*;
 
 #[derive(Resource)]
-struct StartTime(pub Option<f32>);
+pub struct StartTime(pub Option<f32>);
 
 #[derive(Resource)]
-struct ElapsedTimeFromStartRewind(pub Option<f32>);
+pub struct ElapsedTimeFromStartRewind(pub Option<f32>);
 
 fn elapsed_time_from_start_rewind_system(
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
