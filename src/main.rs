@@ -1,22 +1,15 @@
-#![allow(dead_code, unused)]
+// #![allow(dead_code, unused)]
 mod constantes;
-mod ghost;
-mod ghost_actions;
 mod map;
 mod math;
 mod player;
+mod time;
 
-use crate::ghost_actions::{actions_system, GhostActions};
 use crate::math::vec2i::Vec2i;
-use crate::player::{on_player_rewind_system, PlayerPlugin};
+use crate::player::{ghost_actions_system, GhostActions, PlayerPlugin};
+use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
 use map::*;
-
-#[derive(Resource)]
-struct StartTime(pub Option<f32>);
-
-#[derive(Resource)]
-struct ElapsedTimeFromStartRewind(pub Option<f32>);
 
 fn elapsed_time_from_start_rewind_system(
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
@@ -38,14 +31,12 @@ fn main() {
                 elapsed_time_from_start_rewind_system,
                 cursor_grab_system,
                 move_camera,
-                actions_system,
-                on_player_rewind_system,
+                ghost_actions_system,
             ),
         ) // TODO: mettre un ordre
         .add_systems(Startup, setup)
-        .insert_resource(DirectionalLightShadowMap { size: 1000 })
         .insert_resource(GhostActions {
-            list: vec![],
+            actions: vec![],
             index: 0,
         })
         .insert_resource(StartTime(None))
