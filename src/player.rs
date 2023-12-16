@@ -1,4 +1,5 @@
 use super::math::vec2i::Vec2i;
+use crate::constantes::{CELL_LENGTH, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT, PLAYER_UP, PLAYER_Z};
 use crate::map::Map;
 use bevy::{prelude::*, utils::HashMap};
 
@@ -11,11 +12,8 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-fn create_player_system(mut commands: Commands, map_query: Query<&Map>) {
-    let map = map_query.single();
-    let size = map.get_cell_length() / 2.;
-    // let transform =
-
+fn create_player_system(mut commands: Commands) {
+    let size = CELL_LENGTH / 2.;
     commands.spawn((
         Player,
         SpriteBundle {
@@ -24,12 +22,8 @@ fn create_player_system(mut commands: Commands, map_query: Query<&Map>) {
                 custom_size: Some(Vec2::new(size, size)),
                 ..default()
             },
-            transform: Transform::from_xyz(0., 0., 0.1),
-            global_transform: Default::default(),
-            texture: Default::default(),
-            visibility: Default::default(),
-            inherited_visibility: Default::default(),
-            view_visibility: Default::default(),
+            transform: Transform::from_xyz(0., 0., PLAYER_Z),
+            ..default()
         },
     ));
 }
@@ -42,11 +36,6 @@ pub struct Ghost;
 
 #[derive(Component)]
 pub struct MapPosition(Vec2i);
-
-const PLAYER_UP: KeyCode = KeyCode::Up;
-const PLAYER_DOWN: KeyCode = KeyCode::Down;
-const PLAYER_LEFT: KeyCode = KeyCode::Left;
-const PLAYER_RIGHT: KeyCode = KeyCode::Right;
 
 fn player_control_system(
     mut player_query: Query<&mut Transform, With<Player>>,

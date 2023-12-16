@@ -1,4 +1,5 @@
 #![allow(dead_code, unused)]
+mod constantes;
 mod map;
 mod math;
 mod player;

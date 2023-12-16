@@ -1,10 +1,8 @@
 use crate::math::vec2i::Vec2i;
 use bevy::{prelude::*, utils::HashMap};
+use crate::constantes::{CELL_GAP, CELL_LENGTH};
 
 pub struct MapPlugin;
-
-const CELL_LENGTH: f32 = 32.;
-const CELL_GAP: f32 = 8.;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
