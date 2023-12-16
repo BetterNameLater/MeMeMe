@@ -1,8 +1,5 @@
 use super::math::vec2i::Vec2i;
-use crate::constantes::{
-    CELL_LENGTH, INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP,
-    PLAYER_Z,
-};
+use crate::constantes::*;
 use crate::ghost_actions::{Action, ActionType, MoveDirection};
 use crate::map::Map;
 use crate::StartTime;
@@ -27,7 +24,7 @@ fn create_player_system(mut commands: Commands) {
                 custom_size: Some(Vec2::new(size, size)),
                 ..default()
             },
-            transform: Transform::from_xyz(0., 0., PLAYER_Z),
+            transform: PLAYER_START_TRANSFORM,
             ..default()
         },
     ));
@@ -51,7 +48,7 @@ fn player_control_system(
     time: Res<Time>,
     mut start_time: ResMut<StartTime>,
 ) {
-    let mut player_position = player_trans_query.single_mut();
+    let mut player_transform = player_trans_query.single_mut();
     let mut player = player_query.single_mut();
     let mut movement = Vec3::ZERO;
 
@@ -62,22 +59,34 @@ fn player_control_system(
             _ => false,
         });
     if let Some(move_key) = move_key {
-        player_position.translation += CELL_LENGTH
-            * match *move_key {
-                INPUT_PLAYER_UP => Vec3::Y,
-                INPUT_PLAYER_DOWN => Vec3::NEG_Y,
-                INPUT_PLAYER_LEFT => Vec3::NEG_X,
-                INPUT_PLAYER_RIGHT => Vec3::X,
-                _ => unreachable!(),
-            };
+        let move_direction = MoveDirection::from_key_code(*move_key);
+        player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         if let Some(start) = start_time.0 {
             let action_time = time.elapsed_seconds() - start;
             player.actions.push(Action {
-                action_type: ActionType::Move(MoveDirection::Down),
+                action_type: ActionType::Move(move_direction),
                 timestamp_seconds: action_time,
-            }); // TODO
+            });
         } else {
             start_time.0 = Some(time.elapsed_seconds());
         }
+        return;
+    }
+
+    // other actions
+    let action_key = key_inputs
+        .get_just_pressed()
+        .find(|key_code| match **key_code {
+            INPUT_PLAYER_REWIND => true,
+            _ => false,
+        });
+
+    if let Some(action_key) = action_key {
+        // TODO match
+        if action_key == &INPUT_PLAYER_REWIND {
+            start_time.0 = None;
+            *player_transform = PLAYER_START_TRANSFORM;
+        }
+        println!("action !");
     }
 }
