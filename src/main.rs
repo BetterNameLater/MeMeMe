@@ -1,9 +1,16 @@
-use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
+#![allow(dead_code, unused)]
 mod map;
+mod math;
+mod player;
+
+use crate::math::vec2i::Vec2i;
+use crate::player::PlayerPlugin;
+use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
 use map::*;
+
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, MapPlugin))
+        .add_plugins((DefaultPlugins, MapPlugin, PlayerPlugin))
         .add_systems(Update, (cursor_grab_system, move_camera))
         .add_systems(Startup, setup)
         .insert_resource(DirectionalLightShadowMap { size: 1000 })
@@ -16,7 +23,7 @@ fn setup(mut commands: Commands, mut map_query: Query<&mut Map>) {
     let mut map = map_query.single_mut();
     for i in 0..30 {
         for j in 0..30 {
-            map.spawn_cell(&mut commands, Vec2i {x: i as i32, y: j})
+            map.spawn_cell(&mut commands, Vec2i { x: i as i32, y: j })
         }
     }
 }
