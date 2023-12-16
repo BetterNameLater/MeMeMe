@@ -36,6 +36,7 @@ fn create_player_system(mut commands: Commands) {
     Player::create_player(&mut commands);
 }
 
+#[allow(clippy::too_many_arguments)]
 fn on_player_rewind_system(
     mut commands: Commands,
     mut player_query: Query<&mut Player>,
@@ -78,6 +79,7 @@ fn on_player_rewind_system(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn player_input_system(
     mut player_transform_query: Query<&mut Transform, With<Player>>,
     mut player_query: Query<&mut Player>,
@@ -91,10 +93,7 @@ fn player_input_system(
     // move actions
     let move_key = key_inputs
         .get_just_pressed()
-        .find(|key_code| match **key_code {
-            INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT => true,
-            _ => false,
-        });
+        .find(|key_code| matches!(**key_code, INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT));
     if let Some(move_key) = move_key {
         let move_direction = MoveDirection::from_key_code(*move_key);
         player_transform_query.single_mut().translation += CELL_LENGTH * move_direction.to_vec3();
@@ -113,10 +112,7 @@ fn player_input_system(
     // other actions
     let action_key = key_inputs
         .get_just_pressed()
-        .find(|key_code| match **key_code {
-            INPUT_PLAYER_REWIND => true,
-            _ => false,
-        });
+        .find(|key_code| matches!(**key_code, INPUT_PLAYER_REWIND));
     if let Some(action_key) = action_key {
         match action_key {
             &INPUT_PLAYER_REWIND => {
