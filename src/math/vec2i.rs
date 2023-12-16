@@ -1,4 +1,6 @@
-#[derive(PartialEq, Eq, Hash, Clone, Copy, Default)]
+use serde::Deserialize;
+
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize)]
 pub struct Vec2i {
     pub x: i32,
     pub y: i32,

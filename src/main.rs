@@ -1,10 +1,12 @@
-// #![allow(dead_code, unused)]
+#![allow(dead_code, unused)]
 mod constantes;
 mod map;
+mod map_parser;
 mod math;
 mod player;
 mod time;
 
+use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::{ghost_actions_system, GhostActions, PlayerPlugin};
 use crate::time::{ElapsedTimeFromStartRewind, StartTime};
@@ -24,7 +26,9 @@ fn elapsed_time_from_start_rewind_system(
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, MapPlugin, PlayerPlugin))
+        .add_plugins((DefaultPlugins, PlayerPlugin))
+        .init_asset::<MapRepr>()
+        .init_asset_loader::<MapLoader>()
         .add_systems(
             Update,
             (
@@ -34,7 +38,9 @@ fn main() {
                 ghost_actions_system,
             ),
         ) // TODO: mettre un ordre
+        .add_systems(PreStartup, load_levels)
         .add_systems(Startup, setup)
+        .init_resource::<Handlerrs>()
         .insert_resource(GhostActions {
             actions: vec![],
             index: 0,
@@ -44,15 +50,24 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, mut map_query: Query<&mut Map>) {
-    commands.spawn(Camera2dBundle::default());
+#[derive(Resource, Default)]
+struct Handlerrs(Handle<MapRepr>);
 
-    let mut map = map_query.single_mut();
-    for i in 0..30 {
-        for j in 0..30 {
-            map.spawn_cell(&mut commands, Vec2i { x: i, y: j })
+fn load_levels(mut h: ResMut<Handlerrs>, asset_server: Res<AssetServer>) {
+    h.0 = asset_server.load("levels/example.json");
+}
+
+fn setup(mut commands: Commands, custom_assets: ResMut<Assets<MapRepr>>, h: Res<Handlerrs>) {
+    // let level_example = custom_assets.(&h.0).unwrap();
+
+    let mut map = Map::default();
+    for x in 0..30 {
+        for y in 0..30 {
+            map.spawn_cell(&mut commands, Vec2i { x, y })
         }
     }
+    commands.spawn(Camera2dBundle::default());
+    commands.spawn(map);
 }
 
 fn cursor_grab_system(

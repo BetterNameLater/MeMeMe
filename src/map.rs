@@ -2,19 +2,6 @@ use crate::constantes::*;
 use crate::math::vec2i::Vec2i;
 use bevy::{prelude::*, utils::HashMap};
 
-pub struct MapPlugin;
-
-impl Plugin for MapPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_systems(PreStartup, create_map)
-            .add_event::<CellSpawned>();
-    }
-}
-
-fn create_map(mut commands: Commands) {
-    commands.spawn(Map::default());
-}
-
 #[derive(Event)]
 pub struct CellSpawned(pub Entity);
 
