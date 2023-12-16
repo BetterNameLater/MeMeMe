@@ -39,7 +39,7 @@ fn main() {
                 cursor_grab_system,
                 move_camera,
                 actions_system,
-                on_player_rewind_system
+                on_player_rewind_system,
             ),
         ) // TODO: mettre un ordre
         .add_systems(Startup, setup)

@@ -1,15 +1,13 @@
 use crate::constantes::{
     CELL_LENGTH, INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP,
 };
-use crate::ghost::{self, Ghost};
-use crate::{ElapsedTimeFromStartRewind, StartTime};
+use crate::ghost::Ghost;
+use crate::ElapsedTimeFromStartRewind;
 use bevy::ecs::entity::Entity;
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
-use bevy::input::Input;
 use bevy::math::Vec3;
-use bevy::prelude::{KeyCode, MouseButton, Res, ResMut, Resource};
-use bevy::time::Time;
+use bevy::prelude::{KeyCode, Res, ResMut, Resource};
 use bevy::transform::components::Transform;
 
 #[derive(Resource, Debug)]
@@ -19,13 +17,10 @@ pub struct GhostActions {
 }
 
 pub fn actions_system(
-    time: Res<Time>,
-    start_time: Res<StartTime>,
     mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
-    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
+    elapsed_time_from_start_rewind: Res<ElapsedTimeFromStartRewind>,
 ) {
-    // println!("{:?}", ghost_actions);
     if let Some(current_time) = elapsed_time_from_start_rewind.0 {
         loop {
             if ghost_actions.index >= ghost_actions.list.len() {
@@ -39,7 +34,6 @@ pub fn actions_system(
             if action_time > &current_time {
                 return;
             }
-            // println!("Action: {}, current_time {}", action_time, current_time);
             match action_type {
                 ActionType::Move(move_direction) => {
                     let direction = move_direction.to_vec3();
@@ -49,8 +43,6 @@ pub fn actions_system(
             }
             ghost_actions.index += 1;
         }
-    } else {
-        return;
     }
 }
 
