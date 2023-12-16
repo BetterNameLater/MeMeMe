@@ -54,7 +54,7 @@ pub fn on_player_rewind_system(
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut rewind_event: EventReader<RewindEvent>,
     mut player_transform_query: Query<&mut Transform, With<Player>>,
-    mut ghost_transform_query: Query<&mut Transform, With<Ghost>>
+    mut ghost_transform_query: Query<&mut Transform, (With<Ghost>, Without<Player>)>,
 ) {
     for ev in rewind_event.read() {
         let mut player = player_query.single_mut();
@@ -80,7 +80,10 @@ pub fn on_player_rewind_system(
         // insert a new player to replace
         create_player(&mut commands);
 
-        // ghost_transform_query.
+        // reset ghost position
+        ghost_transform_query.for_each_mut(|mut ghost_transform| {
+            *ghost_transform = PLAYER_START_TRANSFORM;
+        });
     }
 }
 
