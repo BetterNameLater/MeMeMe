@@ -25,8 +25,8 @@ pub fn actions_system(
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
 ) {
-    /*     println!("{:?}", ghost_actions); */
-    if let Some(start) = start_time.0 {
+    println!("{:?}", ghost_actions);
+    if let Some(current_time) = elapsed_time_from_start_rewind.0 {
         loop {
             if ghost_actions.index >= ghost_actions.list.len() {
                 return;
@@ -36,9 +36,10 @@ pub fn actions_system(
                 timestamp_seconds: action_time,
                 action_type,
             } = &ghost_actions.list[ghost_actions.index];
-            if action_time > &elapsed_time_from_start_rewind.0.unwrap() {
+            if action_time > &current_time {
                 return;
             }
+            println!("Action: {}, current_time {}", action_time, current_time);
             match action_type {
                 ActionType::Move(move_direction) => {
                     let direction = move_direction.to_vec3();

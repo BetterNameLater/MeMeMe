@@ -32,7 +32,15 @@ fn elapsed_time_from_start_rewind_system(
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, MapPlugin, PlayerPlugin))
-        .add_systems(Update, (cursor_grab_system, move_camera, actions_system))
+        .add_systems(
+            Update,
+            (
+                elapsed_time_from_start_rewind_system,
+                cursor_grab_system,
+                move_camera,
+                actions_system,
+            ),
+        ) // TODO: mettre un ordre
         .add_systems(Startup, setup)
         .insert_resource(DirectionalLightShadowMap { size: 1000 })
         .insert_resource(GhostActions {

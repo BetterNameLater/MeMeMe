@@ -12,7 +12,8 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, create_player_system)
-            .add_systems(Update, player_control_system);
+            .add_systems(Update, player_control_system)
+            .add_event::<RewindEvent>();
     }
 }
 
@@ -41,6 +42,9 @@ pub struct Player {
     actions: Vec<Action>,
 }
 
+#[derive(Event)]
+struct RewindEvent;
+
 fn player_control_system(
     mut commands: Commands,
     mut player_trans_query: Query<&mut Transform, With<Player>>,
@@ -52,6 +56,7 @@ fn player_control_system(
     mut start_time: ResMut<StartTime>,
     mut ghost_actions: ResMut<GhostActions>,
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
+    mut ev_rewind: EventWriter<RewindEvent>,
 ) {
     let mut player_transform = player_trans_query.single_mut();
     let mut player = player_query.single_mut();
@@ -90,6 +95,7 @@ fn player_control_system(
     if let Some(action_key) = action_key {
         // TODO match
         if action_key == &INPUT_PLAYER_REWIND {
+            ev_rewind.send(RewindEvent);
             start_time.0 = None;
             *player_transform = PLAYER_START_TRANSFORM;
             ghost_actions.list.append(&mut player.actions);
