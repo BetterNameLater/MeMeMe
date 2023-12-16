@@ -66,8 +66,8 @@ impl Map {
                         ..default()
                     },
                     transform: Transform::from_translation(Vec3::new(
-                        cell_pos.x + CELL_GAP / 2.,
-                        cell_pos.y + CELL_GAP / 2.,
+                        cell_pos.x,
+                        cell_pos.y,
                         0.,
                     )),
                     ..default()
@@ -75,6 +75,6 @@ impl Map {
                 Cell,
             ))
             .id();
-        self.cells.insert(pos, CellData { id: id });
+        self.cells.insert(pos, CellData { id });
     }
 }
