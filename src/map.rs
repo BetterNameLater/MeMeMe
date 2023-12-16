@@ -1,6 +1,6 @@
+use crate::constantes::*;
 use crate::math::vec2i::Vec2i;
 use bevy::{prelude::*, utils::HashMap};
-use crate::constantes::{CELL_GAP, CELL_LENGTH};
 
 pub struct MapPlugin;
 
@@ -12,7 +12,7 @@ impl Plugin for MapPlugin {
 }
 
 fn create_map(mut commands: Commands) {
-    commands.spawn(Map::new(CELL_LENGTH));
+    commands.spawn(Map::default());
 }
 
 #[derive(Event)]
@@ -21,32 +21,20 @@ pub struct CellSpawned(pub Entity);
 #[derive(Component)]
 pub struct Cell;
 
-pub struct CellData {
-    id: Entity,
-}
-
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct Map {
-    cells: HashMap<Vec2i, CellData>,
-    cell_length: f32,
+    cells: HashMap<Vec2i, Entity>,
 }
 
 impl Map {
-    pub fn new(cell_length: f32) -> Map {
-        Map {
-            cells: HashMap::new(),
-            cell_length: cell_length,
-        }
-    }
-
-    pub fn get_cell_length(&self) -> f32 {
-        self.cell_length
+    pub fn get_cell_entity_by_pos(&self, pos: &Vec2i) -> Option<Entity> {
+        self.cells.get(pos).copied()
     }
 
     pub fn map_to_local(&self, pos: Vec2i) -> Vec2 {
         Vec2 {
-            x: self.cell_length * pos.x as f32,
-            y: self.cell_length * pos.y as f32,
+            x: CELL_LENGTH * pos.x as f32,
+            y: CELL_LENGTH * pos.y as f32,
         }
     }
 
@@ -58,21 +46,17 @@ impl Map {
                     sprite: Sprite {
                         color: Color::rgb(0.25, 0.25, 0.75),
                         custom_size: Some(Vec2::new(
-                            self.get_cell_length() - CELL_GAP,
-                            self.get_cell_length() - CELL_GAP,
+                            CELL_LENGTH - CELL_GAP,
+                            CELL_LENGTH - CELL_GAP,
                         )),
                         ..default()
                     },
-                    transform: Transform::from_translation(Vec3::new(
-                        cell_pos.x,
-                        cell_pos.y,
-                        0.,
-                    )),
+                    transform: Transform::from_translation(Vec3::new(cell_pos.x, cell_pos.y, 0.)),
                     ..default()
                 },
                 Cell,
             ))
             .id();
-        self.cells.insert(pos, CellData { id });
+        self.cells.insert(pos, id);
     }
 }

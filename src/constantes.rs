@@ -1,4 +1,4 @@
-use bevy::prelude::{KeyCode, Transform, Vec3};
+use bevy::prelude::{KeyCode, Transform};
 
 pub const PLAYER_Z: f32 = 1.0;
 pub const PLAYER_START_TRANSFORM: Transform = Transform::from_xyz(0., 0., PLAYER_Z);
