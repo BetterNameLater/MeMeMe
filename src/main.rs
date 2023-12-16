@@ -1,20 +1,30 @@
 #![allow(dead_code, unused)]
 mod constantes;
+mod ghost_actions;
 mod map;
 mod math;
 mod player;
 
+use crate::ghost_actions::{actions_system, GhostActions};
 use crate::math::vec2i::Vec2i;
 use crate::player::PlayerPlugin;
 use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
 use map::*;
 
+#[derive(Resource)]
+struct StartTime(pub Option<f32>);
+
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, MapPlugin, PlayerPlugin))
-        .add_systems(Update, (cursor_grab_system, move_camera))
+        .add_systems(Update, (cursor_grab_system, move_camera, actions_system))
         .add_systems(Startup, setup)
         .insert_resource(DirectionalLightShadowMap { size: 1000 })
+        .insert_resource(GhostActions {
+            list: vec![],
+            index: 0,
+        })
+        .insert_resource(StartTime(None))
         .run();
 }
 
