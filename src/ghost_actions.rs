@@ -1,14 +1,14 @@
 use crate::constantes::{
-    INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP,
+    CELL_LENGTH, INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP,
 };
 use crate::ghost::{self, Ghost};
-use crate::StartTime;
+use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::ecs::entity::Entity;
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
 use bevy::input::Input;
 use bevy::math::Vec3;
-use bevy::prelude::{KeyCode, MouseButton, Res, Resource};
+use bevy::prelude::{KeyCode, MouseButton, Res, ResMut, Resource};
 use bevy::time::Time;
 use bevy::transform::components::Transform;
 
@@ -21,12 +21,12 @@ pub struct GhostActions {
 pub fn actions_system(
     time: Res<Time>,
     start_time: Res<StartTime>,
-    ghost_actions: Res<GhostActions>,
+    mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
+    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
 ) {
     /*     println!("{:?}", ghost_actions); */
     if let Some(start) = start_time.0 {
-        let current_time = time.elapsed_seconds() - start;
         loop {
             if ghost_actions.index >= ghost_actions.list.len() {
                 return;
@@ -36,15 +36,21 @@ pub fn actions_system(
                 timestamp_seconds: action_time,
                 action_type,
             } = &ghost_actions.list[ghost_actions.index];
-            if action_time < &current_time {
+            if action_time > &elapsed_time_from_start_rewind.0.unwrap() {
                 return;
             }
+            match action_type {
+                ActionType::Move(move_direction) => {
+                    let direction = move_direction.to_vec3();
+                    let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();
+                    ghost_transform.translation += direction * CELL_LENGTH;
+                }
+            }
+            ghost_actions.index += 1;
         }
     } else {
         return;
     }
-
-    for ghost in ghosts_query.iter_mut() { /*         println!("Ghost position : {:?}", ghost); */ }
 }
 
 #[derive(Debug)]

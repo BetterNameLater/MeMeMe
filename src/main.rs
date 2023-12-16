@@ -1,10 +1,10 @@
 #![allow(dead_code, unused)]
 mod constantes;
+mod ghost;
 mod ghost_actions;
 mod map;
 mod math;
 mod player;
-mod ghost;
 
 use crate::ghost_actions::{actions_system, GhostActions};
 use crate::math::vec2i::Vec2i;
@@ -14,6 +14,20 @@ use map::*;
 
 #[derive(Resource)]
 struct StartTime(pub Option<f32>);
+
+#[derive(Resource)]
+struct ElapsedTimeFromStartRewind(pub Option<f32>);
+
+fn elapsed_time_from_start_rewind_system(
+    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
+    start_time: Res<StartTime>,
+    time: Res<Time>,
+) {
+    if start_time.0.is_none() {
+        return;
+    }
+    elapsed_time_from_start_rewind.0 = Some(time.elapsed_seconds() - start_time.0.unwrap());
+}
 
 fn main() {
     App::new()
@@ -26,6 +40,7 @@ fn main() {
             index: 0,
         })
         .insert_resource(StartTime(None))
+        .insert_resource(ElapsedTimeFromStartRewind(None))
         .run();
 }
 

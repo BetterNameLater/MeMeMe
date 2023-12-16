@@ -3,7 +3,7 @@ use crate::constantes::*;
 use crate::ghost::Ghost;
 use crate::ghost_actions::{Action, ActionType, GhostActions, MoveDirection};
 use crate::map::Map;
-use crate::StartTime;
+use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::transform::commands;
 use bevy::{prelude::*, utils::HashMap};
 
@@ -51,6 +51,7 @@ fn player_control_system(
     time: Res<Time>,
     mut start_time: ResMut<StartTime>,
     mut ghost_actions: ResMut<GhostActions>,
+    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
 ) {
     let mut player_transform = player_trans_query.single_mut();
     let mut player = player_query.single_mut();
@@ -66,14 +67,14 @@ fn player_control_system(
         let move_direction = MoveDirection::from_key_code(*move_key);
         player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         if let Some(start) = start_time.0 {
-            let action_time = time.elapsed_seconds() - start;
             player.actions.push(Action {
                 ghost_id: player_entity_query.single(),
                 action_type: ActionType::Move(move_direction),
-                timestamp_seconds: action_time,
+                timestamp_seconds: elapsed_time_from_start_rewind.0.unwrap(),
             });
         } else {
             start_time.0 = Some(time.elapsed_seconds());
+            elapsed_time_from_start_rewind.0 = Some(0.);
         }
         return;
     }
@@ -105,6 +106,9 @@ fn player_control_system(
                 .entity(player_entity_query.single())
                 .remove::<Player>()
                 .insert(Ghost);
+            start_time.0 = None;
+            elapsed_time_from_start_rewind.0 = None;
+            ghost_actions.index = 0;
         }
     }
 }
