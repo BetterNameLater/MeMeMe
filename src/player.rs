@@ -1,5 +1,6 @@
 use super::math::vec2i::Vec2i;
 use crate::constantes::*;
+use crate::ghost::Ghost;
 use crate::ghost_actions::{Action, ActionType, GhostActions, MoveDirection};
 use crate::map::Map;
 use crate::StartTime;
@@ -43,7 +44,7 @@ pub struct Player {
 fn player_control_system(
     mut commands: Commands,
     mut player_trans_query: Query<&mut Transform, With<Player>>,
-    mut player_sprite_query: Query<&mut Sprite, With<Player>>,
+    /*     mut player_sprite_query: Query<&mut Sprite, With<Player>>, */
     mut player_query: Query<&mut Player>,
     player_entity_query: Query<Entity, With<Player>>,
     key_inputs: Res<Input<KeyCode>>,
@@ -102,7 +103,8 @@ fn player_control_system(
             create_player(&mut commands);
             commands
                 .entity(player_entity_query.single())
-                .remove::<Player>();
+                .remove::<Player>()
+                .insert(Ghost);
         }
     }
 }
