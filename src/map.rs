@@ -28,7 +28,7 @@ pub struct Map {
 
 impl Map {
     pub fn get_cell_entity_by_pos(&self, pos: &Vec2i) -> Option<Entity> {
-        self.cells.get(pos).map(|e| e.clone())
+        self.cells.get(pos).copied()
     }
 
     pub fn map_to_local(&self, pos: Vec2i) -> Vec2 {

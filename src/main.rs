@@ -8,7 +8,7 @@ mod time;
 use crate::math::vec2i::Vec2i;
 use crate::player::{ghost_actions_system, GhostActions, PlayerPlugin};
 use crate::time::{ElapsedTimeFromStartRewind, StartTime};
-use bevy::{pbr::DirectionalLightShadowMap, prelude::*, window::CursorGrabMode};
+use bevy::{prelude::*, window::CursorGrabMode};
 use map::*;
 
 fn elapsed_time_from_start_rewind_system(
@@ -50,7 +50,7 @@ fn setup(mut commands: Commands, mut map_query: Query<&mut Map>) {
     let mut map = map_query.single_mut();
     for i in 0..30 {
         for j in 0..30 {
-            map.spawn_cell(&mut commands, Vec2i { x: i as i32, y: j })
+            map.spawn_cell(&mut commands, Vec2i { x: i, y: j })
         }
     }
 }

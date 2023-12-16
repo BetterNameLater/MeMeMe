@@ -2,11 +2,11 @@ use super::actions::{Action, ActionType};
 use super::ghost::Ghost;
 use crate::constantes::*;
 use crate::ElapsedTimeFromStartRewind;
-use bevy::ecs::entity::Entity;
+
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
-use bevy::math::Vec3;
-use bevy::prelude::{KeyCode, Res, ResMut, Resource};
+
+use bevy::prelude::{Res, ResMut, Resource};
 use bevy::transform::components::Transform;
 
 #[derive(Resource, Debug)]

@@ -1,7 +1,7 @@
-use crate::constantes::*;
+
 use crate::player::move_direction::MoveDirection;
-use bevy::math::Vec3;
-use bevy::prelude::{Entity, KeyCode};
+
+use bevy::prelude::{Entity};
 
 #[derive(Debug)]
 pub struct Action {
