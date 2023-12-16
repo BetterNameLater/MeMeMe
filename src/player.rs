@@ -1,5 +1,5 @@
 use super::math::vec2i::Vec2i;
-use crate::constantes::{CELL_LENGTH, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT, PLAYER_UP, PLAYER_Z};
+use crate::constantes::{CELL_LENGTH, INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP, PLAYER_Z};
 use crate::map::Map;
 use bevy::{prelude::*, utils::HashMap};
 
@@ -47,16 +47,16 @@ fn player_control_system(
     let move_key = key_inputs
         .get_just_pressed()
         .find(|key_code| match **key_code {
-            PLAYER_DOWN | PLAYER_UP | PLAYER_LEFT | PLAYER_RIGHT => true,
+            INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT => true,
             _ => false,
         });
     if let Some(move_key) = move_key {
         player_position.translation += 32.
             * match *move_key {
-                PLAYER_UP => Vec3::Y,
-                PLAYER_DOWN => Vec3::NEG_Y,
-                PLAYER_LEFT => Vec3::NEG_X,
-                PLAYER_RIGHT => Vec3::X,
+                INPUT_PLAYER_UP => Vec3::Y,
+                INPUT_PLAYER_DOWN => Vec3::NEG_Y,
+                INPUT_PLAYER_LEFT => Vec3::NEG_X,
+                INPUT_PLAYER_RIGHT => Vec3::X,
                 _ => unreachable!(),
             };
     }
