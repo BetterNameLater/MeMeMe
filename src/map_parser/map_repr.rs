@@ -33,14 +33,9 @@ impl AssetLoader for MapLoader {
         _load_context: &'a mut LoadContext,
     ) -> BoxedFuture<'a, Result<Self::Asset, Self::Error>> {
         Box::pin(async move {
-            // Err(std::io::Error::last_os_error())
             let mut bytes = Vec::new();
             reader.read_to_end(&mut bytes).await?;
-            // let custom_asset = ron::de::from_bytes::<CustomAsset>(&bytes)?;
-            Ok(MapRepr {
-                map: vec![vec![]],
-                objects: HashMap::new(),
-            })
+            Ok(serde_json::from_slice::<MapRepr>(&bytes).unwrap())
         })
     }
 
@@ -48,6 +43,8 @@ impl AssetLoader for MapLoader {
         &["json"]
     }
 }
+
+
 
 #[derive(Deserialize_repr, Debug)]
 #[repr(u8)]

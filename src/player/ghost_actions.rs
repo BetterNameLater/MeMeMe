@@ -9,7 +9,7 @@ use bevy::ecs::system::Query;
 use bevy::prelude::{Res, ResMut, Resource};
 use bevy::transform::components::Transform;
 
-#[derive(Resource, Debug)]
+#[derive(Resource, Debug, Default)]
 pub struct GhostActions {
     pub actions: Vec<Action>,
     pub index: usize,

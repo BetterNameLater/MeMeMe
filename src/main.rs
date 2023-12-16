@@ -26,9 +26,11 @@ fn elapsed_time_from_start_rewind_system(
 
 fn main() {
     App::new()
+        .insert_resource(State::default())
+        .insert_resource(GhostActions::default())
+        .insert_resource(StartTime(None))
+        .insert_resource(ElapsedTimeFromStartRewind(None))
         .add_plugins((DefaultPlugins, PlayerPlugin))
-        .init_asset::<MapRepr>()
-        .init_asset_loader::<MapLoader>()
         .add_systems(
             Update,
             (
@@ -36,39 +38,71 @@ fn main() {
                 cursor_grab_system,
                 move_camera,
                 ghost_actions_system,
+                check_levels_loaded_system,
             ),
         ) // TODO: mettre un ordre
-        .add_systems(PreStartup, load_levels)
-        .add_systems(Startup, setup)
-        .init_resource::<Handlerrs>()
-        .insert_resource(GhostActions {
-            actions: vec![],
-            index: 0,
-        })
-        .insert_resource(StartTime(None))
-        .insert_resource(ElapsedTimeFromStartRewind(None))
+        .add_systems(Startup, load_levels)
+        .init_asset_loader::<MapLoader>()
+        .init_asset::<MapRepr>()
         .run();
 }
 
 #[derive(Resource, Default)]
-struct Handlerrs(Handle<MapRepr>);
-
-fn load_levels(mut h: ResMut<Handlerrs>, asset_server: Res<AssetServer>) {
-    h.0 = asset_server.load("levels/example.json");
+struct State {
+    level_1_handle: Option<Handle<MapRepr>>,
+    levels_loaded: bool,
 }
 
-fn setup(mut commands: Commands, custom_assets: ResMut<Assets<MapRepr>>, h: Res<Handlerrs>) {
-    // let level_example = custom_assets.(&h.0).unwrap();
+fn load_levels(mut commands: Commands, asset_server: Res<AssetServer>, mut state: ResMut<State>) {
+    commands.spawn(Camera2dBundle::default());
+    state.level_1_handle = Some(asset_server.load("levels/example.json"));
+}
+
+fn check_levels_loaded_system(
+    mut commands: Commands,
+    mut state: ResMut<State>,
+    custom_assets: Res<Assets<MapRepr>>,
+) {
+    if state.levels_loaded {
+        return;
+    }
+
+    let level_example = custom_assets.get(state.level_1_handle.as_ref().unwrap());
+    if level_example.is_none() {
+        return;
+    }
+    state.levels_loaded = true;
+    let level_example = custom_assets
+        .get(state.level_1_handle.as_ref().unwrap())
+        .unwrap();
 
     let mut map = Map::default();
-    for x in 0..30 {
-        for y in 0..30 {
-            map.spawn_cell(&mut commands, Vec2i { x, y })
-        }
-    }
-    commands.spawn(Camera2dBundle::default());
+
+    level_example
+        .map
+        .iter()
+        .enumerate()
+        .for_each(|(x, map_slice)| {
+            map_slice
+                .iter()
+                .enumerate()
+                .for_each(|(y, background_type)| {
+                    map.spawn_cell(
+                        &mut commands,
+                        Vec2i {
+                            x: x as i32,
+                            y: y as i32,
+                        },
+                        background_type,
+                    )
+                })
+        });
     commands.spawn(map);
 }
+
+// fn setup_map(mut commands: Commands, custom_assets: Res<Assets<MapRepr>>, state: Res<State>) {
+//
+// }
 
 fn cursor_grab_system(
     mut window: Query<&mut Window>,

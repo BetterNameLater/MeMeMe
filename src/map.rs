@@ -1,4 +1,5 @@
 use crate::constantes::*;
+use crate::map_parser::BackgroundType;
 use crate::math::vec2i::Vec2i;
 use bevy::{prelude::*, utils::HashMap};
 
@@ -25,13 +26,23 @@ impl Map {
         }
     }
 
-    pub fn spawn_cell(&mut self, commands: &mut Commands, pos: Vec2i) {
+    pub fn spawn_cell(
+        &mut self,
+        commands: &mut Commands,
+        pos: Vec2i,
+        background_type: &BackgroundType,
+    ) {
         let cell_pos = self.map_to_local(Vec2i::from(pos.x, pos.y));
         let id = commands
             .spawn((
                 SpriteBundle {
                     sprite: Sprite {
-                        color: Color::rgb(0.25, 0.25, 0.75),
+                        color: match background_type {
+                            BackgroundType::Floor => Color::BLUE,
+                            BackgroundType::Wall => Color::BLACK,
+                            BackgroundType::Start => Color::ALICE_BLUE,
+                            BackgroundType::End => Color::GREEN,
+                        },
                         custom_size: Some(Vec2::new(
                             CELL_LENGTH - CELL_GAP,
                             CELL_LENGTH - CELL_GAP,
