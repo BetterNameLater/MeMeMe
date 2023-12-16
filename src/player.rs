@@ -1,6 +1,11 @@
 use super::math::vec2i::Vec2i;
-use crate::constantes::{CELL_LENGTH, INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP, PLAYER_Z};
+use crate::constantes::{
+    CELL_LENGTH, INPUT_PLAYER_DOWN, INPUT_PLAYER_LEFT, INPUT_PLAYER_RIGHT, INPUT_PLAYER_UP,
+    PLAYER_Z,
+};
+use crate::ghost_actions::{Action, ActionType, MoveDirection};
 use crate::map::Map;
+use crate::StartTime;
 use bevy::{prelude::*, utils::HashMap};
 
 pub struct PlayerPlugin;
@@ -15,7 +20,7 @@ impl Plugin for PlayerPlugin {
 fn create_player_system(mut commands: Commands) {
     let size = CELL_LENGTH / 2.;
     commands.spawn((
-        Player,
+        Player::default(),
         SpriteBundle {
             sprite: Sprite {
                 color: Color::BEIGE,
@@ -28,8 +33,10 @@ fn create_player_system(mut commands: Commands) {
     ));
 }
 
-#[derive(Component)]
-pub struct Player;
+#[derive(Component, Default)]
+pub struct Player {
+    actions: Vec<Action>,
+}
 
 #[derive(Component)]
 pub struct Ghost;
@@ -38,10 +45,14 @@ pub struct Ghost;
 pub struct MapPosition(Vec2i);
 
 fn player_control_system(
-    mut player_query: Query<&mut Transform, With<Player>>,
+    mut player_trans_query: Query<&mut Transform, With<Player>>,
+    mut player_query: Query<&mut Player>,
     key_inputs: Res<Input<KeyCode>>,
+    time: Res<Time>,
+    mut start_time: ResMut<StartTime>,
 ) {
-    let mut player_position = player_query.single_mut();
+    let mut player_position = player_trans_query.single_mut();
+    let mut player = player_query.single_mut();
     let mut movement = Vec3::ZERO;
 
     let move_key = key_inputs
@@ -51,7 +62,7 @@ fn player_control_system(
             _ => false,
         });
     if let Some(move_key) = move_key {
-        player_position.translation += 32.
+        player_position.translation += CELL_LENGTH
             * match *move_key {
                 INPUT_PLAYER_UP => Vec3::Y,
                 INPUT_PLAYER_DOWN => Vec3::NEG_Y,
@@ -59,5 +70,14 @@ fn player_control_system(
                 INPUT_PLAYER_RIGHT => Vec3::X,
                 _ => unreachable!(),
             };
+        if let Some(start) = start_time.0 {
+            let action_time = time.elapsed_seconds() - start;
+            player.actions.push(Action {
+                action_type: ActionType::Move(MoveDirection::Down),
+                timestamp_seconds: action_time,
+            }); // TODO
+        } else {
+            start_time.0 = Some(time.elapsed_seconds());
+        }
     }
 }
