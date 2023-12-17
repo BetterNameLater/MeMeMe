@@ -7,11 +7,12 @@ mod player;
 mod time;
 
 use crate::constantes::PLAYER_START_TRANSFORM;
-use crate::items::{on_enter_system, PressurePlate};
+use crate::items::{on_enter_system};
 use crate::math::vec2i::Vec2i;
 use crate::player::{ghost_actions_system, GhostActions, Player, PlayerPlugin, RewindEvent};
 use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
+use items::{Population, Enterable};
 use map::*;
 use std::any::Any;
 
@@ -63,7 +64,8 @@ fn setup(mut commands: Commands, mut map_query: Query<&mut Map>) {
             transform: PLAYER_START_TRANSFORM,
             ..default()
         },
-        PressurePlate { level: 1 },
+        Population(0),
+		Enterable,
     ));
 
     let mut map = map_query.single_mut();

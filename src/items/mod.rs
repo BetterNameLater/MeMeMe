@@ -1,5 +1,13 @@
 mod pressure_plate;
 mod event;
 
+
+
+use bevy::ecs::component::Component;
 pub use event::on_enter_system;
-pub use pressure_plate::PressurePlate;
+
+#[derive(Component)]
+pub struct Population(pub u32);
+
+#[derive(Component)]
+pub struct Enterable;
