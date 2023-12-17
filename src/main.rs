@@ -8,11 +8,16 @@ mod math;
 mod player;
 mod time;
 
+use crate::items::systems::toggle::{toggle_on_interact_system, toggle_on_enter_system};
+use crate::items::systems::teleport::{teleporter_activate_system, teleporter_system};
+use crate::items::systems::people_on::count_people_on_system;
+use crate::items::systems::is_activated::update_is_activated_system;
+
+
 use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
 use crate::items::ghost_only::GhostOnly;
-use crate::items::is_on::IsOn;
-use crate::items::people_on::{count_people_on_system, PeopleOn};
+use crate::items::is_usable::IsUsable;
 use crate::items::player_only::PlayerOnly;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
@@ -24,9 +29,11 @@ use crate::player::{
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
 use items::populate_items::populate_items;
-use items::teleport::{self, teleporter_system};
 use map::*;
+use player::interact::{PlayerInteractEvent, GhostInteractEvent};
 use std::any::Any;
+
+
 
 fn main() {
     App::new()
@@ -51,6 +58,19 @@ fn main() {
                     .after(player_input_system),
                 teleporter_system::<GhostOnly, PlayerNewPositionEvent, Player>
                     .after(player_input_system),
+				teleporter_activate_system::<PlayerOnly, Ghost>
+					.after(player_input_system),
+				teleporter_activate_system::<GhostOnly, Player>
+					.after(player_input_system),
+				toggle_on_interact_system::<GhostOnly, PlayerInteractEvent>
+					.after(player_input_system),
+				toggle_on_interact_system::<PlayerOnly, GhostInteractEvent>
+					.after(player_input_system),
+				toggle_on_enter_system::<PlayerOnly, GhostNewPositionEvent>
+					.after(player_input_system),
+				toggle_on_enter_system::<GhostOnly, PlayerNewPositionEvent>
+					.after(player_input_system),
+                update_is_activated_system
             ),
         )
         // assets

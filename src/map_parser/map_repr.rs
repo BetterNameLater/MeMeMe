@@ -2,6 +2,7 @@ use crate::math::vec2i::Vec2i;
 use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, AsyncReadExt, BoxedFuture, LoadContext};
 use bevy::prelude::TypePath;
+use bevy::render::color::Color;
 use bevy::utils::HashMap;
 use serde::Deserialize;
 use serde_repr::Deserialize_repr;
@@ -76,4 +77,5 @@ pub enum ObjectType {
     PressurePlate,
     Door,
     Teleporter,
+	Lever
 }
