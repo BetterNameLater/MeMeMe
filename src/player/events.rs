@@ -1,5 +1,5 @@
 use crate::math::vec2i::Vec2i;
-use bevy::prelude::{Entity, Event};
+use bevy::prelude::*;
 
 #[derive(Event)]
 pub struct RewindEvent;
