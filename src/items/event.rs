@@ -14,9 +14,9 @@ pub fn on_enter_system(
 
         // PressurePlate
         for (mut pressure_plate, transform) in pressure_plate_query.iter_mut() {
-            if Vec2i::from(transform.translation) == event.0 {
+            if event.0 == transform.translation.into() {
                 pressure_plate.level += 1;
-                print!("on enter {:?}\n", pressure_plate.level);
+                println!("on enter {:?}", pressure_plate.level);
                 break;
             }
         }
@@ -32,9 +32,9 @@ pub fn on_exit_system(
 
         // PressurePlate
         for (mut pressure_plate, transform) in pressure_plate_query.iter_mut() {
-            if Vec2i::from(transform.translation) == event.0 {
+            if event.0 == transform.translation.into() {
                 pressure_plate.level += 1;
-                print!("on enter {:?}\n", pressure_plate.level);
+                println!("on enter {:?}", pressure_plate.level);
                 break;
             }
         }

@@ -19,9 +19,9 @@ impl From<Vec2> for Vec2i {
     }
 }
 
-impl Into<Vec2> for Vec2i {
-    fn into(self) -> Vec2 {
-        Vec2::new(self.x as f32, self.y as f32)
+impl From<Vec2i> for Vec2 {
+    fn from(val: Vec2i) -> Self {
+        Vec2::new(val.x as f32, val.y as f32)
     }
 }
 

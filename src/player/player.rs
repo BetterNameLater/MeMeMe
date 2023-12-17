@@ -117,7 +117,7 @@ fn player_input_system(
         /*
         TODO : OnEnterEvent
          */
-        on_enter_event.send(OnEnterEvent(Vec2i::from(player_transform.translation)));
+        on_enter_event.send(OnEnterEvent(player_transform.translation.into()));
         return;
     }
 
