@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::is_activated::IsActivated;
+use super::is_usable::IsUsable;
 use super::{ghost_only::GhostOnly, people_on::PeopleOn};
 use crate::player::events::NewPositionEvent;
 use crate::player::interact::InteractEvent;
@@ -16,7 +18,7 @@ pub struct Toggle;
 pub fn interact_toggle_system<W: Component, E: InteractEvent>(
     mut player_new_position_event: EventReader<E>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    mut levers_query: Query<&IsActivated, (With<IsUsable>, With<Toggle>, Without<W>)>,
+    mut levers_query: Query<&mut IsActivated, (With<IsUsable>, With<Toggle>, Without<W>)>,
 ) {
     // TODO
     if object_map_query.is_empty() {

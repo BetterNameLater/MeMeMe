@@ -13,7 +13,7 @@ pub struct PeopleOn(pub usize);
 
 pub fn count_people_on_system<W: Component, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,
-    mut player_only_people_on_query: Query<&mut PeopleOn, Without<W>>,
+    mut player_only_people_on_query: Query<&mut PeopleOn, (With<IsUsable>, Without<W>)>,
     mut object_map_query: Query<&Map, With<ObjectMap>>,
 ) {
     // TODO le system ne devait pas ce lancé tant que la map n'est pas lancée

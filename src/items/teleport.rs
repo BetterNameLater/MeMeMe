@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+use super::is_usable::IsUsable;
 use super::{ghost_only::GhostOnly, people_on::PeopleOn};
 use crate::player::events::NewPositionEvent;
 use crate::{
@@ -14,7 +15,7 @@ pub struct Teleporter(pub Vec2i);
 pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
     mut player_new_position_event: EventReader<E>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    teleporter_query: Query<&Teleporter, Without<W>>,
+    teleporter_query: Query<&Teleporter, (With<IsUsable>, Without<W>)>,
     mut player_query: Query<&mut Transform, With<T>>,
 ) {
     // TODO
