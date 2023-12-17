@@ -10,3 +10,5 @@ pub mod player_only;
 pub mod populate_items;
 
 pub mod teleport;
+
+pub mod lever;

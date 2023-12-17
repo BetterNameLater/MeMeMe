@@ -23,9 +23,11 @@ use crate::player::{
 };
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
+use items::lever::interact_toggle_system;
 use items::populate_items::populate_items;
 use items::teleport::{self, teleporter_system};
 use map::*;
+use player::interact::{PlayerInteractEvent, GhostInteractEvent};
 use std::any::Any;
 
 fn main() {
@@ -51,6 +53,10 @@ fn main() {
                     .after(player_input_system),
                 teleporter_system::<GhostOnly, PlayerNewPositionEvent, Player>
                     .after(player_input_system),
+				interact_toggle_system::<GhostOnly, PlayerInteractEvent>
+					.after(player_input_system),
+				interact_toggle_system::<PlayerOnly, GhostInteractEvent>
+					.after(player_input_system),
             ),
         )
         // assets

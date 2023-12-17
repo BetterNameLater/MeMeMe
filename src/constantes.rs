@@ -12,3 +12,4 @@ pub const INPUT_PLAYER_DOWN: KeyCode = KeyCode::Down;
 pub const INPUT_PLAYER_LEFT: KeyCode = KeyCode::Left;
 pub const INPUT_PLAYER_RIGHT: KeyCode = KeyCode::Right;
 pub const INPUT_PLAYER_REWIND: KeyCode = KeyCode::Space;
+pub const INPUT_PLAYER_INTERACT: KeyCode = KeyCode::E;

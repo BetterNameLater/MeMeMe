@@ -2,6 +2,7 @@ use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
 use crate::items::dependencies::Dependencies;
 use crate::items::ghost_only::GhostOnly;
 use crate::items::is_on::IsOn;
+use crate::items::lever::Toggle;
 use crate::items::people_on::PeopleOn;
 use crate::items::player_only::PlayerOnly;
 use crate::map_parser::map_repr::{ObjectRepr, ObjectType};
@@ -59,6 +60,20 @@ pub fn populate_items(
                 commands.entity(item).insert(SpriteBundle {
                     sprite: Sprite {
                         color: Color::BLACK,
+                        custom_size: Some(Vec2::new(size, size)),
+                        ..default()
+                    },
+                    // TODO in a parameter
+                    transform: position.to_initial_map_pos(1),
+                    ..default()
+                });
+            },
+			ObjectType::Lever => {
+                println!("{:?}", object.destination);
+                commands.entity(item).insert(Toggle(object.start_state));
+                commands.entity(item).insert(SpriteBundle {
+                    sprite: Sprite {
+                        color: Color::RED,
                         custom_size: Some(Vec2::new(size, size)),
                         ..default()
                     },

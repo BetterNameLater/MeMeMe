@@ -58,6 +58,9 @@ pub struct ObjectRepr {
     pub position: Vec2i,
     pub destination: Option<Vec2i>,
 
+    #[serde(default)]
+    pub start_state: bool,
+
     #[serde(rename = "type")]
     pub object_type: ObjectType,
     #[serde(default)]
@@ -76,4 +79,5 @@ pub enum ObjectType {
     PressurePlate,
     Door,
     Teleporter,
+	Lever,
 }

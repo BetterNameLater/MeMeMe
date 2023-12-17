@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use super::{ghost_only::GhostOnly, people_on::PeopleOn};
 use crate::player::events::NewPositionEvent;
+use crate::player::interact::InteractEvent;
 use crate::{
     map::{Map, ObjectMap},
     math::vec2i::Vec2i,
@@ -9,13 +10,13 @@ use crate::{
 };
 
 #[derive(Component)]
-pub struct Teleporter(pub Vec2i);
+pub struct Toggle(pub bool);
 
-pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
+
+pub fn interact_toggle_system<W: Component, E: InteractEvent>(
     mut player_new_position_event: EventReader<E>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    teleporter_query: Query<&Teleporter, Without<W>>,
-    mut player_query: Query<&mut Transform, With<T>>,
+    mut levers_query: Query<&mut Toggle, Without<W>>,
 ) {
     // TODO
     if object_map_query.is_empty() {
@@ -23,17 +24,15 @@ pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
     }
     let map = object_map_query.single();
     for event in player_new_position_event.read() {
-        let mut player = player_query.get_mut(event.get_entity());
-		let item_at = map.cells.get(&event.get_now());
-        if player.is_err() || item_at.is_none() {
+		let item_at = map.cells.get(&event.get_pos());
+        if item_at.is_none() {
             continue;
         }
-        let mut player = player.unwrap();
         let item_at = item_at.unwrap();
 
-        if let Ok(destination) = teleporter_query.get(*item_at) {
-            player.translation = Vec3::new(destination.0.x as f32, destination.0.y as f32, 1.);
-            println!("teleporting player");
+        if let Ok(mut toggle) = levers_query.get_mut(*item_at) {
+			toggle.0 = !toggle.0;
+            println!("lever toggled to {}", toggle.0);
         }
     }
 }
