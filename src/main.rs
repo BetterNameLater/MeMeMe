@@ -10,15 +10,16 @@ mod time;
 
 use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
+use crate::items::ghost_only::GhostOnly;
 use crate::items::is_on::IsOn;
-use crate::items::people_on::{
-    count_people_on_ghost_only_system, count_people_on_player_only_system, count_people_on_system,
-    PeopleOn,
-};
+use crate::items::people_on::{count_people_on_system, PeopleOn};
+use crate::items::player_only::PlayerOnly;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::player::{player_input_system, PlayerPlugin};
-use crate::player::{ghost_actions_system, GhostActions, RewindEvent};
+use crate::player::{
+    ghost_actions_system, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent,
+};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
 use items::populate_items::populate_items;
@@ -40,9 +41,10 @@ fn main() {
             Update,
             (
                 elapsed_time_from_start_rewind_system,
-                count_people_on_system.after(player_input_system),
-                count_people_on_ghost_only_system.after(player_input_system),
-                count_people_on_player_only_system.after(player_input_system),
+                count_people_on_system::<GhostOnly, PlayerNewPositionEvent>
+                    .after(player_input_system),
+                count_people_on_system::<PlayerOnly, GhostNewPositionEvent>
+                    .after(player_input_system),
             ),
         )
         // assets
