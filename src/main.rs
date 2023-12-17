@@ -29,6 +29,7 @@ use items::teleport::{self, teleporter_system};
 use map::*;
 use player::interact::{PlayerInteractEvent, GhostInteractEvent};
 use std::any::Any;
+use crate::items::is_activated::update_is_activated_system;
 
 fn main() {
     App::new()
@@ -57,6 +58,7 @@ fn main() {
 					.after(player_input_system),
 				interact_toggle_system::<PlayerOnly, GhostInteractEvent>
 					.after(player_input_system),
+                update_is_activated_system
             ),
         )
         // assets

@@ -6,6 +6,7 @@ use crate::player::events::NewPositionEvent;
 use crate::player::player::Player;
 use crate::player::{Ghost, GhostNewPositionEvent, PlayerNewPositionEvent};
 use bevy::prelude::*;
+use crate::items::is_usable::IsUsable;
 
 /// The number of [`Ghost`] and [`Player`] on this position
 #[derive(Component)]

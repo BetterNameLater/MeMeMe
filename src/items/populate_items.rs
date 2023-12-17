@@ -14,8 +14,8 @@ use bevy::utils::HashMap;
 use super::player_only::SingleUse;
 use super::teleport::Teleporter;
 
-#[derive(Component)]
-pub struct Item;
+// #[derive(Component)]
+// pub struct Item;
 
 pub fn populate_items(
     mut commands: &mut Commands,
@@ -26,7 +26,7 @@ pub fn populate_items(
     let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
-        let item = commands.spawn(Item).id();
+        let item = commands.spawn(IsActivated(false)).id();
         let position = Vec2i::new(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,
@@ -73,7 +73,6 @@ pub fn populate_items(
                 println!("{:?}", object.destination);
                 commands.entity(item).insert(Toggle);
                 commands.entity(item).insert(IsUsable);
-                commands.entity(item).insert(IsActivated(false));
                 commands.entity(item).insert(SpriteBundle {
                     sprite: Sprite {
                         color: Color::RED,
