@@ -1,7 +1,7 @@
 use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
 use crate::items::dependencies::Dependencies;
 use crate::items::ghost_only::GhostOnly;
-use crate::items::is_on::IsOn;
+use crate::items::is_usable::IsUsable;
 use crate::items::people_on::PeopleOn;
 use crate::items::player_only::PlayerOnly;
 use crate::map_parser::map_repr::{ObjectRepr, ObjectType};
@@ -36,7 +36,7 @@ pub fn populate_items(
             ObjectType::PressurePlate => {
                 println!("ma pressure plate");
                 commands.entity(item).insert(PeopleOn(0));
-                commands.entity(item).insert(IsOn(false));
+                commands.entity(item).insert(IsUsable(false));
                 commands.entity(item).insert(SpriteBundle {
                     sprite: Sprite {
                         color: Color::LIME_GREEN,
