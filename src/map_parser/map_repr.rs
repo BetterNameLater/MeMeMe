@@ -60,6 +60,9 @@ pub struct ObjectRepr {
     pub position: Vec2i,
     #[serde(skip)]
     pub depends_on: Vec<String>,
+	pub ghost_only: bool,
+	pub player_only: bool,
+	pub single_use: bool,
 }
 
 #[derive(Deserialize)]

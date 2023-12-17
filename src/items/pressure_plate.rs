@@ -3,8 +3,12 @@ use crate::items::ghost_only::GhostOnly;
 use crate::items::is_on::IsOn;
 use crate::items::people_on::PeopleOn;
 use crate::items::player_only::PlayerOnly;
+use crate::map_parser::map_repr::{ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
+use bevy::utils::HashMap;
+
+use super::player_only::SingleUse;
 
 // #[derive(Component)]
 // pub struct PressurePlate {
@@ -12,21 +16,29 @@ use bevy::prelude::*;
 // }
 //
 
-pub fn spawn_pressure_plate(mut commands: Commands) {
-    let size = CELL_LENGTH / 3.;
-    commands.spawn((
-        PeopleOn(0),
-        IsOn(false),
-        // GhostOnly,
-        SpriteBundle {
-            sprite: Sprite {
-                color: Color::LIME_GREEN,
-                custom_size: Some(Vec2::new(size, size)),
-                ..default()
-            },
-            // TODO in a parameter
-            transform: Vec2i::new(32, 32).to_initial_map_pos(1),
-            ..default()
-        },
-    ));
+#[derive(Component)]
+pub struct Item;
+
+pub fn spawn_pressure_plate(mut commands: Commands, objects: HashMap<String, ObjectRepr>) {
+
+	for (key, object) in objects.iter() {
+		let item = commands.spawn(Item).id();
+
+		match object.object_type {
+			ObjectType::PressurePlate => {
+				commands.entity(item).insert(PeopleOn(0));
+				commands.entity(item).insert(IsOn(false));
+			},
+			_ => {}	
+		}
+		
+		if (object.ghost_only) {
+			commands.entity(item).insert(GhostOnly);
+		} else if (object.player_only) {
+			commands.entity(item).insert(PlayerOnly);
+		} else if (object.single_use) {
+			commands.entity(item).insert(SingleUse);
+		}
+
+	}
 }
