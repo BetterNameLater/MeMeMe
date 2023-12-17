@@ -9,6 +9,9 @@ mod time;
 
 use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
+use crate::items::is_on::IsOn;
+use crate::items::people_on::PeopleOn;
+use crate::items::pressure_plate::spawn_pressure_plate;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::{ghost_actions_system, GhostActions, Player, PlayerPlugin, RewindEvent};
@@ -87,4 +90,5 @@ fn check_levels_loaded_system(
                 })
         });
     commands.spawn(map);
+    spawn_pressure_plate(commands);
 }

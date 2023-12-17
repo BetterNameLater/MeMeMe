@@ -1,4 +1,5 @@
 use bevy::math::{Vec2, Vec3};
+use bevy::prelude::Transform;
 use serde::Deserialize;
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug)]
@@ -28,5 +29,8 @@ impl From<Vec2i> for Vec2 {
 impl Vec2i {
     pub fn new(x: i32, y: i32) -> Vec2i {
         Vec2i { x, y }
+    }
+    pub fn to_initial_map_pos(&self, z: i32) -> Transform {
+        Transform::from_xyz(self.x as f32, self.y as f32, z as f32)
     }
 }

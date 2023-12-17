@@ -1,12 +1,9 @@
-mod dependencies;
-mod door;
-mod event;
-mod ghost_only;
-mod is_enabled;
-mod is_on;
-mod people_on;
-mod player_only;
-mod pressure_plate;
-
-// pub use event::on_enter_system;
-pub use pressure_plate::PressurePlate;
+pub mod dependencies;
+pub mod door;
+pub mod event;
+pub mod ghost_only;
+pub mod is_enabled;
+pub mod is_on;
+pub mod people_on;
+pub mod player_only;
+pub mod pressure_plate;
