@@ -55,19 +55,19 @@ pub enum BackgroundType {
 
 #[derive(Deserialize)]
 pub struct ObjectRepr {
+    pub position: Vec2i,
+    pub destination: Option<Vec2i>,
+
     #[serde(rename = "type")]
     pub object_type: ObjectType,
-    pub position: Vec2i,
-    #[serde(skip)]
+    #[serde(default)]
     pub depends_on: Vec<String>,
-    #[serde(skip)]
+    #[serde(default)]
     pub ghost_only: bool,
-    #[serde(skip)]
+    #[serde(default)]
     pub player_only: bool,
-    #[serde(skip)]
+    #[serde(default)]
     pub single_use: bool,
-
-    pub destination: Option<Vec2i>,
 }
 
 #[derive(Deserialize)]

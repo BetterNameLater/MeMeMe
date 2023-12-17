@@ -26,6 +26,7 @@
     },
     "teleporter_1": {
       "type": "teleporter",
+      "ghost_only": true,
       "depends_on": [
         "plaque_1"
       ],

@@ -16,14 +16,15 @@ use crate::items::people_on::{count_people_on_system, PeopleOn};
 use crate::items::player_only::PlayerOnly;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
-use crate::player::player::{player_input_system, PlayerPlugin};
+use crate::player::player::{player_input_system, Player, PlayerPlugin};
 use crate::player::{
-    ghost_actions_system, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent,
+    ghost_actions_system, Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent,
+    RewindEvent,
 };
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
 use items::populate_items::populate_items;
-use items::teleport::{self, teleporter_player};
+use items::teleport::{self, teleporter_system};
 use map::*;
 use std::any::Any;
 
@@ -46,7 +47,10 @@ fn main() {
                     .after(player_input_system),
                 count_people_on_system::<PlayerOnly, GhostNewPositionEvent>
                     .after(player_input_system),
-                teleporter_player.after(player_input_system),
+                teleporter_system::<PlayerOnly, GhostNewPositionEvent, Ghost>
+                    .after(player_input_system),
+                teleporter_system::<GhostOnly, PlayerNewPositionEvent, Player>
+                    .after(player_input_system),
             ),
         )
         // assets
