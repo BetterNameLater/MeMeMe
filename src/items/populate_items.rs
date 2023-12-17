@@ -38,7 +38,7 @@ pub fn populate_items(
             ObjectType::PressurePlate => {
                 println!("ma pressure plate");
                 commands.entity(item).insert(PeopleOn(0));
-                commands.entity(item).insert(IsUsable(false));
+                commands.entity(item).insert(IsUsable);
                 commands.entity(item).insert(SpriteBundle {
                     sprite: Sprite {
                         color: Color::LIME_GREEN,
@@ -72,7 +72,7 @@ pub fn populate_items(
             ObjectType::Lever => {
                 println!("{:?}", object.destination);
                 commands.entity(item).insert(Toggle);
-                commands.entity(item).insert(IsUsable(false));
+                commands.entity(item).insert(IsUsable);
                 commands.entity(item).insert(IsActivated(false));
                 commands.entity(item).insert(SpriteBundle {
                     sprite: Sprite {
