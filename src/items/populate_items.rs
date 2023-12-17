@@ -12,9 +12,6 @@ use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 use bevy::utils::HashMap;
 
-// #[derive(Component)]
-// pub struct Item;
-
 pub fn populate_items(
     mut commands: &mut Commands,
     objects: &HashMap<String, ObjectRepr>,

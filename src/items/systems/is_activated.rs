@@ -10,19 +10,17 @@ pub struct IsActivated(pub bool);
 
 pub fn update_is_activated_system(
     mut commands: Commands,
-    dependencies: Query<(Entity, &IsActivated)>,
-    usables_query: Query<(Entity, &Dependencies, Option<&IsUsable>)>,
+    is_activated_query: Query<(Entity, &IsActivated)>,
+    is_usable_and_dependencies_query: Query<(Entity, &Dependencies, Option<&IsUsable>)>,
 ) {
-    for (entity, deps_list, current_state) in &usables_query {
-        let my_dependencies = dependencies
+    for (is_usable_entity, is_usable_dependencies, is_usable) in &is_usable_and_dependencies_query {
+        let my_dependencies = is_activated_query
             .iter()
-            .filter(|(ent, a)| deps_list.0.contains(ent) && !a.0);
-        if my_dependencies.count() == 0 {
-            if current_state.is_none() {
-                commands.entity(entity).insert(IsUsable);
-            }
-        } else if let Some(_) = current_state {
-            commands.entity(entity).remove::<IsUsable>();
+            .filter(|(id, is_activated)| is_usable_dependencies.0.contains(id) && !is_activated.0);
+        if my_dependencies.count() == 0 && is_usable.is_none() {
+            commands.entity(is_usable_entity).insert(IsUsable);
+        } else if let Some(_) = is_usable {
+            commands.entity(is_usable_entity).remove::<IsUsable>();
         }
     }
 }

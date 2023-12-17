@@ -1,13 +1,13 @@
 use crate::items::ghost_only::GhostOnly;
 use crate::items::is_usable::IsUsable;
 use crate::items::player_only::PlayerOnly;
+use crate::items::systems::is_activated::IsActivated;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::player::events::NewPositionEvent;
 use crate::player::player::Player;
 use crate::player::{Ghost, GhostNewPositionEvent, PlayerNewPositionEvent};
 use bevy::prelude::*;
-use crate::items::systems::is_activated::IsActivated;
 
 /// The number of [`Ghost`] and [`Player`] on this position
 #[derive(Component)]
