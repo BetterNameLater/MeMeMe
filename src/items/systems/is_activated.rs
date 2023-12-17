@@ -18,11 +18,11 @@ pub fn update_is_activated_system(
             .iter()
             .filter(|(ent, a)| deps_list.0.contains(ent) && !a.0);
         if my_dependencies.count() == 0 {
-			if current_state.is_none() {
-            	commands.entity(entity).insert(IsUsable);
-			}
+            if current_state.is_none() {
+                commands.entity(entity).insert(IsUsable);
+            }
         } else if let Some(_) = current_state {
-			commands.entity(entity).remove::<IsUsable>();
+            commands.entity(entity).remove::<IsUsable>();
         }
     }
 }

@@ -3,8 +3,8 @@ use bevy::prelude::*;
 
 pub trait InteractEvent: Event {
     fn get_pos(&self) -> Vec2i;
-	fn get_entity(&self) -> Entity;
-	fn new(pos: Vec2i, entity: Entity) -> Self;
+    fn get_entity(&self) -> Entity;
+    fn new(pos: Vec2i, entity: Entity) -> Self;
 }
 
 #[derive(Event)]
@@ -18,10 +18,7 @@ impl InteractEvent for PlayerInteractEvent {
         self.0.entity
     }
     fn new(pos: Vec2i, entity: Entity) -> Self {
-        Self(InteractEventData {
-            pos,
-            entity,
-        })
+        Self(InteractEventData { pos, entity })
     }
 }
 
@@ -36,10 +33,7 @@ impl InteractEvent for GhostInteractEvent {
         self.0.entity
     }
     fn new(pos: Vec2i, entity: Entity) -> Self {
-        Self(InteractEventData {
-			pos,
-            entity,
-        })
+        Self(InteractEventData { pos, entity })
     }
 }
 

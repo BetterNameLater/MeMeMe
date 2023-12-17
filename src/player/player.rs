@@ -1,7 +1,7 @@
 use super::actions::{Action, ActionType};
 use super::events::{GhostNewPositionEvent, NewPositionEvent, PlayerNewPositionEvent, RewindEvent};
 use super::ghost::Ghost;
-use super::interact::{PlayerInteractEvent, InteractEvent, GhostInteractEvent};
+use super::interact::{GhostInteractEvent, InteractEvent, PlayerInteractEvent};
 use super::move_direction::MoveDirection;
 use super::{ghost_actions_system, GhostActions};
 use crate::constantes::*;
@@ -93,7 +93,7 @@ pub fn player_input_system(
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut rewind_event: EventWriter<RewindEvent>,
     mut player_new_position_event: EventWriter<PlayerNewPositionEvent>,
-	mut player_interact_event: EventWriter<PlayerInteractEvent>,
+    mut player_interact_event: EventWriter<PlayerInteractEvent>,
 ) {
     // move actions
     let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
@@ -102,7 +102,7 @@ pub fn player_input_system(
             INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT
         )
     });
-	let (mut player_transform, player_entity) = player_transform_query.single_mut();
+    let (mut player_transform, player_entity) = player_transform_query.single_mut();
 
     if let Some(move_key) = move_key {
         let move_direction = MoveDirection::from_key_code(*move_key);
@@ -137,12 +137,12 @@ pub fn player_input_system(
         match action_key {
             &INPUT_PLAYER_REWIND => {
                 rewind_event.send(RewindEvent);
-            },
-			&INPUT_PLAYER_INTERACT => {
+            }
+            &INPUT_PLAYER_INTERACT => {
                 player_interact_event.send(PlayerInteractEvent::new(
-					player_transform.translation.into(),
-					player_entity,
-				));
+                    player_transform.translation.into(),
+                    player_entity,
+                ));
             }
             _ => unreachable!(),
         }
@@ -167,7 +167,7 @@ impl Plugin for PlayerPlugin {
             .add_event::<RewindEvent>()
             .add_event::<PlayerNewPositionEvent>()
             .add_event::<GhostNewPositionEvent>()
-			.add_event::<PlayerInteractEvent>()
-			.add_event::<GhostInteractEvent>();
+            .add_event::<PlayerInteractEvent>()
+            .add_event::<GhostInteractEvent>();
     }
 }

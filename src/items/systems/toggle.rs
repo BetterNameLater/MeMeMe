@@ -27,14 +27,14 @@ pub fn toggle_on_interact_system<W: Component, E: InteractEvent>(
     }
     let map = object_map_query.single();
     for event in player_new_position_event.read() {
-		let item_at = map.cells.get(&event.get_pos());
+        let item_at = map.cells.get(&event.get_pos());
         if item_at.is_none() {
             continue;
         }
         let item_at = item_at.unwrap();
 
         if let Ok(mut toggle) = levers_query.get_mut(*item_at) {
-			toggle.0 = !toggle.0;
+            toggle.0 = !toggle.0;
             println!("lever toggled to {}", toggle.0);
         }
     }
@@ -52,14 +52,14 @@ pub fn toggle_on_enter_system<W: Component, E: NewPositionEvent>(
     }
     let map = object_map_query.single();
     for event in player_new_position_event.read() {
-		let item_at = map.cells.get(&event.get_now());
+        let item_at = map.cells.get(&event.get_now());
         if item_at.is_none() {
             continue;
         }
         let item_at = item_at.unwrap();
 
         if let Ok(mut toggle) = levers_query.get_mut(*item_at) {
-			toggle.0 = !toggle.0;
+            toggle.0 = !toggle.0;
             println!("lever toggled to {}", toggle.0);
         }
     }

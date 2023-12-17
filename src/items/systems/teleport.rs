@@ -47,15 +47,20 @@ pub fn teleporter_activate_system<W: Component, T: Component>(
     teleporter_query: Query<(&Teleporter, &Transform), (Changed<IsUsable>, Without<W>)>,
     mut entities_query: Query<(Entity, &mut Transform), (With<T>, Without<Teleporter>)>,
 ) {
-	let mut moved: HashMap<Entity, ()> = HashMap::new();
-	for (dest, src) in teleporter_query.iter() {
-        let mut entities: Vec<(Entity, Mut<'_, bevy::prelude::Transform>)> = entities_query.iter_mut().filter(|(_, e)| e.translation.x == src.translation.x && e.translation.y == src.translation.y).collect();
-		for (entity, transform) in entities.iter_mut() {
-			if (moved.contains_key(entity)) {
-				continue;
-			}
-			transform.translation = Vec3::new(dest.0.x as f32, dest.0.y as f32, 1.);
-			moved.insert(entity.clone(), ());
-		}
-	}
+    let mut moved: HashMap<Entity, ()> = HashMap::new();
+    for (dest, src) in teleporter_query.iter() {
+        let mut entities: Vec<(Entity, Mut<'_, bevy::prelude::Transform>)> = entities_query
+            .iter_mut()
+            .filter(|(_, e)| {
+                e.translation.x == src.translation.x && e.translation.y == src.translation.y
+            })
+            .collect();
+        for (entity, transform) in entities.iter_mut() {
+            if (moved.contains_key(entity)) {
+                continue;
+            }
+            transform.translation = Vec3::new(dest.0.x as f32, dest.0.y as f32, 1.);
+            moved.insert(entity.clone(), ());
+        }
+    }
 }

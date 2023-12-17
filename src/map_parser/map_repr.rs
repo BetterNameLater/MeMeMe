@@ -77,5 +77,5 @@ pub enum ObjectType {
     PressurePlate,
     Door,
     Teleporter,
-	Lever
+    Lever,
 }
