@@ -6,4 +6,5 @@ pub mod is_enabled;
 pub mod is_on;
 pub mod people_on;
 pub mod player_only;
-pub mod pressure_plate;
+
+pub mod populate_items;

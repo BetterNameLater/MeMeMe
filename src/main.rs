@@ -15,13 +15,13 @@ use crate::items::people_on::{
     count_people_on_ghost_only_system, count_people_on_player_only_system, count_people_on_system,
     PeopleOn,
 };
-use crate::items::pressure_plate::spawn_pressure_plate;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::player::{player_input_system, PlayerPlugin};
 use crate::player::{ghost_actions_system, GhostActions, RewindEvent};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
+use items::populate_items::populate_items;
 use map::*;
 use std::any::Any;
 
@@ -105,5 +105,5 @@ fn check_levels_loaded_system(
     commands.spawn((map, WorldMap));
     // TODO by the albaud
     //  commands.spawn((object_map, ObjectMap));
-    spawn_pressure_plate(commands);
+    let items = populate_items(commands, &level_example.objects);
 }
