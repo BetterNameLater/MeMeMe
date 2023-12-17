@@ -52,6 +52,18 @@
 		  "x": 7,
 		  "y": 3
 		}
+	  },
+	  "lever_1": {
+		"type": "lever",
+		"depends_on": [
+			"plaque_1"
+		  ],
+		  "start_state": false,
+		  "position": {
+			"x": 1,
+			"y": 0
+		  }
+
 	  }
   }
 }
