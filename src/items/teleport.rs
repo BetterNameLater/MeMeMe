@@ -24,15 +24,14 @@ pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
     let map = object_map_query.single();
     for event in player_new_position_event.read() {
         let mut player = player_query.get_mut(event.get_entity());
-        if player.is_err() {
+		let item_at = map.cells.get(&event.get_now());
+        if player.is_err() || item_at.is_none() {
             continue;
         }
         let mut player = player.unwrap();
-        if map.cells.get(&event.get_now()).is_none() {
-            continue;
-        }
-        let pos = map.cells.get(&event.get_now()).unwrap();
-        if let Ok(destination) = teleporter_query.get(*pos) {
+        let item_at = item_at.unwrap();
+
+        if let Ok(destination) = teleporter_query.get(*item_at) {
             player.translation = Vec3::new(destination.0.x as f32, destination.0.y as f32, 1.);
             println!("teleporting player");
         }

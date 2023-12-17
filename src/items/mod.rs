@@ -6,8 +6,6 @@ pub mod is_activated;
 pub mod is_usable;
 pub mod people_on;
 pub mod player_only;
-
 pub mod populate_items;
-
-pub mod teleport;
 pub mod lever;
+pub mod teleport;
