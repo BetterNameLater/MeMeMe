@@ -10,18 +10,21 @@ mod time;
 
 use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
+use crate::items::ghost_only::GhostOnly;
 use crate::items::is_on::IsOn;
-use crate::items::people_on::{
-    count_people_on_ghost_only_system, count_people_on_player_only_system, count_people_on_system,
-    PeopleOn,
-};
-use crate::items::pressure_plate::spawn_pressure_plate;
+use crate::items::people_on::{count_people_on_system, PeopleOn};
+use crate::items::player_only::PlayerOnly;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
-use crate::player::player::{player_input_system, PlayerPlugin};
-use crate::player::{ghost_actions_system, GhostActions, RewindEvent};
+use crate::player::player::{player_input_system, Player, PlayerPlugin};
+use crate::player::{
+    ghost_actions_system, Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent,
+    RewindEvent,
+};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
+use items::populate_items::populate_items;
+use items::teleport::{self, teleporter_system};
 use map::*;
 use std::any::Any;
 
@@ -40,9 +43,14 @@ fn main() {
             Update,
             (
                 elapsed_time_from_start_rewind_system,
-                count_people_on_system.after(player_input_system),
-                count_people_on_ghost_only_system.after(player_input_system),
-                count_people_on_player_only_system.after(player_input_system),
+                count_people_on_system::<GhostOnly, PlayerNewPositionEvent>
+                    .after(player_input_system),
+                count_people_on_system::<PlayerOnly, GhostNewPositionEvent>
+                    .after(player_input_system),
+                teleporter_system::<PlayerOnly, GhostNewPositionEvent, Ghost>
+                    .after(player_input_system),
+                teleporter_system::<GhostOnly, PlayerNewPositionEvent, Player>
+                    .after(player_input_system),
             ),
         )
         // assets
@@ -80,7 +88,7 @@ fn check_levels_loaded_system(
         .get(state.level_1_handle.as_ref().unwrap())
         .unwrap();
 
-    let mut map = Map::default();
+    let mut world_map = Map::default();
 
     level_example
         .map
@@ -92,7 +100,7 @@ fn check_levels_loaded_system(
                 .iter()
                 .enumerate()
                 .for_each(|(x, background_type)| {
-                    map.spawn_cell(
+                    world_map.spawn_cell(
                         &mut commands,
                         Vec2i {
                             x: x as i32,
@@ -102,6 +110,8 @@ fn check_levels_loaded_system(
                     )
                 })
         });
-    commands.spawn(map);
-    spawn_pressure_plate(commands);
+    commands.spawn((world_map, WorldMap));
+    let items = populate_items(&mut commands, &level_example.objects);
+    let object_map = Map { cells: items };
+    commands.spawn((object_map, ObjectMap));
 }
