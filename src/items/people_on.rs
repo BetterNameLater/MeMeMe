@@ -6,6 +6,7 @@ use crate::player::events::NewPositionEvent;
 use crate::player::player::Player;
 use crate::player::{Ghost, GhostNewPositionEvent, PlayerNewPositionEvent};
 use bevy::prelude::*;
+use crate::items::is_usable::IsUsable;
 
 use super::is_activated::{IsActivated, self};
 use super::is_usable::IsUsable;
