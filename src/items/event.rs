@@ -1,11 +1,11 @@
 use crate::items::pressure_plate::PressurePlate;
 use crate::math::vec2i::Vec2i;
-use crate::player::{OnEnterEvent, RewindEvent};
+use crate::player::{PlayerNewPositionEvent, RewindEvent};
 use bevy::prelude::{EventReader, Query};
 use bevy::{prelude::*, transform};
 
 pub fn on_enter_system(
-    mut rewind_event: EventReader<OnEnterEvent>,
+    mut rewind_event: EventReader<PlayerNewPositionEvent>,
     // mut enterable_items: Query<(&mut Enterable, &Transform)>,
     mut pressure_plate_query: Query<(&mut PressurePlate, &Transform)>,
 ) {
@@ -24,7 +24,7 @@ pub fn on_enter_system(
 }
 
 pub fn on_exit_system(
-    mut rewind_event: EventReader<OnEnterEvent>,
+    mut rewind_event: EventReader<PlayerNewPositionEvent>,
     mut pressure_plate_query: Query<(&mut PressurePlate, &Transform)>,
 ) {
     for event in rewind_event.read() {

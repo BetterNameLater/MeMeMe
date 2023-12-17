@@ -5,4 +5,7 @@ use bevy::prelude::Event;
 pub struct RewindEvent;
 
 #[derive(Event)]
-pub struct OnEnterEvent(pub Vec2i);
+pub struct PlayerNewPositionEvent(pub Vec2i);
+
+#[derive(Event)]
+pub struct GhostNewPositionEvent(pub Vec2i);

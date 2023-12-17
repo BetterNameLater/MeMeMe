@@ -1,5 +1,5 @@
 use super::actions::{Action, ActionType};
-use super::events::{OnEnterEvent, RewindEvent};
+use super::events::{GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent};
 use super::ghost::Ghost;
 use super::move_direction::MoveDirection;
 use super::GhostActions;
@@ -91,12 +91,12 @@ fn player_input_system(
     mut start_time: ResMut<StartTime>,
     mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut rewind_event: EventWriter<RewindEvent>,
-    mut on_enter_event: EventWriter<OnEnterEvent>,
+    mut player_new_position_event: EventWriter<PlayerNewPositionEvent>,
 ) {
     // move actions
-    let move_key = key_inputs.get_just_pressed().find(|key_code| {
+    let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
         matches!(
-            **key_code,
+            key_code,
             INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT
         )
     });
@@ -117,7 +117,7 @@ fn player_input_system(
         /*
         TODO : OnEnterEvent
          */
-        on_enter_event.send(OnEnterEvent(player_transform.translation.into()));
+        player_new_position_event.send(PlayerNewPositionEvent(player_transform.translation.into()));
         return;
     }
 
@@ -144,6 +144,7 @@ impl Plugin for PlayerPlugin {
         app.add_systems(Startup, create_player_system)
             .add_systems(Update, (player_input_system, on_player_rewind_system))
             .add_event::<RewindEvent>()
-            .add_event::<OnEnterEvent>();
+            .add_event::<PlayerNewPositionEvent>()
+            .add_event::<GhostNewPositionEvent>();
     }
 }
