@@ -10,6 +10,8 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct PeopleOn(pub usize);
 
+pub struct Destination(pub usize);
+
 pub fn count_people_on_system(
     mut player_new_position_event: EventReader<PlayerNewPositionEvent>,
     mut ghost_new_position_event: EventReader<GhostNewPositionEvent>,

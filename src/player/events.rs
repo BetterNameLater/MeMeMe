@@ -1,5 +1,5 @@
 use crate::math::vec2i::Vec2i;
-use bevy::prelude::Event;
+use bevy::prelude::*;
 
 #[derive(Event)]
 pub struct RewindEvent;
@@ -8,6 +8,7 @@ pub struct RewindEvent;
 pub struct PlayerNewPositionEvent {
     pub before: Vec2i,
     pub now: Vec2i,
+	pub player: Entity,
 }
 
 #[derive(Event)]

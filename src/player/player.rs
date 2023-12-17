@@ -83,9 +83,8 @@ fn on_player_rewind_system(
 
 #[allow(clippy::too_many_arguments)]
 pub fn player_input_system(
-    mut player_transform_query: Query<&mut Transform, With<Player>>,
+    mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
-    player_entity_query: Query<Entity, With<Player>>,
     key_inputs: Res<Input<KeyCode>>,
     time: Res<Time>,
     mut start_time: ResMut<StartTime>,
@@ -102,11 +101,11 @@ pub fn player_input_system(
     });
     if let Some(move_key) = move_key {
         let move_direction = MoveDirection::from_key_code(*move_key);
-        let mut player_transform = player_transform_query.single_mut();
+        let (mut player_transform, player_entity) = player_transform_query.single_mut();
         let before: Vec2i = player_transform.translation.into();
         player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         player_query.single_mut().actions.push(Action {
-            ghost_entity: player_entity_query.single(),
+            ghost_entity: player_entity,
             action_type: ActionType::Move(move_direction),
             timestamp_seconds: elapsed_time_from_start_rewind.0.unwrap_or(0.),
         });
@@ -121,6 +120,8 @@ pub fn player_input_system(
         player_new_position_event.send(PlayerNewPositionEvent {
             before,
             now: player_transform.translation.into(),
+			player: player_entity,
+
         });
         return;
     }

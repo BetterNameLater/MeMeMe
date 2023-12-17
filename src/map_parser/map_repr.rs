@@ -66,6 +66,8 @@ pub struct ObjectRepr {
     pub player_only: bool,
     #[serde(skip)]
     pub single_use: bool,
+
+	pub destination: Option<Vec2i>,
 }
 
 #[derive(Deserialize)]
@@ -73,4 +75,5 @@ pub struct ObjectRepr {
 pub enum ObjectType {
     PressurePlate,
     Door,
+	Teleporter,
 }

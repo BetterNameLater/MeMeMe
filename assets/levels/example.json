@@ -23,6 +23,34 @@
         "x": 2,
         "y": 3
       }
-    }
+    },
+    "teleporter_1": {
+      "type": "teleporter",
+      "depends_on": [
+        "plaque_1"
+      ],
+	  "destination": {
+        "x": 7,
+        "y": 3
+      },
+      "position": {
+        "x": 3,
+        "y": 3
+      }
+    },
+	"teleporter_2": {
+		"type": "teleporter",
+		"depends_on": [
+		  "plaque_1"
+		],
+		"destination": {
+		  "x": 3,
+		  "y": 3
+		},
+		"position": {
+		  "x": 7,
+		  "y": 3
+		}
+	  }
   }
 }

@@ -22,6 +22,7 @@ use crate::player::{ghost_actions_system, GhostActions, RewindEvent};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
 use items::populate_items::populate_items;
+use items::teleport::{self, teleporter_player};
 use map::*;
 use std::any::Any;
 
@@ -43,6 +44,7 @@ fn main() {
                 count_people_on_system.after(player_input_system),
                 count_people_on_ghost_only_system.after(player_input_system),
                 count_people_on_player_only_system.after(player_input_system),
+				teleporter_player.after(player_input_system),
             ),
         )
         // assets
