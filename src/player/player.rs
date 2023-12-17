@@ -103,6 +103,7 @@ fn player_input_system(
     if let Some(move_key) = move_key {
         let move_direction = MoveDirection::from_key_code(*move_key);
         let mut player_transform = player_transform_query.single_mut();
+        let before: Vec2i = player_transform.translation.into();
         player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity_query.single(),
@@ -117,7 +118,10 @@ fn player_input_system(
         /*
         TODO : OnEnterEvent
          */
-        player_new_position_event.send(PlayerNewPositionEvent(player_transform.translation.into()));
+        player_new_position_event.send(PlayerNewPositionEvent {
+            before,
+            now: player_transform.translation.into(),
+        });
         return;
     }
 

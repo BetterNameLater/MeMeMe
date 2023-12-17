@@ -8,7 +8,7 @@ mod player;
 mod time;
 
 use crate::constantes::PLAYER_START_TRANSFORM;
-use crate::items::{on_enter_system, PressurePlate};
+// use crate::items::{on_enter_system, PressurePlate};
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::{ghost_actions_system, GhostActions, Player, PlayerPlugin, RewindEvent};
@@ -23,12 +23,7 @@ fn main() {
         .insert_resource(GhostActions::default())
         .add_systems(
             Update,
-            (
-                elapsed_time_from_start_rewind_system,
-                ghost_actions_system,
-                // on_pressure_plate_enter,
-                on_enter_system,
-            ),
+            (elapsed_time_from_start_rewind_system, ghost_actions_system),
         )
         .insert_resource(StartTime(None))
         .insert_resource(ElapsedTimeFromStartRewind(None))
