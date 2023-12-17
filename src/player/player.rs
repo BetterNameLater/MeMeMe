@@ -2,7 +2,7 @@ use super::actions::{Action, ActionType};
 use super::events::{GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent};
 use super::ghost::Ghost;
 use super::move_direction::MoveDirection;
-use super::GhostActions;
+use super::{ghost_actions_system, GhostActions};
 use crate::constantes::*;
 use crate::map::Map;
 use crate::math::vec2i::Vec2i;
@@ -82,7 +82,7 @@ fn on_player_rewind_system(
 }
 
 #[allow(clippy::too_many_arguments)]
-fn player_input_system(
+pub fn player_input_system(
     mut player_transform_query: Query<&mut Transform, With<Player>>,
     mut player_query: Query<&mut Player>,
     player_entity_query: Query<Entity, With<Player>>,
@@ -146,7 +146,14 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, create_player_system)
-            .add_systems(Update, (player_input_system, on_player_rewind_system))
+            .add_systems(
+                Update,
+                (
+                    player_input_system,
+                    ghost_actions_system,
+                    on_player_rewind_system,
+                ),
+            )
             .add_event::<RewindEvent>()
             .add_event::<PlayerNewPositionEvent>()
             .add_event::<GhostNewPositionEvent>();

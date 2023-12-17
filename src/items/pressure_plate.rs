@@ -1,6 +1,8 @@
 use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
+use crate::items::ghost_only::GhostOnly;
 use crate::items::is_on::IsOn;
 use crate::items::people_on::PeopleOn;
+use crate::items::player_only::PlayerOnly;
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 
@@ -15,6 +17,7 @@ pub fn spawn_pressure_plate(mut commands: Commands) {
     commands.spawn((
         PeopleOn(0),
         IsOn(false),
+        // GhostOnly,
         SpriteBundle {
             sprite: Sprite {
                 color: Color::LIME_GREEN,

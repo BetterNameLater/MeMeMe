@@ -1,4 +1,5 @@
 #![allow(dead_code, unused)]
+#![allow(clippy::type_complexity)]
 mod constantes;
 mod items;
 mod map;
@@ -10,11 +11,15 @@ mod time;
 use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
 use crate::items::is_on::IsOn;
-use crate::items::people_on::PeopleOn;
+use crate::items::people_on::{
+    count_people_on_ghost_only_system, count_people_on_player_only_system, count_people_on_system,
+    PeopleOn,
+};
 use crate::items::pressure_plate::spawn_pressure_plate;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
-use crate::player::{ghost_actions_system, GhostActions, Player, PlayerPlugin, RewindEvent};
+use crate::player::player::{player_input_system, PlayerPlugin};
+use crate::player::{ghost_actions_system, GhostActions, RewindEvent};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::{prelude::*, window::CursorGrabMode};
 use map::*;
@@ -22,17 +27,25 @@ use std::any::Any;
 
 fn main() {
     App::new()
+        // resources
         .insert_resource(State::default())
         .insert_resource(GhostActions::default())
-        .add_systems(
-            Update,
-            (elapsed_time_from_start_rewind_system, ghost_actions_system),
-        )
         .insert_resource(StartTime(None))
         .insert_resource(ElapsedTimeFromStartRewind(None))
-        .add_plugins((DefaultPlugins, PlayerPlugin))
-        .add_systems(SpawnScene, check_levels_loaded_system)
+        // systems
         .add_systems(Startup, load_levels)
+        .add_systems(SpawnScene, check_levels_loaded_system)
+        .add_plugins((DefaultPlugins, PlayerPlugin))
+        .add_systems(
+            Update,
+            (
+                elapsed_time_from_start_rewind_system,
+                count_people_on_system.after(player_input_system),
+                count_people_on_ghost_only_system.after(player_input_system),
+                count_people_on_player_only_system.after(player_input_system),
+            ),
+        )
+        // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()
         .run();

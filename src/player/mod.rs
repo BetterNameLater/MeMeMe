@@ -1,13 +1,12 @@
-mod actions;
-mod events;
-mod ghost;
-mod ghost_actions;
-mod move_direction;
-mod player;
+pub mod actions;
+pub mod events;
+pub mod ghost;
+pub mod ghost_actions;
+pub mod move_direction;
+pub mod player;
 
 // exports
 
 pub use events::{GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent};
 pub use ghost::Ghost;
 pub use ghost_actions::{ghost_actions_system, GhostActions};
-pub use player::{Player, PlayerPlugin};

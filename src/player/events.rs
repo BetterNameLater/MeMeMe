@@ -15,3 +15,9 @@ pub struct GhostNewPositionEvent {
     pub before: Vec2i,
     pub now: Vec2i,
 }
+
+// TODO refactor ?
+pub struct NewPositionEvent {
+    pub before: Vec2i,
+    pub now: Vec2i,
+}
