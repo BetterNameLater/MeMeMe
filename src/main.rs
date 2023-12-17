@@ -11,7 +11,7 @@ mod time;
 use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
 use crate::items::ghost_only::GhostOnly;
-use crate::items::is_on::IsOn;
+use crate::items::is_usable::IsUsable;
 use crate::items::people_on::{count_people_on_system, PeopleOn};
 use crate::items::player_only::PlayerOnly;
 use crate::map_parser::{MapLoader, MapRepr};

@@ -4,4 +4,4 @@ use bevy::prelude::*;
 /// - Door
 /// - ...
 #[derive(Component)]
-pub struct IsEnabled;
+pub struct IsActivated(pub bool);

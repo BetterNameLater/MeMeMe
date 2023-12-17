@@ -4,4 +4,4 @@ use bevy::prelude::*;
 /// - Pressure Plate
 /// - ...
 #[derive(Component)]
-pub struct IsOn(pub bool);
+pub struct IsUsable(pub bool);
