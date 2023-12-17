@@ -44,23 +44,25 @@ pub fn populate_items(
                     transform: position.to_initial_map_pos(1),
                     ..default()
                 });
-            },
-			ObjectType::Teleporter => {
-				println!("{:?}", object.destination);
-				if let Some(destination) = object.destination {
-					commands.entity(item).insert(Teleporter(Vec2i::new(destination.x * 32, destination.y * 32)));
-				}
+            }
+            ObjectType::Teleporter => {
+                println!("{:?}", object.destination);
+                if let Some(destination) = object.destination {
+                    commands.entity(item).insert(Teleporter(Vec2i::new(
+                        destination.x * 32,
+                        destination.y * 32,
+                    )));
+                }
                 commands.entity(item).insert(SpriteBundle {
                     sprite: Sprite {
                         color: Color::BLACK,
-                        custom_size: Some(Vec2::new(size , size)),
+                        custom_size: Some(Vec2::new(size, size)),
                         ..default()
                     },
                     // TODO in a parameter
                     transform: position.to_initial_map_pos(1),
                     ..default()
                 });
-	
             }
             _ => {}
         }

@@ -1,5 +1,5 @@
 use super::actions::{Action, ActionType};
-use super::events::{GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent};
+use super::events::{GhostNewPositionEvent, NewPositionEvent, PlayerNewPositionEvent, RewindEvent};
 use super::ghost::Ghost;
 use super::move_direction::MoveDirection;
 use super::{ghost_actions_system, GhostActions};
@@ -8,6 +8,7 @@ use crate::map::Map;
 use crate::math::vec2i::Vec2i;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
+use bevy::transform::components::Transform;
 
 #[derive(Component, Default)]
 pub struct Player {
@@ -117,12 +118,11 @@ pub fn player_input_system(
         /*
         TODO : OnEnterEvent
          */
-        player_new_position_event.send(PlayerNewPositionEvent {
+        player_new_position_event.send(PlayerNewPositionEvent::new(
             before,
-            now: player_transform.translation.into(),
-			player: player_entity,
-
-        });
+            player_transform.translation.into(),
+            player_entity,
+        ));
         return;
     }
 

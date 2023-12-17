@@ -8,6 +8,7 @@ use bevy::ecs::system::Query;
 
 use crate::math::vec2i::Vec2i;
 use crate::player::events::GhostNewPositionEvent;
+use crate::player::events::NewPositionEvent;
 use bevy::prelude::{EventWriter, Res, ResMut, Resource};
 use bevy::transform::components::Transform;
 
@@ -44,10 +45,11 @@ pub fn ghost_actions_system(
                     let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();
                     let before: Vec2i = ghost_transform.translation.into();
                     ghost_transform.translation += direction * CELL_LENGTH;
-                    ghost_new_position_event.send(GhostNewPositionEvent {
+                    ghost_new_position_event.send(GhostNewPositionEvent::new(
                         before,
-                        now: ghost_transform.translation.into(),
-                    });
+                        ghost_transform.translation.into(),
+                        ghost_id.clone(),
+                    ));
                 }
             }
             ghost_actions.index += 1;
