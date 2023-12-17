@@ -102,6 +102,8 @@ fn check_levels_loaded_system(
                     )
                 })
         });
-    commands.spawn(map);
+    commands.spawn((map, WorldMap));
+    // TODO by the albaud
+    //  commands.spawn((object_map, ObjectMap));
     spawn_pressure_plate(commands);
 }

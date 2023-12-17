@@ -14,6 +14,12 @@ pub struct Map {
     cells: HashMap<Vec2i, Entity>,
 }
 
+#[derive(Component)]
+pub struct WorldMap;
+
+#[derive(Component)]
+pub struct ObjectMap;
+
 impl Map {
     pub fn get_cell_entity_by_pos(&self, pos: &Vec2i) -> Option<Entity> {
         self.cells.get(pos).copied()
