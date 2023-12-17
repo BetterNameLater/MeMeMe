@@ -14,19 +14,35 @@ use super::player_only::SingleUse;
 pub struct Item;
 
 pub fn populate_items(
-    mut commands: Commands,
+    mut commands: &mut Commands,
     objects: &HashMap<String, ObjectRepr>,
 ) -> HashMap<Vec2i, Entity> {
     let mut items: HashMap<Vec2i, Entity> = HashMap::default();
+    let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
         let item = commands.spawn(Item).id();
-        items.insert(object.position.into(), item.clone());
+        let position = Vec2i::new(
+            object.position.x * CELL_LENGTH as i32,
+            object.position.y * CELL_LENGTH as i32,
+        );
+        items.insert(position, item.clone());
 
         match object.object_type {
             ObjectType::PressurePlate => {
+                println!("ma pressure plate");
                 commands.entity(item).insert(PeopleOn(0));
                 commands.entity(item).insert(IsOn(false));
+                commands.entity(item).insert(SpriteBundle {
+                    sprite: Sprite {
+                        color: Color::LIME_GREEN,
+                        custom_size: Some(Vec2::new(size, size)),
+                        ..default()
+                    },
+                    // TODO in a parameter
+                    transform: position.to_initial_map_pos(1),
+                    ..default()
+                });
             }
             _ => {}
         }

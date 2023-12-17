@@ -11,7 +11,7 @@ pub struct Cell;
 
 #[derive(Component, Default)]
 pub struct Map {
-    cells: HashMap<Vec2i, Entity>,
+    pub cells: HashMap<Vec2i, Entity>,
 }
 
 #[derive(Component)]

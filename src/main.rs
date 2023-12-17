@@ -80,7 +80,7 @@ fn check_levels_loaded_system(
         .get(state.level_1_handle.as_ref().unwrap())
         .unwrap();
 
-    let mut map = Map::default();
+    let mut world_map = Map::default();
 
     level_example
         .map
@@ -92,7 +92,7 @@ fn check_levels_loaded_system(
                 .iter()
                 .enumerate()
                 .for_each(|(x, background_type)| {
-                    map.spawn_cell(
+                    world_map.spawn_cell(
                         &mut commands,
                         Vec2i {
                             x: x as i32,
@@ -102,8 +102,8 @@ fn check_levels_loaded_system(
                     )
                 })
         });
-    commands.spawn((map, WorldMap));
-    // TODO by the albaud
-    //  commands.spawn((object_map, ObjectMap));
-    let items = populate_items(commands, &level_example.objects);
+    commands.spawn((world_map, WorldMap));
+    let items = populate_items(&mut commands, &level_example.objects);
+    let object_map = Map { cells: items };
+    commands.spawn((object_map, ObjectMap));
 }
