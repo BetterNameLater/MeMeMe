@@ -1,4 +1,5 @@
 use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
+use crate::items::dependencies::Dependencies;
 use crate::items::ghost_only::GhostOnly;
 use crate::items::is_on::IsOn;
 use crate::items::people_on::PeopleOn;
@@ -18,7 +19,8 @@ pub fn populate_items(
     mut commands: &mut Commands,
     objects: &HashMap<String, ObjectRepr>,
 ) -> HashMap<Vec2i, Entity> {
-    let mut items: HashMap<Vec2i, Entity> = HashMap::default();
+    let mut items_by_vec2i: HashMap<Vec2i, Entity> = HashMap::new();
+    let mut items_by_name: HashMap<String, Entity> = HashMap::new();
     let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
@@ -27,7 +29,8 @@ pub fn populate_items(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,
         );
-        items.insert(position, item.clone());
+        items_by_vec2i.insert(position, item.clone());
+        items_by_name.insert(key.clone(), item.clone());
 
         match object.object_type {
             ObjectType::PressurePlate => {
@@ -74,6 +77,20 @@ pub fn populate_items(
         } else if (object.single_use) {
             commands.entity(item).insert(SingleUse);
         }
+
+        if !object.depends_on.is_empty() {
+            let deps_entities: Vec<Entity> = object
+                .depends_on
+                .iter()
+                .map(|name| {
+                    items_by_name
+                        .get(name)
+                        .expect("Ce nom n'est pas défini !")
+                        .clone()
+                })
+                .collect();
+            commands.entity(item).insert(Dependencies(deps_entities));
+        }
     }
-    return items;
+    return items_by_vec2i;
 }
