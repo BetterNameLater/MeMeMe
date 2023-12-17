@@ -77,20 +77,26 @@ pub fn populate_items(
         } else if (object.single_use) {
             commands.entity(item).insert(SingleUse);
         }
+    }
 
-        if !object.depends_on.is_empty() {
-            let deps_entities: Vec<Entity> = object
-                .depends_on
-                .iter()
-                .map(|name| {
-                    items_by_name
-                        .get(name)
-                        .expect("Ce nom n'est pas défini !")
-                        .clone()
-                })
-                .collect();
-            commands.entity(item).insert(Dependencies(deps_entities));
+    for (name, item) in items_by_name.iter() {
+        let object = objects.get(name).unwrap();
+        if object.depends_on.is_empty() {
+            continue;
         }
+        let deps_entities: Vec<Entity> = object
+            .depends_on
+            .iter()
+            .map(|name| {
+                items_by_name
+                    .get(name)
+                    .expect("Ce nom n'est pas défini !")
+                    .clone()
+            })
+            .collect();
+        commands
+            .entity(item.clone())
+            .insert(Dependencies(deps_entities));
     }
     return items_by_vec2i;
 }
