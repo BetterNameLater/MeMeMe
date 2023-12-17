@@ -4,10 +4,10 @@ use super::ghost::Ghost;
 use super::move_direction::MoveDirection;
 use super::GhostActions;
 use crate::constantes::*;
-use crate::{ElapsedTimeFromStartRewind, StartTime};
-use bevy::prelude::*;
 use crate::map::Map;
 use crate::math::vec2i::Vec2i;
+use crate::{ElapsedTimeFromStartRewind, StartTime};
+use bevy::prelude::*;
 
 #[derive(Component, Default)]
 pub struct Player {
@@ -117,7 +117,7 @@ fn player_input_system(
         /*
         TODO : OnEnterEvent
          */
-        on_enter_event.send(OnEnterEvent(Vec2i::from_vec3(player_transform.translation)));
+        on_enter_event.send(OnEnterEvent(Vec2i::from(player_transform.translation)));
         return;
     }
 
@@ -144,7 +144,6 @@ impl Plugin for PlayerPlugin {
         app.add_systems(Startup, create_player_system)
             .add_systems(Update, (player_input_system, on_player_rewind_system))
             .add_event::<RewindEvent>()
-            .add_event::<OnEnterEvent>()
-        ;
+            .add_event::<OnEnterEvent>();
     }
 }

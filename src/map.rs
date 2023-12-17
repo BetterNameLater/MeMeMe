@@ -32,7 +32,7 @@ impl Map {
         pos: Vec2i,
         background_type: &BackgroundType,
     ) {
-        let cell_pos = self.map_to_local(Vec2i::from(pos.x, pos.y));
+        let cell_pos = self.map_to_local(Vec2i::new(pos.x, pos.y));
         let id = commands
             .spawn((
                 SpriteBundle {

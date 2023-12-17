@@ -44,8 +44,6 @@ impl AssetLoader for MapLoader {
     }
 }
 
-
-
 #[derive(Deserialize_repr, Debug)]
 #[repr(u8)]
 pub enum BackgroundType {

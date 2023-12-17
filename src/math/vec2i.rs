@@ -1,4 +1,4 @@
-use bevy::math::Vec3;
+use bevy::math::{Vec2, Vec3};
 use serde::Deserialize;
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug)]
@@ -7,15 +7,26 @@ pub struct Vec2i {
     pub y: i32,
 }
 
-impl Vec2i {
-    pub fn from(x: i32, y: i32) -> Vec2i {
-        Vec2i { x, y }
+impl From<Vec3> for Vec2i {
+    fn from(vec3: Vec3) -> Self {
+        Self::new(vec3.x as i32, vec3.y as i32)
     }
+}
 
-    pub fn from_vec3(vec: Vec3) -> Vec2i {
-        Vec2i {
-            x: vec.x as i32,
-            y: vec.y as i32,
-        }
+impl From<Vec2> for Vec2i {
+    fn from(vec3: Vec2) -> Self {
+        Self::new(vec3.x as i32, vec3.y as i32)
+    }
+}
+
+impl Into<Vec2> for Vec2i {
+    fn into(self) -> Vec2 {
+        Vec2::new(self.x as f32, self.y as f32)
+    }
+}
+
+impl Vec2i {
+    pub fn new(x: i32, y: i32) -> Vec2i {
+        Vec2i { x, y }
     }
 }
