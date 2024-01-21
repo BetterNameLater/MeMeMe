@@ -1,19 +1,16 @@
 use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
 use crate::items::dependencies::Dependencies;
 use crate::items::ghost_only::GhostOnly;
-use crate::items::is_on::IsOn;
-use crate::items::people_on::PeopleOn;
-use crate::items::player_only::PlayerOnly;
+use crate::items::is_usable::IsUsable;
+use crate::items::player_only::{PlayerOnly, SingleUse};
+use crate::items::systems::is_activated::IsActivated;
+use crate::items::systems::people_on::PeopleOn;
+use crate::items::systems::teleport::Teleporter;
+use crate::items::systems::toggle::ToggleInteract;
 use crate::map_parser::map_repr::{ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 use bevy::utils::HashMap;
-
-use super::player_only::SingleUse;
-use super::teleport::Teleporter;
-
-#[derive(Component)]
-pub struct Item;
 
 pub fn populate_items(
     mut commands: &mut Commands,
@@ -24,7 +21,7 @@ pub fn populate_items(
     let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
-        let item = commands.spawn(Item).id();
+        let item = commands.spawn((IsActivated(false), IsUsable)).id();
         let position = Vec2i::new(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,
@@ -34,47 +31,46 @@ pub fn populate_items(
 
         match object.object_type {
             ObjectType::PressurePlate => {
-                println!("ma pressure plate");
                 commands.entity(item).insert(PeopleOn(0));
-                commands.entity(item).insert(IsOn(false));
-                commands.entity(item).insert(SpriteBundle {
-                    sprite: Sprite {
-                        color: Color::LIME_GREEN,
-                        custom_size: Some(Vec2::new(size, size)),
-                        ..default()
-                    },
-                    // TODO in a parameter
-                    transform: position.to_initial_map_pos(1),
-                    ..default()
-                });
             }
             ObjectType::Teleporter => {
-                println!("{:?}", object.destination);
-                if let Some(destination) = object.destination {
-                    commands.entity(item).insert(Teleporter(Vec2i::new(
-                        destination.x * 32,
-                        destination.y * 32,
-                    )));
-                }
-                commands.entity(item).insert(SpriteBundle {
-                    sprite: Sprite {
-                        color: Color::BLACK,
-                        custom_size: Some(Vec2::new(size, size)),
-                        ..default()
-                    },
-                    // TODO in a parameter
-                    transform: position.to_initial_map_pos(1),
-                    ..default()
-                });
+                let destination = object.destination.unwrap();
+                commands.entity(item).insert(Teleporter(Vec2i::new(
+                    destination.x * 32,
+                    destination.y * 32,
+                )));
+            }
+            ObjectType::Lever => {
+                commands.entity(item).insert(ToggleInteract);
             }
             _ => {}
-        }
+        };
+
+        let item_color = match object.object_type {
+            ObjectType::PressurePlate => Color::GREEN,
+            ObjectType::Teleporter => Color::BLUE,
+            ObjectType::Lever => Color::YELLOW,
+            _ => Color::RED,
+        };
+
+        commands.entity(item).insert(SpriteBundle {
+            sprite: Sprite {
+                color: item_color,
+                custom_size: Some(Vec2::new(size, size)),
+                ..default()
+            },
+            // TODO in a parameter
+            transform: position.to_initial_map_pos(1),
+            ..default()
+        });
 
         if (object.ghost_only) {
             commands.entity(item).insert(GhostOnly);
-        } else if (object.player_only) {
+        }
+        if (object.player_only) {
             commands.entity(item).insert(PlayerOnly);
-        } else if (object.single_use) {
+        }
+        if (object.single_use) {
             commands.entity(item).insert(SingleUse);
         }
     }

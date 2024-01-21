@@ -1,5 +1,7 @@
 use crate::items::ghost_only::GhostOnly;
+use crate::items::is_usable::IsUsable;
 use crate::items::player_only::PlayerOnly;
+use crate::items::systems::is_activated::IsActivated;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::player::events::NewPositionEvent;
@@ -13,7 +15,10 @@ pub struct PeopleOn(pub usize);
 
 pub fn count_people_on_system<W: Component, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,
-    mut player_only_people_on_query: Query<&mut PeopleOn, Without<W>>,
+    mut player_only_people_on_query: Query<
+        (&mut IsActivated, &mut PeopleOn),
+        (With<IsUsable>, Without<W>),
+    >,
     mut object_map_query: Query<&Map, With<ObjectMap>>,
 ) {
     // TODO le system ne devait pas ce lancé tant que la map n'est pas lancée
@@ -22,17 +27,24 @@ pub fn count_people_on_system<W: Component, E: NewPositionEvent>(
     }
     let object_map = object_map_query.single();
     for new_position_event in player_new_position_event.read() {
-        if let Some(leaved_cell) =
-            object_map.get_cell_entity_by_pos(&new_position_event.get_before())
-        {
-            if let Ok(mut people_on) = player_only_people_on_query.get_mut(leaved_cell) {
+        println!("count_people_on_system");
+        if let Some(&leaved_cell) = object_map.cells.get(&new_position_event.get_before()) {
+            if let Ok((mut is_activated, mut people_on)) =
+                player_only_people_on_query.get_mut(leaved_cell)
+            {
                 people_on.0 -= 1;
+                is_activated.0 = people_on.0 > 0;
+                println!("people on: {}", people_on.0);
             }
         }
-        if let Some(entered_cell) = object_map.get_cell_entity_by_pos(&new_position_event.get_now())
-        {
-            if let Ok(mut people_on) = player_only_people_on_query.get_mut(entered_cell) {
+        if let Some(&entered_cell) = object_map.cells.get(&new_position_event.get_now()) {
+            println!("item here");
+            if let Ok((mut is_activated, mut people_on)) =
+                player_only_people_on_query.get_mut(entered_cell)
+            {
                 people_on.0 += 1;
+                is_activated.0 = people_on.0 > 0;
+                println!("people on: {}", people_on.0);
             }
         }
     }

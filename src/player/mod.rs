@@ -2,9 +2,9 @@ pub mod actions;
 pub mod events;
 pub mod ghost;
 pub mod ghost_actions;
+pub mod interact;
 pub mod move_direction;
 pub mod player;
-
 // exports
 
 pub use events::{GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent};
