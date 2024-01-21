@@ -7,6 +7,6 @@ pub mod move_direction;
 pub mod player;
 // exports
 
-pub use events::{GhostNewPositionEvent, PlayerNewPositionEvent, RewindEvent};
+pub use events::{GhostNewPositionEvent, PlayerNewPositionEvent};
 pub use ghost::Ghost;
 pub use ghost_actions::{ghost_actions_system, GhostActions};

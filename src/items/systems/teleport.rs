@@ -6,7 +6,6 @@ use crate::player::events::NewPositionEvent;
 use crate::{
     map::{Map, ObjectMap},
     math::vec2i::Vec2i,
-    player::{self, player::Player, Ghost, GhostNewPositionEvent, PlayerNewPositionEvent},
 };
 
 #[derive(Component)]
@@ -25,7 +24,7 @@ pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
     }
     let map = object_map_query.single();
     for event in player_new_position_event.read() {
-        let mut player = player_query.get_mut(event.get_entity());
+        let player = player_query.get_mut(event.get_entity());
         if player.is_err() {
             continue;
         }
@@ -56,11 +55,11 @@ pub fn teleporter_activate_system<W: Component, T: Component>(
             })
             .collect();
         for (entity, transform) in entities.iter_mut() {
-            if (moved.contains_key(entity)) {
+            if moved.contains_key(entity) {
                 continue;
             }
             transform.translation = Vec3::new(dest.0.x as f32, dest.0.y as f32, 1.);
-            moved.insert(entity.clone(), ());
+            moved.insert(*entity, ());
         }
     }
 }

@@ -5,7 +5,7 @@ use super::interact::{GhostInteractEvent, InteractEvent, PlayerInteractEvent};
 use super::move_direction::MoveDirection;
 use super::{ghost_actions_system, GhostActions};
 use crate::constantes::*;
-use crate::map::Map;
+
 use crate::math::vec2i::Vec2i;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
@@ -134,11 +134,11 @@ pub fn player_input_system(
         .get_just_pressed()
         .find(|key_code| matches!(**key_code, INPUT_PLAYER_REWIND | INPUT_PLAYER_INTERACT));
     if let Some(action_key) = action_key {
-        match action_key {
-            &INPUT_PLAYER_REWIND => {
+        match *action_key {
+            INPUT_PLAYER_REWIND => {
                 rewind_event.send(RewindEvent);
             }
-            &INPUT_PLAYER_INTERACT => {
+            INPUT_PLAYER_INTERACT => {
                 player_interact_event.send(PlayerInteractEvent::new(
                     player_transform.translation.into(),
                     player_entity,
