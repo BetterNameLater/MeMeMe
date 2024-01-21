@@ -16,7 +16,7 @@
         "x": 2,
         "y": 3
       },
-      "interaction_type": "all"
+      "interaction_type": "player_only"
     }
   }
 }

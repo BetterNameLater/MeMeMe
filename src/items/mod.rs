@@ -5,6 +5,7 @@ pub mod enterable;
 pub mod events;
 pub mod ghost_only;
 pub mod is_usable;
+pub mod level_teleporter;
 pub mod player_only;
 pub mod populate_items;
 
