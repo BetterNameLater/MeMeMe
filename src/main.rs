@@ -13,24 +13,22 @@ use crate::items::systems::people_on::count_people_on_system;
 use crate::items::systems::teleport::{teleporter_activate_system, teleporter_system};
 use crate::items::systems::toggle::{toggle_on_enter_system, toggle_on_interact_system};
 
-use crate::constantes::PLAYER_START_TRANSFORM;
 // use crate::items::{on_enter_system, PressurePlate};
+use crate::items::enterable::people_enter_system;
+use crate::items::events::OnEnterEvent;
 use crate::items::ghost_only::GhostOnly;
-use crate::items::is_usable::IsUsable;
+
+use crate::items::level_teleporter::level_teleporter_system;
 use crate::items::player_only::PlayerOnly;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::player::{player_input_system, Player, PlayerPlugin};
-use crate::player::{
-    ghost_actions_system, Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent,
-    RewindEvent,
-};
+use crate::player::{Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent};
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
-use bevy::{prelude::*, window::CursorGrabMode};
+use bevy::prelude::*;
 use items::populate_items::populate_items;
 use map::*;
 use player::interact::{GhostInteractEvent, PlayerInteractEvent};
-use std::any::Any;
 
 fn main() {
     App::new()
@@ -43,10 +41,15 @@ fn main() {
         .add_systems(Startup, load_levels)
         .add_systems(SpawnScene, check_levels_loaded_system)
         .add_plugins((DefaultPlugins, PlayerPlugin))
+        .add_event::<OnEnterEvent>()
         .add_systems(
             Update,
             (
                 elapsed_time_from_start_rewind_system,
+                people_enter_system::<PlayerOnly, GhostNewPositionEvent>.after(player_input_system),
+                people_enter_system::<GhostOnly, PlayerNewPositionEvent>.after(player_input_system),
+                level_teleporter_system
+                    .after(people_enter_system::<PlayerOnly, GhostNewPositionEvent>),
                 count_people_on_system::<GhostOnly, PlayerNewPositionEvent>
                     .after(player_input_system),
                 count_people_on_system::<PlayerOnly, GhostNewPositionEvent>
