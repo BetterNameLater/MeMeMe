@@ -21,7 +21,9 @@ pub fn populate_items(
     let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
-        let item = commands.spawn((IsActivated(false), IsUsable)).id();
+        let item = commands
+            .spawn((IsActivated(false), IsUsable, DebugName(key.clone())))
+            .id();
         let position = Vec2i::new(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,

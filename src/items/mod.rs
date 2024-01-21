@@ -1,3 +1,4 @@
+pub mod debug_name;
 pub mod dependencies;
 pub mod door;
 pub mod ghost_only;
