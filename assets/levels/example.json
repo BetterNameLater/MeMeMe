@@ -1,21 +1,25 @@
 {
   "map": [
-        [1,1,1,1,1],
-        [1,0,3,0,1],
-        [1,0,0,0,1],
-        [1,0,2,0,1],
-        [1,1,1,1,1]
+    [1,1,1,1,1],
+    [1,0,3,0,1],
+    [1,0,0,0,1],
+    [1,0,2,0,1],
+    [1,1,1,1,1]
   ],
   "objects": {
     "plaque_1": {
-      "type": "pressure_plate",
+      "data": {
+        "type": "pressure_plate"
+      },
       "position": {
         "x": 2,
         "y": 2
       }
     },
     "door_1": {
-      "type": "door",
+      "data": {
+        "type": "door"
+      },
       "depends_on": [
         "plaque_1"
       ],
@@ -25,45 +29,50 @@
       }
     },
     "teleporter_1": {
-      "type": "teleporter",
-      "ghost_only": true,
+      "data": {
+        "type": "teleporter",
+        "destination": {
+          "x": 7,
+          "y": 3
+        }
+      },
+      "interaction_type": "ghost_only",
       "depends_on": [
         "plaque_1"
       ],
-	  "destination": {
-        "x": 7,
-        "y": 3
-      },
       "position": {
         "x": 3,
         "y": 3
       }
     },
-	"teleporter_2": {
-		"type": "teleporter",
-		"depends_on": [
-		  "plaque_1"
-		],
-		"destination": {
-		  "x": 3,
-		  "y": 3
-		},
-		"position": {
-		  "x": 7,
-		  "y": 3
-		}
-	  },
-	  "lever_1": {
-		"type": "lever",
-		"depends_on": [
-			"plaque_1"
-		  ],
-		  "start_state": false,
-		  "position": {
-			"x": 1,
-			"y": 0
-		  }
-
-	  }
+    "teleporter_2": {
+      "data": {
+        "type": "teleporter",
+        "destination": {
+          "x": 3,
+          "y": 3
+        }
+      },
+      "depends_on": [
+        "plaque_1"
+      ],
+      "position": {
+        "x": 7,
+        "y": 3
+      }
+    },
+    "lever_1": {
+      "data": {
+        "type": "lever"
+      },
+      "depends_on": [
+        "plaque_1"
+      ],
+      "start_state": false,
+      "position": {
+        "x": 1,
+        "y": 0
+      }
+    }
   }
 }

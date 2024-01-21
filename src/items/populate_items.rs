@@ -7,7 +7,7 @@ use crate::items::systems::is_activated::IsActivated;
 use crate::items::systems::people_on::PeopleOn;
 use crate::items::systems::teleport::Teleporter;
 use crate::items::systems::toggle::ToggleInteract;
-use crate::map_parser::map_repr::{ObjectRepr, ObjectType};
+use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 use bevy::utils::HashMap;
@@ -33,8 +33,7 @@ pub fn populate_items(
             ObjectType::PressurePlate => {
                 commands.entity(item).insert(PeopleOn(0));
             }
-            ObjectType::Teleporter => {
-                let destination = object.destination.unwrap();
+            ObjectType::Teleporter { destination } => {
                 commands.entity(item).insert(Teleporter(Vec2i::new(
                     destination.x * 32,
                     destination.y * 32,
@@ -43,14 +42,16 @@ pub fn populate_items(
             ObjectType::Lever => {
                 commands.entity(item).insert(ToggleInteract);
             }
-            _ => {}
+            ObjectType::Door => {}
+            ObjectType::LevelTeleporter { .. } => {}
         };
 
         let item_color = match object.object_type {
             ObjectType::PressurePlate => Color::GREEN,
-            ObjectType::Teleporter => Color::BLUE,
+            ObjectType::Teleporter { .. } => Color::BLUE,
             ObjectType::Lever => Color::YELLOW,
-            _ => Color::RED,
+            ObjectType::Door => Color::MIDNIGHT_BLUE,
+            ObjectType::LevelTeleporter { .. } => Color::BISQUE
         };
 
         commands.entity(item).insert(SpriteBundle {
@@ -64,12 +65,16 @@ pub fn populate_items(
             ..default()
         });
 
-        if (object.ghost_only) {
-            commands.entity(item).insert(GhostOnly);
+        match object.interaction_type {
+            InteractionType::GhostOnly => {
+                commands.entity(item).insert(GhostOnly);
+            }
+            InteractionType::PlayerOnly => {
+                commands.entity(item).insert(PlayerOnly);
+            }
+            InteractionType::All => {}
         }
-        if (object.player_only) {
-            commands.entity(item).insert(PlayerOnly);
-        }
+
         if (object.single_use) {
             commands.entity(item).insert(SingleUse);
         }

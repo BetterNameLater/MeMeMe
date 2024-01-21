@@ -54,28 +54,39 @@ pub enum BackgroundType {
     End = 3,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct ObjectRepr {
     pub position: Vec2i,
-    pub destination: Option<Vec2i>,
-
-    #[serde(rename = "type")]
+    #[serde(default)]
+    pub interaction_type: InteractionType,
+    #[serde(rename = "data")]
     pub object_type: ObjectType,
     #[serde(default)]
     pub depends_on: Vec<String>,
     #[serde(default)]
-    pub ghost_only: bool,
-    #[serde(default)]
-    pub player_only: bool,
-    #[serde(default)]
     pub single_use: bool,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug, Default)]
 #[serde(rename_all = "snake_case")]
+pub enum InteractionType {
+    #[default]
+    All,
+    GhostOnly,
+    PlayerOnly,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
 pub enum ObjectType {
     PressurePlate,
     Door,
-    Teleporter,
+    Teleporter {
+        destination: Vec2i,
+    },
+    LevelTeleporter {
+        destination: String,
+    },
     Lever,
 }
