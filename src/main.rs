@@ -76,13 +76,13 @@ fn main() {
 
 #[derive(Resource, Default)]
 struct State {
-    level_1_handle: Option<Handle<MapRepr>>,
+    current_level_handle: Option<Handle<MapRepr>>,
     levels_loaded: bool,
 }
 
 fn load_levels(mut commands: Commands, asset_server: Res<AssetServer>, mut state: ResMut<State>) {
     commands.spawn(Camera2dBundle::default());
-    state.level_1_handle = Some(asset_server.load("levels/example.json"));
+    state.current_level_handle = Some(asset_server.load("levels/example.json"));
 }
 
 fn check_levels_loaded_system(
@@ -94,13 +94,13 @@ fn check_levels_loaded_system(
         return;
     }
 
-    let level_example = custom_assets.get(state.level_1_handle.as_ref().unwrap());
+    let level_example = custom_assets.get(state.current_level_handle.as_ref().unwrap());
     if level_example.is_none() {
         return;
     }
     state.levels_loaded = true;
     let level_example = custom_assets
-        .get(state.level_1_handle.as_ref().unwrap())
+        .get(state.current_level_handle.as_ref().unwrap())
         .unwrap();
 
     let mut world_map = Map::default();
