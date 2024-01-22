@@ -6,7 +6,7 @@ use bevy::utils::HashMap;
 use serde::Deserialize;
 use serde_repr::Deserialize_repr;
 
-#[derive(Asset, TypePath, Deserialize)]
+#[derive(Asset, TypePath, Deserialize, Debug)]
 pub struct MapRepr {
     pub map: Vec<Vec<BackgroundType>>,
     pub objects: HashMap<String, ObjectRepr>,

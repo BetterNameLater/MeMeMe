@@ -1,11 +1,8 @@
 use crate::items::enterable::EnterAble;
 use crate::items::events::OnEnterEvent;
-
 use crate::items::is_usable::IsUsable;
 use crate::items::player_only::PlayerOnly;
-
 use crate::map::{Map, ObjectMap};
-
 use bevy::prelude::*;
 
 #[derive(Component)]

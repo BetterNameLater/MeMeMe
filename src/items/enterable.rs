@@ -1,8 +1,6 @@
 use crate::items::events::OnEnterEvent;
-
 use crate::map::{Map, ObjectMap};
 use crate::player::events::NewPositionEvent;
-
 use bevy::prelude::{Component, EventReader, EventWriter, Query, With, Without};
 
 /// Component we can "enter" on
