@@ -21,10 +21,6 @@ pub fn level_teleporter_system(
     >,
     object_map_query: Query<&Map, With<ObjectMap>>,
 ) {
-    // TODO le system ne devait pas ce lancé tant que la map n'est pas lancée
-    if object_map_query.is_empty() {
-        return;
-    }
     let _object_map = object_map_query.single();
     for on_enter_event in on_enter_event_reader.read() {
         if let Ok(level_name) = level_teleporter_query.get(on_enter_event.item) {

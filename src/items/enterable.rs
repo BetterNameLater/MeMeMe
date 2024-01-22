@@ -15,10 +15,6 @@ pub fn people_enter_system<W: Component, E: NewPositionEvent>(
 
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
 ) {
-    // TODO le system ne devait pas ce lancé tant que la map n'est pas lancée
-    if object_map_query.is_empty() {
-        return;
-    }
     let object_map = object_map_query.single();
     for new_position_event in player_new_position_event.read() {
         if let Some(entered_cell) = object_map.cells.get(&new_position_event.get_now()) {

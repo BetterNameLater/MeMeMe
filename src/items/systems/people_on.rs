@@ -19,10 +19,6 @@ pub fn count_people_on_system<W: Component, E: NewPositionEvent>(
     >,
     object_map_query: Query<&Map, With<ObjectMap>>,
 ) {
-    // TODO le system ne devait pas ce lancé tant que la map n'est pas lancée
-    if object_map_query.is_empty() {
-        return;
-    }
     let object_map = object_map_query.single();
     for new_position_event in player_new_position_event.read() {
         // println!("count_people_on_system");
