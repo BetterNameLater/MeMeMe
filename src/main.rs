@@ -20,6 +20,7 @@ use crate::items::systems::teleport::{teleporter_activate_system, teleporter_sys
 use crate::items::systems::toggle::{toggle_on_enter_system, toggle_on_interact_system};
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
+use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
 use crate::player::events::RewindEvent;
 use crate::player::player::{player_input_system, Player, PlayerPlugin};
 use crate::player::{
@@ -43,6 +44,8 @@ fn main() {
                 .load_collection::<LevelAssets>(),
         )
         // systems
+        .add_systems(PreStartup, loading_screen)
+        .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
         .add_systems(OnEnter(GameState::LoadingLevel), load_level)
         // plugins
         .add_plugins(LevelPlugin)
