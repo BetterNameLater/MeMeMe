@@ -2,6 +2,7 @@
 #![allow(clippy::type_complexity)]
 mod constantes;
 mod items;
+mod level;
 mod map;
 mod map_parser;
 mod math;
@@ -18,6 +19,7 @@ use crate::items::systems::is_activated::update_is_activated_system;
 use crate::items::systems::people_on::count_people_on_system;
 use crate::items::systems::teleport::{teleporter_activate_system, teleporter_system};
 use crate::items::systems::toggle::{toggle_on_enter_system, toggle_on_interact_system};
+use crate::level::plugin::LevelPlugin;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
@@ -48,6 +50,7 @@ fn main() {
         .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
         .add_systems(OnEnter(GameState::LoadingLevel), load_level)
         // plugins
+        .add_plugins(DefaultPlugins)
         .add_plugins(LevelPlugin)
         // assets
         .init_asset_loader::<MapLoader>()
