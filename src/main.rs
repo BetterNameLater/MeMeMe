@@ -6,6 +6,7 @@ mod level;
 mod map;
 mod map_parser;
 mod math;
+mod menu;
 mod player;
 mod state;
 mod time;
@@ -63,6 +64,12 @@ fn main() {
 
 #[derive(AssetCollection, Resource)]
 struct LevelAssets {
+    #[asset(
+        paths("levels/example.json", "levels/example_2.json"),
+        collection(typed)
+    )]
+    levels: Vec<Handle<MapRepr>>,
+
     #[asset(path = "levels/entry_point.json")]
     entry_point: Handle<MapRepr>,
 }
