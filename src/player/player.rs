@@ -6,7 +6,6 @@ use super::move_direction::MoveDirection;
 use super::{ghost_actions_system, GhostActions};
 use crate::constantes::*;
 use crate::level::components::level_tag::LevelTag;
-use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::state::GameState;
 use crate::{ElapsedTimeFromStartRewind, StartTime};

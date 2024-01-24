@@ -1,29 +1,18 @@
-use crate::items::enterable::{people_enter_system, EnterAble};
+use crate::items::enterable::people_enter_system;
 use crate::items::events::OnEnterEvent;
 use crate::items::ghost_only::GhostOnly;
 use crate::items::level_teleporter::level_teleporter_system;
 use crate::items::player_only::PlayerOnly;
-use crate::items::populate_items::populate_items;
 use crate::items::systems::is_activated::update_is_activated_system;
 use crate::items::systems::people_on::count_people_on_system;
 use crate::items::systems::teleport::{teleporter_activate_system, teleporter_system};
 use crate::items::systems::toggle::{toggle_on_enter_system, toggle_on_interact_system};
-use crate::map::*;
-use crate::map_parser::{MapLoader, MapRepr};
-use crate::math::vec2i::Vec2i;
-use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
-use crate::player::events::RewindEvent;
 use crate::player::interact::{GhostInteractEvent, PlayerInteractEvent};
 use crate::player::player::{player_input_system, Player, PlayerPlugin};
-use crate::player::{
-    ghost_actions_system, Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent,
-};
+use crate::player::{Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent};
 use crate::state::GameState;
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
-use bevy::math::Affine3A;
 use bevy::prelude::*;
-use bevy::winit::WinitSettings;
-use bevy_asset_loader::prelude::*;
 
 pub struct LevelPlugin;
 

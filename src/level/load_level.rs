@@ -11,9 +11,9 @@ use bevy::prelude::*;
 
 pub fn load_level(
     mut commands: Commands,
-    mut level_assets: Res<LevelAssets>,
+    level_assets: Res<LevelAssets>,
     custom_assets: Res<Assets<MapRepr>>,
-    mut game_state: ResMut<State<GameState>>,
+    _game_state: ResMut<State<GameState>>,
     mut next_state: ResMut<NextState<GameState>>,
 ) {
     commands.spawn(Camera2dBundle::default());
