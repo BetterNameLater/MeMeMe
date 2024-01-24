@@ -1,5 +1,6 @@
 use crate::items::populate_items::populate_items;
 use crate::level::components::level_tag::LevelTag;
+use crate::level::components::level_to_go::LevelToGo;
 use crate::map::{Map, ObjectMap, WorldMap};
 use crate::map_parser::MapRepr;
 use crate::math::vec2i::Vec2i;
@@ -13,11 +14,22 @@ pub fn load_level(
     mut commands: Commands,
     level_assets: Res<LevelAssets>,
     custom_assets: Res<Assets<MapRepr>>,
-    _game_state: ResMut<State<GameState>>,
     mut next_state: ResMut<NextState<GameState>>,
+    level_to_go_query: Query<(&LevelToGo, Entity)>,
 ) {
-    commands.spawn(Camera2dBundle::default());
-    let level = custom_assets.get(level_assets.entry_point.clone()).unwrap();
+    let level_to_go = level_to_go_query.single();
+    let level_asset = level_assets
+        .levels
+        .iter()
+        .find(|a| {
+            if let Some(path) = a.path() {
+                return format!("levels/{}.json", level_to_go.0.0) == path.to_string();
+            }
+            false
+        })
+        .unwrap();
+
+    let level = custom_assets.get(level_asset.clone()).unwrap();
     let mut world_map = Map::default();
     level
         .map
@@ -47,4 +59,5 @@ pub fn load_level(
     });
     Player::create_player(&mut commands, level_tag);
     next_state.set(GameState::InLevel);
+    commands.entity(level_to_go.1).despawn();
 }

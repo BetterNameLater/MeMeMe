@@ -7,6 +7,8 @@ use crate::items::systems::is_activated::update_is_activated_system;
 use crate::items::systems::people_on::count_people_on_system;
 use crate::items::systems::teleport::{teleporter_activate_system, teleporter_system};
 use crate::items::systems::toggle::{toggle_on_enter_system, toggle_on_interact_system};
+use crate::level::load_level::load_level;
+use crate::level::unload_level::unload_level;
 use crate::player::interact::{GhostInteractEvent, PlayerInteractEvent};
 use crate::player::player::{player_input_system, Player, PlayerPlugin};
 use crate::player::{Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent};
@@ -28,6 +30,8 @@ impl Plugin for LevelPlugin {
             // events
             .add_event::<OnEnterEvent>()
             // systems
+            .add_systems(OnExit(GameState::InLevel), unload_level)
+            .add_systems(OnEnter(GameState::LoadingLevel), load_level)
             .add_systems(
                 Update,
                 (

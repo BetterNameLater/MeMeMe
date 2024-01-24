@@ -11,7 +11,7 @@ mod player;
 mod state;
 mod time;
 
-use crate::level::load_level::load_level;
+use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
@@ -31,8 +31,8 @@ fn main() {
         )
         // systems
         .add_systems(PreStartup, loading_screen)
+        .add_systems(PreStartup, setup)
         .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
-        .add_systems(OnEnter(GameState::LoadingLevel), load_level)
         // plugins
         .add_plugins(DefaultPlugins)
         .add_plugins(LevelPlugin)
@@ -42,14 +42,20 @@ fn main() {
         .run();
 }
 
+fn setup(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
+    commands.spawn(LevelToGo("entry_point".to_string()));
+}
+
 #[derive(AssetCollection, Resource)]
 struct LevelAssets {
     #[asset(
-        paths("levels/example.json", "levels/example_2.json"),
+        paths(
+            "levels/entry_point.json",
+            "levels/example.json",
+            "levels/example_2.json"
+        ),
         collection(typed)
     )]
     levels: Vec<Handle<MapRepr>>,
-
-    #[asset(path = "levels/entry_point.json")]
-    entry_point: Handle<MapRepr>,
 }
