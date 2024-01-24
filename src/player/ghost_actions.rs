@@ -48,7 +48,7 @@ pub fn ghost_actions_system(
                     ghost_new_position_event.send(GhostNewPositionEvent::new(
                         before,
                         ghost_transform.translation.into(),
-                        ghost_id.clone(),
+                        *ghost_id,
                     ));
                 }
             }

@@ -1,7 +1,10 @@
-use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
+use crate::constantes::CELL_LENGTH;
+use crate::items::debug_name::DebugName;
 use crate::items::dependencies::Dependencies;
+use crate::items::enterable::EnterAble;
 use crate::items::ghost_only::GhostOnly;
 use crate::items::is_usable::IsUsable;
+use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::player_only::{PlayerOnly, SingleUse};
 use crate::items::systems::is_activated::IsActivated;
 use crate::items::systems::people_on::PeopleOn;
@@ -13,7 +16,7 @@ use bevy::prelude::*;
 use bevy::utils::HashMap;
 
 pub fn populate_items(
-    mut commands: &mut Commands,
+    commands: &mut Commands,
     objects: &HashMap<String, ObjectRepr>,
 ) -> HashMap<Vec2i, Entity> {
     let mut items_by_vec2i: HashMap<Vec2i, Entity> = HashMap::new();
@@ -21,15 +24,17 @@ pub fn populate_items(
     let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
-        let item = commands.spawn((IsActivated(false), IsUsable)).id();
+        let item = commands
+            .spawn((IsActivated(false), IsUsable, DebugName(key.clone())))
+            .id();
         let position = Vec2i::new(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,
         );
-        items_by_vec2i.insert(position, item.clone());
-        items_by_name.insert(key.clone(), item.clone());
+        items_by_vec2i.insert(position, item);
+        items_by_name.insert(key.clone(), item);
 
-        match object.object_type {
+        match &object.object_type {
             ObjectType::PressurePlate => {
                 commands.entity(item).insert(PeopleOn(0));
             }
@@ -43,7 +48,12 @@ pub fn populate_items(
                 commands.entity(item).insert(ToggleInteract);
             }
             ObjectType::Door => {}
-            ObjectType::LevelTeleporter { .. } => {}
+            ObjectType::LevelTeleporter { destination } => {
+                commands.entity(item).insert(EnterAble);
+                commands
+                    .entity(item)
+                    .insert(LevelTeleporter(destination.clone()));
+            }
         };
 
         let item_color = match object.object_type {
@@ -51,7 +61,7 @@ pub fn populate_items(
             ObjectType::Teleporter { .. } => Color::BLUE,
             ObjectType::Lever => Color::YELLOW,
             ObjectType::Door => Color::MIDNIGHT_BLUE,
-            ObjectType::LevelTeleporter { .. } => Color::BISQUE
+            ObjectType::LevelTeleporter { .. } => Color::BISQUE,
         };
 
         commands.entity(item).insert(SpriteBundle {
@@ -75,7 +85,7 @@ pub fn populate_items(
             InteractionType::All => {}
         }
 
-        if (object.single_use) {
+        if object.single_use {
             commands.entity(item).insert(SingleUse);
         }
     }
@@ -88,16 +98,9 @@ pub fn populate_items(
         let deps_entities: Vec<Entity> = object
             .depends_on
             .iter()
-            .map(|name| {
-                items_by_name
-                    .get(name)
-                    .expect("Ce nom n'est pas défini !")
-                    .clone()
-            })
+            .map(|name| *items_by_name.get(name).expect("Ce nom n'est pas défini !"))
             .collect();
-        commands
-            .entity(item.clone())
-            .insert(Dependencies(deps_entities));
+        commands.entity(*item).insert(Dependencies(deps_entities));
     }
-    return items_by_vec2i;
+    items_by_vec2i
 }

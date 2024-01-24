@@ -2,13 +2,9 @@ use bevy::prelude::*;
 
 use super::is_activated::IsActivated;
 use crate::items::is_usable::IsUsable;
+use crate::map::{Map, ObjectMap};
 use crate::player::events::NewPositionEvent;
 use crate::player::interact::InteractEvent;
-use crate::{
-    map::{Map, ObjectMap},
-    math::vec2i::Vec2i,
-    player::{self, player::Player, Ghost, GhostNewPositionEvent, PlayerNewPositionEvent},
-};
 
 #[derive(Component)]
 pub struct ToggleInteract;

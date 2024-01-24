@@ -19,7 +19,7 @@ pub fn update_is_activated_system(
             .filter(|(id, is_activated)| is_usable_dependencies.0.contains(id) && !is_activated.0);
         if my_dependencies.count() == 0 && is_usable.is_none() {
             commands.entity(is_usable_entity).insert(IsUsable);
-        } else if let Some(_) = is_usable {
+        } else if is_usable.is_some() {
             commands.entity(is_usable_entity).remove::<IsUsable>();
         }
     }

@@ -21,10 +21,6 @@ pub struct WorldMap;
 pub struct ObjectMap;
 
 impl Map {
-    pub fn get_cell_entity_by_pos(&self, pos: &Vec2i) -> Option<Entity> {
-        self.cells.get(pos).copied()
-    }
-
     pub fn map_to_local(&self, pos: Vec2i) -> Vec2 {
         Vec2 {
             x: CELL_LENGTH * pos.x as f32,

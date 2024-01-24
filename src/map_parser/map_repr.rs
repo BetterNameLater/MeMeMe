@@ -2,13 +2,11 @@ use crate::math::vec2i::Vec2i;
 use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, AsyncReadExt, BoxedFuture, LoadContext};
 use bevy::prelude::TypePath;
-use bevy::render::color::Color;
 use bevy::utils::HashMap;
 use serde::Deserialize;
 use serde_repr::Deserialize_repr;
-use std::io::ErrorKind;
 
-#[derive(Asset, TypePath, Deserialize)]
+#[derive(Asset, TypePath, Deserialize, Debug)]
 pub struct MapRepr {
     pub map: Vec<Vec<BackgroundType>>,
     pub objects: HashMap<String, ObjectRepr>,
@@ -17,11 +15,6 @@ pub struct MapRepr {
 #[derive(Default)]
 pub struct MapLoader;
 
-#[non_exhaustive]
-#[derive(Debug)]
-pub enum CustomAssetLoaderError {
-    Io(std::io::Error),
-}
 impl AssetLoader for MapLoader {
     type Asset = MapRepr;
     type Settings = ();
@@ -82,11 +75,7 @@ pub enum InteractionType {
 pub enum ObjectType {
     PressurePlate,
     Door,
-    Teleporter {
-        destination: Vec2i,
-    },
-    LevelTeleporter {
-        destination: String,
-    },
+    Teleporter { destination: Vec2i },
+    LevelTeleporter { destination: String },
     Lever,
 }
