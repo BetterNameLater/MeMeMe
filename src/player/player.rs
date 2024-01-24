@@ -155,19 +155,19 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, create_player_system)
-            .add_systems(
-                Update,
-                (
-                    player_input_system,
-                    ghost_actions_system,
-                    on_player_rewind_system,
-                ),
+        app.add_systems(
+            Update,
+            (
+                player_input_system,
+                ghost_actions_system,
+                on_player_rewind_system,
             )
-            .add_event::<RewindEvent>()
-            .add_event::<PlayerNewPositionEvent>()
-            .add_event::<GhostNewPositionEvent>()
-            .add_event::<PlayerInteractEvent>()
-            .add_event::<GhostInteractEvent>();
+                .run_if(in_state(GameState::InLevel)),
+        )
+        .add_event::<RewindEvent>()
+        .add_event::<PlayerNewPositionEvent>()
+        .add_event::<GhostNewPositionEvent>()
+        .add_event::<PlayerInteractEvent>()
+        .add_event::<GhostInteractEvent>();
     }
 }
