@@ -17,10 +17,7 @@ pub fn toggle_on_interact_system<W: Component, E: InteractEvent>(
     object_map_query: Query<&Map, With<ObjectMap>>,
     mut levers_query: Query<&mut IsActivated, (With<IsUsable>, With<ToggleInteract>, Without<W>)>,
 ) {
-    // TODO
-    if object_map_query.is_empty() {
-        return;
-    }
+    // TODO la c'est comme le "on enter" alors que ca devrait prendre l'event "E"
     let map = object_map_query.single();
     for event in player_new_position_event.read() {
         let item_at = map.cells.get(&event.get_pos());
