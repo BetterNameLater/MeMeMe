@@ -5,8 +5,10 @@ use super::interact::{GhostInteractEvent, InteractEvent, PlayerInteractEvent};
 use super::move_direction::MoveDirection;
 use super::{ghost_actions_system, GhostActions};
 use crate::constantes::*;
-
+use crate::level::components::level_tag::LevelTag;
+use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
+use crate::state::GameState;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
 use bevy::transform::components::Transform;
@@ -17,28 +19,26 @@ pub struct Player {
 }
 
 impl Player {
-    fn create_player(commands: &mut Commands) {
+    pub fn create_player(commands: &mut Commands, level_tag: Entity) {
         let size = CELL_LENGTH / 2.;
-        commands.spawn((
-            Player::default(),
-            SpriteBundle {
-                sprite: Sprite {
-                    color: Color::BEIGE,
-                    custom_size: Some(Vec2::new(size, size)),
+        commands.entity(level_tag).with_children(|parent| {
+            parent.spawn((
+                Player::default(),
+                SpriteBundle {
+                    sprite: Sprite {
+                        color: Color::BEIGE,
+                        custom_size: Some(Vec2::new(size, size)),
+                        ..default()
+                    },
+                    transform: PLAYER_START_TRANSFORM,
                     ..default()
                 },
-                transform: PLAYER_START_TRANSFORM,
-                ..default()
-            },
-        ));
+            ));
+        });
     }
 }
 
 // systems
-
-fn create_player_system(mut commands: Commands) {
-    Player::create_player(&mut commands);
-}
 
 #[allow(clippy::too_many_arguments)]
 fn on_player_rewind_system(
@@ -51,6 +51,7 @@ fn on_player_rewind_system(
     mut rewind_event: EventReader<RewindEvent>,
     mut player_transform_query: Query<&mut Transform, With<Player>>,
     mut ghost_transform_query: Query<&mut Transform, (With<Ghost>, Without<Player>)>,
+    level_query: Query<Entity, With<LevelTag>>,
 ) {
     for _ in rewind_event.read() {
         let mut player = player_query.single_mut();
@@ -74,7 +75,7 @@ fn on_player_rewind_system(
             .insert(Ghost);
 
         // insert a new player to replace
-        Player::create_player(&mut commands);
+        Player::create_player(&mut commands, level_query.single());
 
         // reset ghost position
         ghost_transform_query.for_each_mut(|mut ghost_transform| {
