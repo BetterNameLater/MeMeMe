@@ -6,20 +6,15 @@ use crate::player::interact::InteractEvent;
 use bevy::prelude::*;
 use std::marker::PhantomData;
 
+#[derive(Default)]
 pub struct Interact;
+
+#[derive(Default)]
 pub struct Enter;
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct Toggle<T> {
     pub marker: PhantomData<T>,
-}
-
-impl<T> Toggle<T> {
-    pub fn new() -> Self {
-        Toggle {
-            marker: PhantomData,
-        }
-    }
 }
 
 // toggle entitie isActive when player interact with it

@@ -72,7 +72,7 @@ pub fn populate_items(
             }
             ObjectType::Lever => {
                 commands.entity(item).insert(LeverBundle {
-                    toggle: Toggle::new(),
+                    toggle: Toggle::default(),
                 });
             }
             ObjectType::Door => {
@@ -93,7 +93,7 @@ pub fn populate_items(
                 commands
                     .entity(item)
                     .insert(bundle::button_bundle::ButtonBundle {
-                        toggle_interact: Toggle::new(),
+                        toggle_interact: Toggle::default(),
                     });
             }
         };
