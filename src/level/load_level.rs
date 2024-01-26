@@ -31,6 +31,8 @@ pub fn load_level(
 
     let level = custom_assets.get(level_asset.clone()).unwrap();
     let mut world_map = Map::default();
+    let items = populate_items(&mut commands, &level.objects);
+    let level_tag = commands.spawn((LevelTag, SpriteBundle::default())).id();
     level
         .map
         .iter()
@@ -43,6 +45,7 @@ pub fn load_level(
                 .for_each(|(x, background_type)| {
                     world_map.spawn_cell(
                         &mut commands,
+                        level_tag,
                         Vec2i {
                             x: x as i32,
                             y: y as i32,
@@ -51,8 +54,6 @@ pub fn load_level(
                     )
                 })
         });
-    let items = populate_items(&mut commands, &level.objects);
-    let level_tag = commands.spawn((LevelTag, SpriteBundle::default())).id();
     commands.entity(level_tag).with_children(|parent| {
         parent.spawn((world_map, WorldMap));
         parent.spawn((Map { cells: items }, ObjectMap));
