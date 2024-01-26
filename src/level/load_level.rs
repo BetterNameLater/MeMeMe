@@ -23,7 +23,7 @@ pub fn load_level(
         .iter()
         .find(|a| {
             if let Some(path) = a.path() {
-                return format!("levels/{}.json", level_to_go.0.0) == path.to_string();
+                return format!("levels/{}.json", level_to_go.0 .0) == path.to_string();
             }
             false
         })

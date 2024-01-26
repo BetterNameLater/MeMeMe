@@ -4,7 +4,6 @@ use bevy::prelude::*;
 pub enum GameState {
     #[default]
     BootingGame,
-    StartScreen,
     LoadingLevel,
     InLevel,
 }

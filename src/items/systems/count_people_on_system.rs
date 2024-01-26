@@ -1,15 +1,9 @@
-use crate::items::is_usable::IsUsable;
-
-use crate::items::systems::is_activated::IsActivated;
+use crate::items::components::is_activated::IsActivated;
+use crate::items::components::is_usable::IsUsable;
+use crate::items::components::people_on::PeopleOn;
 use crate::map::{Map, ObjectMap};
-
 use crate::player::events::NewPositionEvent;
-
 use bevy::prelude::*;
-
-/// The number of [`Ghost`] and [`Player`] on this position
-#[derive(Component)]
-pub struct PeopleOn(pub usize);
 
 pub fn count_people_on_system<W: Component, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,

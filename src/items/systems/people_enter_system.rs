@@ -1,12 +1,8 @@
+use crate::items::components::enterable::EnterAble;
 use crate::items::events::OnEnterEvent;
 use crate::map::{Map, ObjectMap};
 use crate::player::events::NewPositionEvent;
 use bevy::prelude::{Component, EventReader, EventWriter, Query, With, Without};
-
-/// Component we can "enter" on
-/// Will trigger an OnEnter event
-#[derive(Component)]
-pub struct EnterAble;
 
 pub fn people_enter_system<W: Component, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,

@@ -1,12 +1,7 @@
-use crate::items::dependencies::Dependencies;
-use crate::items::is_usable::IsUsable;
+use crate::items::components::dependencies::Dependencies;
+use crate::items::components::is_activated::IsActivated;
+use crate::items::components::is_usable::IsUsable;
 use bevy::prelude::*;
-
-/// Component representing the state of an item. Is it enable, can we interact with it ?
-/// - Door
-/// - ...
-#[derive(Component)]
-pub struct IsActivated(pub bool);
 
 pub fn update_is_activated_system(
     mut commands: Commands,

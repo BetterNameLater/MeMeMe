@@ -5,9 +5,7 @@ use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::hierarchy::DespawnRecursiveExt;
-use bevy::prelude::{
-    Commands, Entity, NextState, Query, Res, ResMut, With,
-};
+use bevy::prelude::{Commands, Entity, NextState, Query, Res, ResMut, With};
 
 pub fn unload_level(
     mut commands: Commands,

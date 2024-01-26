@@ -1,15 +1,9 @@
+use crate::items::components::is_usable::IsUsable;
+use crate::items::components::teleporter::Teleporter;
+use crate::map::{Map, ObjectMap};
+use crate::player::events::NewPositionEvent;
 use bevy::prelude::*;
 use bevy::utils::hashbrown::HashMap;
-
-use crate::items::is_usable::IsUsable;
-use crate::player::events::NewPositionEvent;
-use crate::{
-    map::{Map, ObjectMap},
-    math::vec2i::Vec2i,
-};
-
-#[derive(Component)]
-pub struct Teleporter(pub Vec2i);
 
 // teleport entities that enter the teleporter
 pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
