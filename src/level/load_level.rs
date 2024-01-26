@@ -31,8 +31,8 @@ pub fn load_level(
 
     let level = custom_assets.get(level_asset.clone()).unwrap();
     let mut world_map = Map::default();
-    let items = populate_items(&mut commands, &level.objects);
     let level_tag = commands.spawn((LevelTag, SpriteBundle::default())).id();
+    let items = populate_items(&mut commands, level_tag, &level.objects);
     level
         .map
         .iter()

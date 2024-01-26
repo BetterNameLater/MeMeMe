@@ -26,6 +26,7 @@ use bevy::utils::HashMap;
 
 pub fn populate_items(
     commands: &mut Commands,
+    parent: Entity,
     objects: &HashMap<String, ObjectRepr>,
 ) -> HashMap<Vec2i, Entity> {
     let mut items_by_vec2i: HashMap<Vec2i, Entity> = HashMap::new();
@@ -33,13 +34,21 @@ pub fn populate_items(
     let size = CELL_LENGTH / 3.;
 
     for (key, object) in objects.iter() {
-        let item = commands
-            .spawn(ItemBundle {
-                is_usable: IsUsable,
-                is_activated: IsActivated(false),
-                debug_name: DebugName(key.clone()),
-            })
-            .id();
+        let mut item: Option<Entity> = None;
+
+        commands.entity(parent).with_children(|parent| {
+            item = Some(
+                parent
+                    .spawn(ItemBundle {
+                        is_usable: IsUsable,
+                        is_activated: IsActivated(false),
+                        debug_name: DebugName(key.clone()),
+                    })
+                    .id(),
+            );
+        });
+        let item = item.unwrap();
+
         let position = Vec2i::new(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,
