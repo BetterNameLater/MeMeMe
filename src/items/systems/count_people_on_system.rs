@@ -1,42 +1,41 @@
 use crate::items::components::is_activated::IsActivated;
 use crate::items::components::is_usable::IsUsable;
 use crate::items::components::people_on::PeopleOn;
-use crate::map::{Map, ObjectMap};
-use crate::player::events::NewPositionEvent;
+use crate::items::events::{OnEnterEvent, OnExitEvent};
 use bevy::prelude::*;
 
-pub fn count_people_on_system<W: Component, E: NewPositionEvent>(
-    mut player_new_position_event: EventReader<E>,
+pub fn count_people_on_system<W: Component, T: Component>(
     mut player_only_people_on_query: Query<
         (&mut IsActivated, &mut PeopleOn),
         (With<IsUsable>, Without<W>),
     >,
-    object_map_query: Query<&Map, With<ObjectMap>>,
+    person: Query<With<T>>,
+    mut on_exit_event_reader: EventReader<OnExitEvent>,
+    mut on_enter_event_reader: EventReader<OnEnterEvent>,
 ) {
-    let object_map = object_map_query.single();
-    for new_position_event in player_new_position_event.read() {
-        // println!("count_people_on_system");
-        if let Some(&leaved_cell) = object_map.cells.get(&new_position_event.get_before()) {
+    on_exit_event_reader
+        .read()
+        .filter(|on_exit_event| person.contains(on_exit_event.person))
+        .for_each(|on_exit_event| {
             if let Ok((mut is_activated, mut people_on)) =
-                player_only_people_on_query.get_mut(leaved_cell)
+                player_only_people_on_query.get_mut(on_exit_event.item)
             {
                 people_on.0 -= 1;
                 is_activated.0 = people_on.0 > 0;
-                // println!("people on: {}", people_on.0);
+                println!("people on (on exit): {}", people_on.0);
             }
-        }
-        if let Some(entered_cell) = object_map.cells.get(&new_position_event.get_now()) {
-            // println!("entered in cell {:?}, at position {:?}", entered_cell, new_position_event.get_now());
-            match player_only_people_on_query.get_mut(*entered_cell) {
-                Ok((mut is_activated, mut people_on)) => {
-                    people_on.0 += 1;
-                    is_activated.0 = people_on.0 > 0;
-                    // println!("people on: {}", people_on.0);
-                }
-                Err(_err) => {
-                    // println!("{:?}: this cell has no PeopleOn", err);
-                }
+        });
+
+    on_enter_event_reader
+        .read()
+        .filter(|on_enter_event| person.contains(on_enter_event.person))
+        .for_each(|on_enter_event| {
+            if let Ok((mut is_activated, mut people_on)) =
+                player_only_people_on_query.get_mut(on_enter_event.item)
+            {
+                people_on.0 += 1;
+                is_activated.0 = people_on.0 > 0;
+                println!("people on (on enter): {}", people_on.0);
             }
-        }
-    }
+        });
 }

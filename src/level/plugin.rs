@@ -44,8 +44,8 @@ impl Plugin for LevelPlugin {
                         .after(player_input_system),
                     (
                         level_teleporter_system,
-                        count_people_on_system::<GhostOnly, PlayerNewPositionEvent>,
-                        count_people_on_system::<PlayerOnly, GhostNewPositionEvent>,
+                        count_people_on_system::<GhostOnly, Player>,
+                        count_people_on_system::<PlayerOnly, Ghost>,
                         teleporter_system::<PlayerOnly, Ghost>,
                         teleporter_system::<GhostOnly, Player>,
                         teleporter_activate_system::<PlayerOnly, Ghost>,
