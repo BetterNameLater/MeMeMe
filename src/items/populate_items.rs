@@ -60,11 +60,13 @@ pub fn populate_items(
             ObjectType::PressurePlate => {
                 commands.entity(item).insert(PressurePlateBundle {
                     // TODO check if player begins here
+                    enterable: EnterAble,
                     people_on: PeopleOn(0),
                 });
             }
             ObjectType::Teleporter { destination } => {
                 commands.entity(item).insert(TeleporterBundle {
+                    enterable: EnterAble,
                     teleporter: Teleporter(Vec2i::new(destination.x * 32, destination.y * 32)),
                 });
             }
@@ -83,21 +85,25 @@ pub fn populate_items(
                 });
             }
             ObjectType::PressurePlateOnOff => {
-                commands.entity(item).insert(PressurePlateOnOffBundle {});
+                commands.entity(item).insert(PressurePlateOnOffBundle {
+                    enterable: EnterAble,
+                });
             }
             ObjectType::Button => {
                 commands
                     .entity(item)
-                    .insert(bundle::button_bundle::ButtonBundle {});
+                    .insert(bundle::button_bundle::ButtonBundle {
+                        toggle_interact: Toggle::new(),
+                    });
             }
         };
 
         let item_color = match object.object_type {
             ObjectType::PressurePlate => Color::GREEN,
-            ObjectType::Teleporter { .. } => Color::BLUE,
+            ObjectType::Teleporter { .. } => Color::GOLD,
             ObjectType::Lever => Color::YELLOW,
             ObjectType::Door => Color::MIDNIGHT_BLUE,
-            ObjectType::LevelTeleporter { .. } => Color::BISQUE,
+            ObjectType::LevelTeleporter { .. } => Color::ALICE_BLUE,
             _ => todo!(),
         };
 
