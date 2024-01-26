@@ -22,6 +22,7 @@ pub mod components {
     pub mod teleporter;
 }
 pub mod bundle {
+    pub mod button_bundle;
     pub mod door_bundle;
     pub mod item_bundle;
     pub mod level_teleporter_bundle;

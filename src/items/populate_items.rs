@@ -1,9 +1,11 @@
 use crate::constantes::CELL_LENGTH;
+use crate::items::bundle;
 use crate::items::bundle::door_bundle::DoorBundle;
 use crate::items::bundle::item_bundle::ItemBundle;
 use crate::items::bundle::level_teleporter_bundle::LevelTeleporterBundle;
 use crate::items::bundle::lever_bundle::LeverBundle;
 use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
+use crate::items::bundle::pressure_plate_on_off_bundle::PressurePlateOnOffBundle;
 use crate::items::bundle::teleporter_bundle::TeleporterBundle;
 use crate::items::components::debug_name::DebugName;
 use crate::items::components::dependencies::Dependencies;
@@ -62,12 +64,22 @@ pub fn populate_items(
                     toggle: Toggle::new(),
                 });
             }
-            ObjectType::Door => { commands.entity(item).insert(DoorBundle {}); },
+            ObjectType::Door => {
+                commands.entity(item).insert(DoorBundle {});
+            }
             ObjectType::LevelTeleporter { destination } => {
                 commands.entity(item).insert(LevelTeleporterBundle {
                     enterable: EnterAble,
                     level_teleporter: LevelTeleporter(destination.clone()),
                 });
+            }
+            ObjectType::PressurePlateOnOff => {
+                commands.entity(item).insert(PressurePlateOnOffBundle {});
+            }
+            ObjectType::Button => {
+                commands
+                    .entity(item)
+                    .insert(bundle::button_bundle::ButtonBundle {});
             }
         };
 
@@ -77,6 +89,7 @@ pub fn populate_items(
             ObjectType::Lever => Color::YELLOW,
             ObjectType::Door => Color::MIDNIGHT_BLUE,
             ObjectType::LevelTeleporter { .. } => Color::BISQUE,
+            _ => todo!(),
         };
 
         commands.entity(item).insert(SpriteBundle {

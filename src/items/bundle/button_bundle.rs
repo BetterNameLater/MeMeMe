@@ -1,4 +1,4 @@
 use bevy::prelude::Bundle;
 
 #[derive(Bundle)]
-pub struct PressurePlateOnOffBundle {}
+pub struct ButtonBundle {}
