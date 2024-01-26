@@ -30,8 +30,8 @@ fn main() {
                 .load_collection::<LevelAssets>(),
         )
         // systems
-        .add_systems(PreStartup, loading_screen)
-        .add_systems(PreStartup, setup)
+        .add_systems(Startup, setup)
+        .add_systems(Startup, loading_screen)
         .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
         // plugins
         .add_plugins(DefaultPlugins)
