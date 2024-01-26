@@ -1,6 +1,6 @@
 use crate::items::components::ghost_only::GhostOnly;
 use crate::items::components::player_only::PlayerOnly;
-use crate::items::events::OnEnterEvent;
+use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::level_teleporter_system;
 use crate::items::systems::people_enter_system::people_enter_system;
@@ -29,6 +29,7 @@ impl Plugin for LevelPlugin {
             .add_plugins(PlayerPlugin)
             // events
             .add_event::<OnEnterEvent>()
+            .add_event::<OnExitEvent>()
             // systems
             .add_systems(OnExit(GameState::InLevel), unload_level)
             .add_systems(OnEnter(GameState::LoadingLevel), load_level)

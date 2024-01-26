@@ -7,3 +7,10 @@ pub struct OnEnterEvent {
     pub item: Entity,
     pub person: Entity,
 }
+
+#[derive(Event, Debug)]
+pub struct OnExitEvent {
+    pub position: Vec2i,
+    pub item: Entity,
+    pub person: Entity,
+}
