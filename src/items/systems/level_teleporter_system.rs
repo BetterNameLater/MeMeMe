@@ -12,12 +12,7 @@ pub fn level_teleporter_system(
     mut commands: Commands,
     level_teleporter_query: Query<
         &LevelTeleporter,
-        (
-            With<EnterAble>,
-            With<IsUsable>,
-            With<PlayerOnly>,
-            With<LevelTeleporter>,
-        ),
+        (With<EnterAble>, With<IsUsable>, With<PlayerOnly>),
     >,
     mut next_state: ResMut<NextState<GameState>>,
 ) {

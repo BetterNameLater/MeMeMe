@@ -8,7 +8,6 @@ pub fn people_enter_system<W: Component, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,
     player_only_people_on_query: Query<(With<EnterAble>, Without<W>)>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
 ) {
     let object_map = object_map_query.single();

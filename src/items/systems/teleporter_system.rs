@@ -1,59 +1,45 @@
+use crate::items::components::enterable::EnterAble;
 use crate::items::components::is_usable::IsUsable;
 use crate::items::components::teleporter::Teleporter;
-use crate::map::{Map, ObjectMap};
-use crate::player::events::NewPositionEvent;
+use crate::items::events::OnEnterEvent;
 use bevy::prelude::*;
-use bevy::utils::hashbrown::HashMap;
+use bevy::utils::HashSet;
 
-// teleport entities that enter the teleporter
-pub fn teleporter_system<W: Component, E: NewPositionEvent, T: Component>(
-    mut player_new_position_event: EventReader<E>,
-    object_map_query: Query<&Map, With<ObjectMap>>,
-    teleporter_query: Query<&Teleporter, (With<IsUsable>, Without<W>)>,
-    mut player_query: Query<&mut Transform, With<T>>,
+pub fn teleporter_system<W: Component, T: Component>(
+    teleporter_query: Query<&Teleporter, (With<IsUsable>, Without<W>, With<EnterAble>)>,
+    mut person_query: Query<&mut Transform, With<T>>,
+
+    mut on_enter_event_reader: EventReader<OnEnterEvent>,
 ) {
-    // TODO
-    if object_map_query.is_empty() {
-        return;
-    }
-    let map = object_map_query.single();
-    for event in player_new_position_event.read() {
-        let player = player_query.get_mut(event.get_entity());
-        if player.is_err() {
-            continue;
-        }
-        let mut player = player.unwrap();
-        if map.cells.get(&event.get_now()).is_none() {
-            continue;
-        }
-        let pos = map.cells.get(&event.get_now()).unwrap();
-        if let Ok(destination) = teleporter_query.get(*pos) {
-            player.translation = Vec3::new(destination.0.x as f32, destination.0.y as f32, 1.);
-            println!("teleporting player");
+    for on_enter_event in on_enter_event_reader.read() {
+        if let Ok(mut person) = person_query.get_mut(on_enter_event.person) {
+            if let Ok(teleporter) = teleporter_query.get(on_enter_event.item) {
+                person.translation = Vec3::new(teleporter.0.x as f32, teleporter.0.y as f32, 1.);
+            }
         }
     }
 }
 
-// Might be Refactored
+// TODO Might be Refactored
 // teleport all entities already on the teleporter if it's activated
 pub fn teleporter_activate_system<W: Component, T: Component>(
     teleporter_query: Query<(&Teleporter, &Transform), (Changed<IsUsable>, Without<W>)>,
     mut entities_query: Query<(Entity, &mut Transform), (With<T>, Without<Teleporter>)>,
 ) {
-    let mut moved: HashMap<Entity, ()> = HashMap::new();
+    let mut moved: HashSet<Entity> = HashSet::new();
     for (dest, src) in teleporter_query.iter() {
-        let mut entities: Vec<(Entity, Mut<'_, bevy::prelude::Transform>)> = entities_query
+        let mut entities: Vec<(Entity, Mut<'_, Transform>)> = entities_query
             .iter_mut()
             .filter(|(_, e)| {
                 e.translation.x == src.translation.x && e.translation.y == src.translation.y
             })
             .collect();
         for (entity, transform) in entities.iter_mut() {
-            if moved.contains_key(entity) {
+            if moved.contains(entity) {
                 continue;
             }
             transform.translation = Vec3::new(dest.0.x as f32, dest.0.y as f32, 1.);
-            moved.insert(*entity, ());
+            moved.insert(*entity);
         }
     }
 }
