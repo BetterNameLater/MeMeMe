@@ -21,3 +21,12 @@ pub mod components {
     pub mod single_use;
     pub mod teleporter;
 }
+pub mod bundle {
+    pub mod door_bundle;
+    pub mod item_bundle;
+    pub mod level_teleporter_bundle;
+    pub mod lever_bundle;
+    pub mod pressure_plate_bundle;
+    pub mod pressure_plate_on_off_bundle;
+    pub mod teleporter_bundle;
+}

@@ -1,4 +1,10 @@
 use crate::constantes::CELL_LENGTH;
+use crate::items::bundle::door_bundle::DoorBundle;
+use crate::items::bundle::item_bundle::ItemBundle;
+use crate::items::bundle::level_teleporter_bundle::LevelTeleporterBundle;
+use crate::items::bundle::lever_bundle::LeverBundle;
+use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
+use crate::items::bundle::teleporter_bundle::TeleporterBundle;
 use crate::items::components::debug_name::DebugName;
 use crate::items::components::dependencies::Dependencies;
 use crate::items::components::enterable::EnterAble;
@@ -10,7 +16,7 @@ use crate::items::components::people_on::PeopleOn;
 use crate::items::components::player_only::PlayerOnly;
 use crate::items::components::single_use::SingleUse;
 use crate::items::components::teleporter::Teleporter;
-use crate::items::systems::toggle::{Interact, Toggle};
+use crate::items::systems::toggle::Toggle;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
@@ -26,7 +32,11 @@ pub fn populate_items(
 
     for (key, object) in objects.iter() {
         let item = commands
-            .spawn((IsActivated(false), IsUsable, DebugName(key.clone())))
+            .spawn(ItemBundle {
+                is_usable: IsUsable,
+                is_activated: IsActivated(false),
+                debug_name: DebugName(key.clone()),
+            })
             .id();
         let position = Vec2i::new(
             object.position.x * CELL_LENGTH as i32,
@@ -37,23 +47,27 @@ pub fn populate_items(
 
         match &object.object_type {
             ObjectType::PressurePlate => {
-                commands.entity(item).insert(PeopleOn(0));
+                commands.entity(item).insert(PressurePlateBundle {
+                    // TODO check if player begins here
+                    people_on: PeopleOn(0),
+                });
             }
             ObjectType::Teleporter { destination } => {
-                commands.entity(item).insert(Teleporter(Vec2i::new(
-                    destination.x * 32,
-                    destination.y * 32,
-                )));
+                commands.entity(item).insert(TeleporterBundle {
+                    teleporter: Teleporter(Vec2i::new(destination.x * 32, destination.y * 32)),
+                });
             }
             ObjectType::Lever => {
-                commands.entity(item).insert(Toggle::<Interact>::new());
+                commands.entity(item).insert(LeverBundle {
+                    toggle: Toggle::new(),
+                });
             }
-            ObjectType::Door => {}
+            ObjectType::Door => { commands.entity(item).insert(DoorBundle {}); },
             ObjectType::LevelTeleporter { destination } => {
-                commands.entity(item).insert(EnterAble);
-                commands
-                    .entity(item)
-                    .insert(LevelTeleporter(destination.clone()));
+                commands.entity(item).insert(LevelTeleporterBundle {
+                    enterable: EnterAble,
+                    level_teleporter: LevelTeleporter(destination.clone()),
+                });
             }
         };
 

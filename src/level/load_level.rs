@@ -60,4 +60,5 @@ pub fn load_level(
     Player::create_player(&mut commands, level_tag);
     next_state.set(GameState::InLevel);
     commands.entity(level_to_go.1).despawn();
+    // TODO reset time
 }
