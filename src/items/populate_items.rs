@@ -10,7 +10,7 @@ use crate::items::components::people_on::PeopleOn;
 use crate::items::components::player_only::PlayerOnly;
 use crate::items::components::single_use::SingleUse;
 use crate::items::components::teleporter::Teleporter;
-use crate::items::systems::toggle::ToggleInteract;
+use crate::items::systems::toggle::{Interact, Toggle};
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
@@ -46,7 +46,7 @@ pub fn populate_items(
                 )));
             }
             ObjectType::Lever => {
-                commands.entity(item).insert(ToggleInteract);
+                commands.entity(item).insert(Toggle::<Interact>::new());
             }
             ObjectType::Door => {}
             ObjectType::LevelTeleporter { destination } => {

@@ -4,17 +4,29 @@ use crate::map::{Map, ObjectMap};
 use crate::player::events::NewPositionEvent;
 use crate::player::interact::InteractEvent;
 use bevy::prelude::*;
+use std::marker::PhantomData;
+
+pub struct Interact;
+pub struct Enter;
 
 #[derive(Component)]
-pub struct ToggleInteract;
-#[derive(Component)]
-pub struct ToggleOnEnter;
+pub struct Toggle<T> {
+    pub marker: PhantomData<T>,
+}
+
+impl<T> Toggle<T> {
+    pub fn new() -> Self {
+        Toggle {
+            marker: PhantomData,
+        }
+    }
+}
 
 // toggle entitie isActive when player interact with it
 pub fn toggle_on_interact_system<W: Component, E: InteractEvent>(
     mut player_new_position_event: EventReader<E>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    mut levers_query: Query<&mut IsActivated, (With<IsUsable>, With<ToggleInteract>, Without<W>)>,
+    mut levers_query: Query<&mut IsActivated, (With<IsUsable>, With<Toggle<Interact>>, Without<W>)>,
 ) {
     // TODO la c'est comme le "on enter" alors que ca devrait prendre l'event "E"
     let map = object_map_query.single();
@@ -36,7 +48,7 @@ pub fn toggle_on_interact_system<W: Component, E: InteractEvent>(
 pub fn toggle_on_enter_system<W: Component, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    mut levers_query: Query<&mut IsActivated, (With<IsUsable>, With<ToggleOnEnter>, Without<W>)>,
+    mut levers_query: Query<&mut IsActivated, (With<IsUsable>, With<Toggle<Enter>>, Without<W>)>,
 ) {
     // TODO
     if object_map_query.is_empty() {
