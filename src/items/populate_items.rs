@@ -18,7 +18,7 @@ use crate::items::components::people_on::PeopleOn;
 use crate::items::components::player_only::PlayerOnly;
 use crate::items::components::single_use::SingleUse;
 use crate::items::components::teleporter::Teleporter;
-use crate::items::systems::toggle::Toggle;
+use crate::items::components::toggle::Toggle;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
@@ -87,6 +87,7 @@ pub fn populate_items(
             ObjectType::PressurePlateOnOff => {
                 commands.entity(item).insert(PressurePlateOnOffBundle {
                     enterable: EnterAble,
+                    toggle_enter: Toggle::default(),
                 });
             }
             ObjectType::Button => {
@@ -104,6 +105,7 @@ pub fn populate_items(
             ObjectType::Lever => Color::YELLOW,
             ObjectType::Door => Color::MIDNIGHT_BLUE,
             ObjectType::LevelTeleporter { .. } => Color::ALICE_BLUE,
+            ObjectType::PressurePlateOnOff => Color::AZURE,
             _ => todo!(),
         };
 

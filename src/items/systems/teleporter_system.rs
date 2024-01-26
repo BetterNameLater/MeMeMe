@@ -8,7 +8,6 @@ use bevy::utils::HashSet;
 pub fn teleporter_system<W: Component, T: Component>(
     teleporter_query: Query<&Teleporter, (With<IsUsable>, Without<W>, With<EnterAble>)>,
     mut person_query: Query<&mut Transform, With<T>>,
-
     mut on_enter_event_reader: EventReader<OnEnterEvent>,
 ) {
     for on_enter_event in on_enter_event_reader.read() {

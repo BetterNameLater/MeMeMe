@@ -5,7 +5,7 @@ pub mod systems {
     pub mod level_teleporter_system;
     pub mod people_enter_system;
     pub mod teleporter_system;
-    pub mod toggle;
+    pub mod toggle_on_system;
     pub mod update_is_activated_system;
 }
 pub mod components {
@@ -20,6 +20,7 @@ pub mod components {
     pub mod player_only;
     pub mod single_use;
     pub mod teleporter;
+    pub mod toggle;
 }
 pub mod bundle {
     pub mod button_bundle;

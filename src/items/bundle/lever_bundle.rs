@@ -1,4 +1,4 @@
-use crate::items::systems::toggle::{Interact, Toggle};
+use crate::items::components::toggle::{Interact, Toggle};
 use bevy::prelude::Bundle;
 
 #[derive(Bundle)]
