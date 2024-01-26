@@ -1,9 +1,9 @@
 {
   "map": [
     [1,1,1,1,1,1,1,1],
-    [1,0,0,0,0,0,3,1],
     [1,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1]
   ],
   "objects": {
@@ -15,6 +15,17 @@
       "position": {
         "x": 2,
         "y": 3
+      },
+      "interaction_type": "player_only"
+    }  ,
+    "test_teleporter_is_teleporting": {
+      "data": {
+        "type": "level_teleporter",
+        "destination": "test_teleporter_is_teleporting_all_after_activation"
+      },
+      "position": {
+        "x": 0,
+        "y": 1
       },
       "interaction_type": "player_only"
     }
