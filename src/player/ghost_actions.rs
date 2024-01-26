@@ -1,14 +1,12 @@
 use super::actions::{Action, ActionType};
 use super::ghost::Ghost;
 use crate::constantes::*;
+use crate::math::vec2i::Vec2i;
+use crate::player::events::new_position_event::NewPositionEvent;
+use crate::player::GhostNewPositionEvent;
 use crate::ElapsedTimeFromStartRewind;
-
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
-
-use crate::math::vec2i::Vec2i;
-use crate::player::events::GhostNewPositionEvent;
-use crate::player::events::NewPositionEvent;
 use bevy::prelude::{EventWriter, Res, ResMut, Resource};
 use bevy::transform::components::Transform;
 

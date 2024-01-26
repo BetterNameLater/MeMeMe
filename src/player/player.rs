@@ -1,12 +1,13 @@
 use super::actions::{Action, ActionType};
-use super::events::{GhostNewPositionEvent, NewPositionEvent, PlayerNewPositionEvent, RewindEvent};
 use super::ghost::Ghost;
 use super::interact::{GhostInteractEvent, InteractEvent, PlayerInteractEvent};
 use super::move_direction::MoveDirection;
-use super::{ghost_actions_system, GhostActions};
+use super::{ghost_actions_system, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent};
 use crate::constantes::*;
 use crate::level::components::level_tag::LevelTag;
 use crate::math::vec2i::Vec2i;
+use crate::player::events::new_position_event::NewPositionEvent;
+use crate::player::events::rewind_event::RewindEvent;
 use crate::state::GameState;
 use crate::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;

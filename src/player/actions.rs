@@ -1,5 +1,4 @@
 use crate::player::move_direction::MoveDirection;
-
 use bevy::prelude::Entity;
 
 #[derive(Debug)]

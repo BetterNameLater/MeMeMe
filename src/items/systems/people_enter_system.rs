@@ -1,7 +1,7 @@
 use crate::items::components::enterable::EnterAble;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::map::{Map, ObjectMap};
-use crate::player::events::NewPositionEvent;
+use crate::player::events::new_position_event::NewPositionEvent;
 use bevy::prelude::{Component, EventReader, EventWriter, Query, With, Without};
 
 pub fn people_enter_system<W: Component, E: NewPositionEvent>(
