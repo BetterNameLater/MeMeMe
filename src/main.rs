@@ -4,7 +4,9 @@ mod items;
 mod level;
 mod map;
 mod map_parser;
-mod math;
+mod math {
+    pub mod vec2i;
+}
 mod menu;
 mod player;
 mod state;

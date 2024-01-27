@@ -1,9 +1,8 @@
-use crate::constantes::{CELL_LENGTH, PLAYER_START_TRANSFORM};
+use crate::constantes::{CELL_LENGTH, PLAYER_Z};
+use crate::math::vec2i::Vec2i;
 use crate::player::actions::Action;
 use bevy::math::Vec2;
-use bevy::prelude::{
-    default, BuildChildren, Color, Commands, Component, Entity, Sprite, SpriteBundle,
-};
+use bevy::prelude::{default, Color, Commands, Component, Entity, Sprite, SpriteBundle};
 
 #[derive(Component, Default, Debug)]
 pub struct Player {
@@ -11,10 +10,11 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn create_player(commands: &mut Commands, level_tag: Entity) {
+    pub fn spawn_player(commands: &mut Commands, position: Vec2i) -> Entity {
         let size = CELL_LENGTH / 2.;
-        commands.entity(level_tag).with_children(|parent| {
-            parent.spawn((
+
+        return commands
+            .spawn((
                 Player::default(),
                 SpriteBundle {
                     sprite: Sprite {
@@ -22,10 +22,10 @@ impl Player {
                         custom_size: Some(Vec2::new(size, size)),
                         ..default()
                     },
-                    transform: PLAYER_START_TRANSFORM,
+                    transform: position.to_transform(PLAYER_Z as i32),
                     ..default()
                 },
-            ));
-        });
+            ))
+            .id();
     }
 }

@@ -8,7 +8,7 @@ pub struct Dependencies<T: DependenciesType>(pub Vec<Entity>, PhantomData<T>);
 
 impl<T: DependenciesType> Dependencies<T> {
     pub fn new(entities: Vec<Entity>) -> Self {
-        Self(entities, PhantomData::default())
+        Self(entities, PhantomData)
     }
 }
 

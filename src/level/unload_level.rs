@@ -5,6 +5,7 @@ use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::hierarchy::DespawnRecursiveExt;
+use bevy::log::{debug, info};
 use bevy::prelude::{Commands, Entity, NextState, Query, Res, ResMut, With};
 
 pub fn unload_level(
@@ -15,7 +16,7 @@ pub fn unload_level(
     level_query: Query<Entity, With<LevelTag>>,
     level_to_go_query: Query<&LevelToGo>,
 ) {
-    println!("unload level");
+    info!("Unloading current level");
 
     // TODO pas tres elegant de verifier ca
     if level_to_go_query.get_single().is_ok() {
@@ -25,4 +26,5 @@ pub fn unload_level(
     }
     let level = level_query.single();
     commands.entity(level).despawn_recursive();
+    debug!("Current level recursively de-spawned");
 }

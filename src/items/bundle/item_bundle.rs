@@ -41,7 +41,7 @@ impl ItemBundle {
                     custom_size: Some(Vec2::new(size, size)),
                     ..default()
                 },
-                transform: position.to_initial_map_pos(1),
+                transform: position.to_transform(1),
                 ..default()
             },
         }

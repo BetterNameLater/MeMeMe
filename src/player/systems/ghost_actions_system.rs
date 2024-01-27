@@ -17,6 +17,13 @@ pub struct GhostActions {
     pub index: usize,
 }
 
+impl GhostActions {
+    pub fn reset(&mut self) {
+        self.actions.clear();
+        self.index = 0;
+    }
+}
+
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,

@@ -25,7 +25,15 @@
         "y": 1
       }
     },
-    
+    "lever_3": {
+      "data": {
+        "type": "lever"
+      },
+      "position": {
+        "x": 2,
+        "y": 1
+      }
+    },
     "teleporter_1": {
       "data": {
         "type": "teleporter",
@@ -36,7 +44,8 @@
       },
       "depends_on": {
         "lever_1": true,
-        "lever_2": false
+        "lever_2": false,
+        "lever_3": false
       },
       "interaction_type": "all",
       "position": {

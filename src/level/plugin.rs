@@ -10,6 +10,7 @@ use crate::items::systems::update_is_activated_system::{
     update_is_unusable_system, update_is_usable_system,
 };
 use crate::level::load_level::load_level;
+use crate::level::ressources::level_informations::LevelInformations;
 use crate::level::unload_level::unload_level;
 use crate::player::components::player::Player;
 use crate::player::plugin::PlayerPlugin;
@@ -28,6 +29,7 @@ impl Plugin for LevelPlugin {
             // resources
             .insert_resource(GhostActions::default())
             .insert_resource(StartTime(None))
+            .insert_resource(LevelInformations::default())
             .insert_resource(ElapsedTimeFromStartRewind(None))
             // plugins
             .add_plugins(EguiPlugin)
