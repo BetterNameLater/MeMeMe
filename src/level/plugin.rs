@@ -16,6 +16,7 @@ use crate::player::{Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositio
 use crate::state::GameState;
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
+use bevy_egui::{egui, EguiContexts, EguiPlugin};
 
 pub struct LevelPlugin;
 
@@ -27,6 +28,7 @@ impl Plugin for LevelPlugin {
             .insert_resource(StartTime(None))
             .insert_resource(ElapsedTimeFromStartRewind(None))
             // plugins
+            .add_plugins(EguiPlugin)
             .add_plugins(PlayerPlugin)
             // events
             .add_event::<OnEnterEvent>()
@@ -37,6 +39,7 @@ impl Plugin for LevelPlugin {
             .add_systems(
                 Update,
                 (
+                    ui_example_system,
                     elapsed_time_from_start_rewind_system,
                     (
                         people_enter_system::<PlayerOnly, GhostNewPositionEvent>,
@@ -63,4 +66,10 @@ impl Plugin for LevelPlugin {
                     .run_if(in_state(GameState::InLevel)),
             );
     }
+}
+
+fn ui_example_system(mut contexts: EguiContexts) {
+    egui::Window::new("Hello").show(contexts.ctx_mut(), |ui| {
+        ui.label("world");
+    });
 }

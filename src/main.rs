@@ -1,4 +1,3 @@
-// #![allow(dead_code, unused)]
 #![allow(clippy::type_complexity)]
 mod constantes;
 mod items;
