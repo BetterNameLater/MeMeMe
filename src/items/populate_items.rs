@@ -146,18 +146,22 @@ pub fn populate_items(
             .filter(|(_, on)| **on)
             .map(|(name, on)| *items_by_name.get(name).expect("Ce nom n'est pas défini !"))
             .collect();
-        commands
-            .entity(*item)
-            .insert(Dependencies::<On>::new(dependencies_on_entities));
+        if !dependencies_on_entities.is_empty() {
+            commands
+                .entity(*item)
+                .insert(Dependencies::<On>::new(dependencies_on_entities));
+        }
         let dependencies_off_entities: Vec<Entity> = object
             .depends_on
             .iter()
             .filter(|(_, on)| !**on)
             .map(|(name, on)| *items_by_name.get(name).expect("Ce nom n'est pas défini !"))
             .collect();
-        commands
-            .entity(*item)
-            .insert(Dependencies::<Off>::new(dependencies_off_entities));
+        if !dependencies_off_entities.is_empty() {
+            commands
+                .entity(*item)
+                .insert(Dependencies::<Off>::new(dependencies_off_entities));
+        }
         println!("{:?} {:?} have now deps !", name, item)
     }
 

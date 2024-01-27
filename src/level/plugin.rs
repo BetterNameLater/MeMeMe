@@ -6,7 +6,9 @@ use crate::items::systems::level_teleporter_system::level_teleporter_system;
 use crate::items::systems::people_enter_system::people_enter_system;
 use crate::items::systems::teleporter_system::{teleporter_activate_system, teleporter_system};
 use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_interact_system};
-use crate::items::systems::update_is_activated_system::update_is_usable_system;
+use crate::items::systems::update_is_activated_system::{
+    update_is_unusable_system, update_is_usable_system,
+};
 use crate::level::load_level::load_level;
 use crate::level::unload_level::unload_level;
 use crate::player::components::player::Player;
@@ -46,6 +48,10 @@ impl Plugin for LevelPlugin {
                         people_enter_system::<GhostOnly, PlayerNewPositionEvent>,
                     )
                         .after(player_input_system),
+                    update_is_usable_system
+                        .after(people_enter_system::<PlayerOnly, GhostNewPositionEvent>)
+                        .after(people_enter_system::<GhostOnly, PlayerNewPositionEvent>),
+                    update_is_unusable_system.after(update_is_usable_system),
                     (
                         level_teleporter_system,
                         count_people_on_system::<GhostOnly, Player>,
@@ -59,9 +65,7 @@ impl Plugin for LevelPlugin {
                         toggle_on_interact_system::<PlayerOnly, Ghost>,
                         toggle_on_interact_system::<GhostOnly, Player>,
                     )
-                        .after(people_enter_system::<PlayerOnly, GhostNewPositionEvent>)
-                        .after(people_enter_system::<GhostOnly, PlayerNewPositionEvent>),
-                    update_is_usable_system,
+                        .after(update_is_unusable_system),
                 )
                     .run_if(in_state(GameState::InLevel)),
             );

@@ -5,3 +5,5 @@ use bevy::prelude::Component;
 /// - ...
 #[derive(Component)]
 pub struct IsActivated(pub bool);
+
+// TODO reset on rewind !!
