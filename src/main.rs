@@ -15,6 +15,7 @@ use crate::level::plugin::LevelPlugin;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
 use crate::time::ElapsedTimeFromStartRewind;
+use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use state::GameState;
@@ -33,7 +34,10 @@ fn main() {
         .add_systems(Startup, loading_screen)
         .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
         // plugins
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(LogPlugin {
+            level: Level::INFO,
+            filter: "wgpu=error,bevy_render=info,bevy_ecs=info,me_me_me=trace".to_string(),
+        }))
         .add_plugins(LevelPlugin)
         // assets
         .init_asset_loader::<MapLoader>()
