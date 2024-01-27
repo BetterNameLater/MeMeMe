@@ -49,17 +49,6 @@ fn setup(mut commands: Commands) {
 
 #[derive(AssetCollection, Resource)]
 struct LevelAssets {
-    #[asset(
-        paths(
-            "levels/test_teleporter_is_teleporting.json",
-            "levels/test_teleporter_is_teleporting_all_after_activation.json",
-            "levels/test_pressure_plate_on_off.json",
-            "levels/entry_point.json",
-            "levels/example.json",
-            "levels/example_2.json",
-            "levels/test_button.json"
-        ),
-        collection(typed)
-    )]
+    #[asset(path = "levels", collection(typed))]
     levels: Vec<Handle<MapRepr>>,
 }

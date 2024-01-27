@@ -21,7 +21,7 @@
     "test_teleporter_is_teleporting": {
       "data": {
         "type": "level_teleporter",
-        "destination": "test_button"
+        "destination": "tests/test_button"
       },
       "position": {
         "x": 0,
