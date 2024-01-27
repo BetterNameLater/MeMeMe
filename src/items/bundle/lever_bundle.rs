@@ -3,7 +3,7 @@ use bevy::prelude::Bundle;
 
 /// Represent a Lever (or switch) item
 /// When a person `Interact` it activate itself
-#[derive(Bundle)]
+#[derive(Bundle, Default)]
 pub struct LeverBundle {
     pub toggle: Toggle<Interact>,
 }

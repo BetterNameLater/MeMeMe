@@ -4,7 +4,7 @@ use bevy::prelude::Bundle;
 
 /// Represent a LevelTeleporter item
 /// The LevelTeleporter call a state change to an other level when the player enter it
-#[derive(Bundle)]
+#[derive(Bundle, Default)]
 pub struct LevelTeleporterBundle {
     pub level_teleporter: LevelTeleporter,
     pub enterable: EnterAble,

@@ -1,12 +1,49 @@
+use crate::constantes::CELL_LENGTH;
 use crate::items::components::debug_name::DebugName;
 use crate::items::components::is_activated::IsActivated;
 use crate::items::components::is_usable::IsUsable;
-use bevy::prelude::Bundle;
+use crate::map_parser::map_repr::ObjectType;
+use crate::math::vec2i::Vec2i;
+use bevy::math::Vec2;
+use bevy::prelude::{default, Bundle, Color, Sprite};
+use bevy::sprite::SpriteBundle;
 
 /// Shared properties between all items
 #[derive(Bundle)]
 pub struct ItemBundle {
-    pub is_activated: IsActivated,
-    pub is_usable: IsUsable,
-    pub debug_name: DebugName,
+    is_activated: IsActivated,
+    is_usable: IsUsable,
+    debug_name: DebugName,
+    sprite_bundle: SpriteBundle,
+}
+
+impl ItemBundle {
+    pub fn new(debug_name: &str, position: Vec2i, object_type: &ObjectType) -> Self {
+        let size = CELL_LENGTH / 3.;
+
+        let color = match object_type {
+            ObjectType::PressurePlate => Color::GREEN,
+            ObjectType::Teleporter { .. } => Color::GOLD,
+            ObjectType::Lever => Color::YELLOW,
+            ObjectType::Door => Color::MIDNIGHT_BLUE,
+            ObjectType::LevelTeleporter { .. } => Color::ALICE_BLUE,
+            ObjectType::PressurePlateOnOff => Color::AZURE,
+            ObjectType::Button => Color::DARK_GRAY,
+        };
+
+        ItemBundle {
+            is_usable: IsUsable,
+            is_activated: IsActivated(false),
+            debug_name: DebugName(debug_name.to_string()),
+            sprite_bundle: SpriteBundle {
+                sprite: Sprite {
+                    color,
+                    custom_size: Some(Vec2::new(size, size)),
+                    ..default()
+                },
+                transform: position.to_initial_map_pos(1),
+                ..default()
+            },
+        }
+    }
 }
