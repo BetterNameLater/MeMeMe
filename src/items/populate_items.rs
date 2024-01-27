@@ -6,7 +6,6 @@ use crate::items::bundle::level_teleporter_bundle::LevelTeleporterBundle;
 use crate::items::bundle::lever_bundle::LeverBundle;
 use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
 use crate::items::bundle::pressure_plate_on_off_bundle::PressurePlateOnOffBundle;
-use crate::items::bundle::switch_bundle::SwitchBundle;
 use crate::items::bundle::teleporter_bundle::TeleporterBundle;
 use crate::items::components::debug_name::DebugName;
 use crate::items::components::dependencies::Dependencies;
@@ -98,9 +97,6 @@ pub fn populate_items(
                         toggle_interact: Toggle::default(),
                     });
             }
-            ObjectType::Switch => {
-                commands.entity(item).insert(SwitchBundle {});
-            }
         };
 
         let item_color = match object.object_type {
@@ -111,7 +107,6 @@ pub fn populate_items(
             ObjectType::LevelTeleporter { .. } => Color::ALICE_BLUE,
             ObjectType::PressurePlateOnOff => Color::AZURE,
             ObjectType::Button => Color::DARK_GRAY,
-            ObjectType::Switch => Color::LIME_GREEN,
         };
 
         commands.entity(item).insert(SpriteBundle {

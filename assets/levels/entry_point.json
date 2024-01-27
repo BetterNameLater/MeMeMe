@@ -17,11 +17,11 @@
         "y": 3
       },
       "interaction_type": "player_only"
-    }  ,
+    },
     "test_teleporter_is_teleporting": {
       "data": {
         "type": "level_teleporter",
-        "destination": "tests/test_switch"
+        "destination": "tests/test_lever"
       },
       "position": {
         "x": 0,

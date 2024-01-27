@@ -80,5 +80,4 @@ pub enum ObjectType {
     LevelTeleporter { destination: String },
     Lever,
     Button, // TODO avec le temps de cool-down variable ?
-    Switch,
 }
