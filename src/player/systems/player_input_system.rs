@@ -1,4 +1,5 @@
 use crate::constantes::*;
+use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::components::player::Player;
@@ -21,6 +22,7 @@ pub fn player_input_system(
     mut rewind_event: EventWriter<RewindEvent>,
     mut player_new_position_event: EventWriter<PlayerNewPositionEvent>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,
+    object_map_query: Query<&Map, With<ObjectMap>>,
 ) {
     // move actions
     let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
@@ -71,11 +73,15 @@ pub fn player_input_system(
                     action_type: ActionType::Interact,
                     timestamp_seconds: elapsed_time_from_start_rewind.0.unwrap_or(0.),
                 });
-                println!("interact !!!");
-                player_interact_event.send(InteractEvent::new(
-                    player_transform.translation.into(),
-                    player_entity,
-                ));
+                let object_map = object_map_query.single();
+                let pos: Vec2i = player_transform.translation.into();
+                if let Some(item) = object_map.cells.get(&pos) {
+                    player_interact_event.send(InteractEvent::new(
+                        player_transform.translation.into(),
+                        player_entity,
+                        *item,
+                    ));
+                }
             }
             _ => unreachable!(),
         }

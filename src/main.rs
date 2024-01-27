@@ -56,7 +56,8 @@ struct LevelAssets {
             "levels/test_pressure_plate_on_off.json",
             "levels/entry_point.json",
             "levels/example.json",
-            "levels/example_2.json"
+            "levels/example_2.json",
+            "levels/test_button.json"
         ),
         collection(typed)
     )]

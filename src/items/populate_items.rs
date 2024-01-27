@@ -106,7 +106,7 @@ pub fn populate_items(
             ObjectType::Door => Color::MIDNIGHT_BLUE,
             ObjectType::LevelTeleporter { .. } => Color::ALICE_BLUE,
             ObjectType::PressurePlateOnOff => Color::AZURE,
-            _ => todo!(),
+            ObjectType::Button => Color::DARK_GRAY,
         };
 
         commands.entity(item).insert(SpriteBundle {

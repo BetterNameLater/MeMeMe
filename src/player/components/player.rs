@@ -5,7 +5,7 @@ use bevy::prelude::{
     default, BuildChildren, Color, Commands, Component, Entity, Sprite, SpriteBundle,
 };
 
-#[derive(Component, Default)]
+#[derive(Component, Default, Debug)]
 pub struct Player {
     pub actions: Vec<Action>,
 }

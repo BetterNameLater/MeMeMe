@@ -21,7 +21,7 @@
     "test_teleporter_is_teleporting": {
       "data": {
         "type": "level_teleporter",
-        "destination": "test_pressure_plate_on_off"
+        "destination": "test_button"
       },
       "position": {
         "x": 0,

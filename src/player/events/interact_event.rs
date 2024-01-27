@@ -2,18 +2,20 @@ use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 use std::marker::PhantomData;
 
-#[derive(Event)]
+#[derive(Event, Debug)]
 pub struct InteractEvent<T> {
     pub pos: Vec2i,
-    pub entity: Entity,
+    pub person: Entity,
+    pub item: Entity,
     pub marker: PhantomData<T>,
 }
 
 impl<T> InteractEvent<T> {
-    pub fn new(pos: Vec2i, entity: Entity) -> Self {
+    pub fn new(pos: Vec2i, person: Entity, item: Entity) -> Self {
         Self {
             pos,
-            entity,
+            person,
+            item,
             marker: Default::default(),
         }
     }
