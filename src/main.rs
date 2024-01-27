@@ -15,7 +15,7 @@ use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
-use crate::time::{ElapsedTimeFromStartRewind, StartTime};
+use crate::time::ElapsedTimeFromStartRewind;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use state::GameState;

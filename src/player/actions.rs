@@ -11,4 +11,5 @@ pub struct Action {
 #[derive(Debug)]
 pub enum ActionType {
     Move(MoveDirection),
+    Interact,
 }

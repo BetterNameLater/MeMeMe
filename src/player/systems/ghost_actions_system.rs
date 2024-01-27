@@ -1,9 +1,9 @@
-use super::actions::{Action, ActionType};
-use super::ghost::Ghost;
 use crate::constantes::*;
 use crate::math::vec2i::Vec2i;
+use crate::player::actions::{Action, ActionType};
+use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEvent;
-use crate::player::GhostNewPositionEvent;
+use crate::player::{Ghost, GhostNewPositionEvent};
 use crate::ElapsedTimeFromStartRewind;
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
@@ -16,13 +16,12 @@ pub struct GhostActions {
     pub index: usize,
 }
 
-// systems
-
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
     elapsed_time_from_start_rewind: Res<ElapsedTimeFromStartRewind>,
     mut ghost_new_position_event: EventWriter<GhostNewPositionEvent>,
+    mut ghost_interact_event: EventWriter<InteractEvent<Ghost>>,
 ) {
     if let Some(current_time) = elapsed_time_from_start_rewind.0 {
         loop {
@@ -37,14 +36,20 @@ pub fn ghost_actions_system(
             if action_time > &current_time {
                 return;
             }
+            let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();
             match action_type {
                 ActionType::Move(move_direction) => {
                     let direction = move_direction.to_vec3();
-                    let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();
                     let before: Vec2i = ghost_transform.translation.into();
                     ghost_transform.translation += direction * CELL_LENGTH;
                     ghost_new_position_event.send(GhostNewPositionEvent::new(
                         before,
+                        ghost_transform.translation.into(),
+                        *ghost_id,
+                    ));
+                }
+                ActionType::Interact => {
+                    ghost_interact_event.send(InteractEvent::new(
                         ghost_transform.translation.into(),
                         *ghost_id,
                     ));

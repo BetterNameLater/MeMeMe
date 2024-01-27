@@ -4,7 +4,7 @@ use crate::level::components::level_to_go::LevelToGo;
 use crate::map::{Map, ObjectMap, WorldMap};
 use crate::map_parser::MapRepr;
 use crate::math::vec2i::Vec2i;
-use crate::player::player::Player;
+use crate::player::components::player::Player;
 use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
