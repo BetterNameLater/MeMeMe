@@ -7,16 +7,25 @@
     [0,0,0,0,0,0]
   ],
   "objects": {
-    "plaque_1": {
+    "lever_1": {
       "data": {
-        "type": "pressure_plate"
+        "type": "lever"
       },
-      "interaction_type": "all",
+      "position": {
+        "x": 0,
+        "y": 1
+      }
+    },
+    "lever_2": {
+      "data": {
+        "type": "lever"
+      },
       "position": {
         "x": 1,
         "y": 1
       }
     },
+    
     "teleporter_1": {
       "data": {
         "type": "teleporter",
@@ -25,13 +34,14 @@
           "y": 3
         }
       },
-      "interaction_type": "ghost_only",
+      "depends_on": {
+        "lever_1": true,
+        "lever_2": false
+      },
+      "interaction_type": "all",
       "position": {
         "x": 3,
         "y": 3
-      },
-      "depends_on": {
-        "plaque_1": true
       }
     }
   }

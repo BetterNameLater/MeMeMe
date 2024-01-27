@@ -55,7 +55,7 @@ pub struct ObjectRepr {
     #[serde(rename = "data")]
     pub object_type: ObjectType,
     #[serde(default)]
-    pub depends_on: Vec<String>,
+    pub depends_on: HashMap<String, bool>,
     #[serde(default)]
     pub single_use: bool,
 }

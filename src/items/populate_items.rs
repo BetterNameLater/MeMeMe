@@ -8,7 +8,7 @@ use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
 use crate::items::bundle::pressure_plate_on_off_bundle::PressurePlateOnOffBundle;
 use crate::items::bundle::teleporter_bundle::TeleporterBundle;
 use crate::items::components::debug_name::DebugName;
-use crate::items::components::dependencies::Dependencies;
+use crate::items::components::dependencies::{Dependencies, Off, On};
 use crate::items::components::enterable::EnterAble;
 use crate::items::components::ghost_only::GhostOnly;
 use crate::items::components::is_activated::IsActivated;
@@ -140,12 +140,26 @@ pub fn populate_items(
         if object.depends_on.is_empty() {
             continue;
         }
-        let deps_entities: Vec<Entity> = object
+        let dependencies_on_entities: Vec<Entity> = object
             .depends_on
             .iter()
-            .map(|name| *items_by_name.get(name).expect("Ce nom n'est pas défini !"))
+            .filter(|(_, on)| **on)
+            .map(|(name, on)| *items_by_name.get(name).expect("Ce nom n'est pas défini !"))
             .collect();
-        commands.entity(*item).insert(Dependencies(deps_entities));
+        commands
+            .entity(*item)
+            .insert(Dependencies::<On>::new(dependencies_on_entities));
+        let dependencies_off_entities: Vec<Entity> = object
+            .depends_on
+            .iter()
+            .filter(|(_, on)| !**on)
+            .map(|(name, on)| *items_by_name.get(name).expect("Ce nom n'est pas défini !"))
+            .collect();
+        commands
+            .entity(*item)
+            .insert(Dependencies::<Off>::new(dependencies_off_entities));
+        println!("{:?} {:?} have now deps !", name, item)
     }
+
     items_by_vec2i
 }

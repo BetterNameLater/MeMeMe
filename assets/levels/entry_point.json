@@ -21,7 +21,7 @@
     "test_teleporter_is_teleporting": {
       "data": {
         "type": "level_teleporter",
-        "destination": "tests/test_lever"
+        "destination": "tests/test_dependencies"
       },
       "position": {
         "x": 0,

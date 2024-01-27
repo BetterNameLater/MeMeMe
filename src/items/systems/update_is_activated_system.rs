@@ -1,12 +1,12 @@
-use crate::items::components::dependencies::Dependencies;
+use crate::items::components::dependencies::{Dependencies, On};
 use crate::items::components::is_activated::IsActivated;
 use crate::items::components::is_usable::IsUsable;
 use bevy::prelude::*;
 
-pub fn update_is_activated_system(
+pub fn update_is_usable_system(
     mut commands: Commands,
     is_activated_query: Query<(Entity, &IsActivated)>,
-    is_usable_and_dependencies_query: Query<(Entity, &Dependencies, Option<&IsUsable>)>,
+    is_usable_and_dependencies_query: Query<(Entity, &Dependencies<On>, Option<&IsUsable>)>,
 ) {
     for (is_usable_entity, is_usable_dependencies, is_usable) in &is_usable_and_dependencies_query {
         let my_dependencies = is_activated_query
