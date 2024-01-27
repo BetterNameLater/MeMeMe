@@ -30,5 +30,6 @@ pub mod bundle {
     pub mod lever_bundle;
     pub mod pressure_plate_bundle;
     pub mod pressure_plate_on_off_bundle;
+    pub mod switch_bundle;
     pub mod teleporter_bundle;
 }
