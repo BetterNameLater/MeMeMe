@@ -3,9 +3,6 @@ use crate::map_parser::BackgroundType;
 use crate::math::vec2i::Vec2i;
 use bevy::{prelude::*, utils::HashMap};
 
-#[derive(Event)]
-pub struct CellSpawned(pub Entity);
-
 #[derive(Component)]
 pub struct Cell;
 
@@ -21,7 +18,7 @@ pub struct WorldMap;
 pub struct ObjectMap;
 
 impl Map {
-    pub fn map_to_local(&self, pos: Vec2i) -> Vec2 {
+    fn map_to_local(&self, pos: Vec2i) -> Vec2 {
         Vec2 {
             x: CELL_LENGTH * pos.x as f32,
             y: CELL_LENGTH * pos.y as f32,
