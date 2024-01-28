@@ -1,4 +1,5 @@
 use crate::constantes::*;
+use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
@@ -9,7 +10,6 @@ use crate::player::events::rewind_event::RewindEvent;
 use crate::player::move_direction::MoveDirection;
 use crate::player::PlayerNewPositionEvent;
 use bevy::prelude::*;
-use crate::level::ressources::level_informations::LevelInformations;
 
 #[allow(clippy::too_many_arguments)]
 pub fn player_input_system(
@@ -42,8 +42,8 @@ pub fn player_input_system(
             timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
         });
         if level_infos.elapsed_time_from_start_rewind.is_none() {
-           level_infos. start_time = Some(time.elapsed_seconds());
-           level_infos. elapsed_time_from_start_rewind = Some(0.);
+            level_infos.start_time = Some(time.elapsed_seconds());
+            level_infos.elapsed_time_from_start_rewind = Some(0.);
         }
 
         /*

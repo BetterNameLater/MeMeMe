@@ -1,4 +1,5 @@
 use crate::constantes::*;
+use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
@@ -9,7 +10,6 @@ use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
 use bevy::prelude::{EventWriter, Reflect, Res, ResMut, Resource};
 use bevy::transform::components::Transform;
-use crate::level::ressources::level_informations::LevelInformations;
 
 #[derive(Resource, Debug, Default, Reflect)]
 pub struct GhostActions {
