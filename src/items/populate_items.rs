@@ -9,6 +9,7 @@ use crate::items::bundle::pressure_plate_on_off_bundle::PressurePlateOnOffBundle
 use crate::items::bundle::teleporter_bundle::TeleporterBundle;
 use crate::items::components::dependencies::{Dependencies, Off, On};
 use crate::items::components::ghost_only::GhostOnly;
+use crate::items::components::killing::Killing;
 use crate::items::components::level_teleporter::LevelTeleporter;
 use crate::items::components::player_only::PlayerOnly;
 use crate::items::components::single_use::SingleUse;
