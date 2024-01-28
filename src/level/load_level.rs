@@ -9,7 +9,6 @@ use crate::math::vec2i::Vec2i;
 use crate::player::components::player::Player;
 use crate::player::GhostActions;
 use crate::state::GameState;
-use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::prelude::*;
@@ -35,8 +34,6 @@ pub fn load_level(
     custom_assets: Res<Assets<MapRepr>>,
     mut next_state: ResMut<NextState<GameState>>,
     level_to_go_query: Query<(&LevelToGo, Entity)>,
-    mut start_time: ResMut<StartTime>,
-    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut ghost_actions: ResMut<GhostActions>,
     mut level_infos: ResMut<LevelInformations>,
 ) {
@@ -106,8 +103,6 @@ pub fn load_level(
     commands.entity(level_to_go.1).despawn();
 
     // reset ressources
-    start_time.0 = None;
-    elapsed_time_from_start_rewind.0 = None;
     ghost_actions.reset();
     level_infos.reset(start_position);
 }

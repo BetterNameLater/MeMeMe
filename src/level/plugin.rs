@@ -11,13 +11,13 @@ use crate::items::systems::update_is_activated_system::{
 };
 use crate::level::load_level::load_level;
 use crate::level::ressources::level_informations::LevelInformations;
+use crate::level::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
 use crate::level::unload_level::unload_level;
 use crate::player::components::player::Player;
 use crate::player::plugin::PlayerPlugin;
 use crate::player::systems::player_input_system::player_input_system;
 use crate::player::{Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositionEvent};
 use crate::state::GameState;
-use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
 
 pub struct LevelPlugin;
@@ -27,9 +27,7 @@ impl Plugin for LevelPlugin {
         app
             // resources
             .insert_resource(GhostActions::default())
-            .insert_resource(StartTime(None))
             .insert_resource(LevelInformations::default())
-            .insert_resource(ElapsedTimeFromStartRewind(None))
             // plugins
             .add_plugins(PlayerPlugin)
             // events

@@ -8,8 +8,8 @@ use crate::player::events::new_position_event::NewPositionEvent;
 use crate::player::events::rewind_event::RewindEvent;
 use crate::player::move_direction::MoveDirection;
 use crate::player::PlayerNewPositionEvent;
-use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
+use crate::level::ressources::level_informations::LevelInformations;
 
 #[allow(clippy::too_many_arguments)]
 pub fn player_input_system(
@@ -17,8 +17,7 @@ pub fn player_input_system(
     mut player_query: Query<&mut Player>,
     key_inputs: Res<Input<KeyCode>>,
     time: Res<Time>,
-    mut start_time: ResMut<StartTime>,
-    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
+    mut level_infos: ResMut<LevelInformations>,
     mut rewind_event: EventWriter<RewindEvent>,
     mut player_new_position_event: EventWriter<PlayerNewPositionEvent>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,
@@ -40,11 +39,11 @@ pub fn player_input_system(
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity,
             action_type: ActionType::Move(move_direction),
-            timestamp_seconds: elapsed_time_from_start_rewind.0.unwrap_or(0.),
+            timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
         });
-        if elapsed_time_from_start_rewind.0.is_none() {
-            start_time.0 = Some(time.elapsed_seconds());
-            elapsed_time_from_start_rewind.0 = Some(0.);
+        if level_infos.elapsed_time_from_start_rewind.is_none() {
+           level_infos. start_time = Some(time.elapsed_seconds());
+           level_infos. elapsed_time_from_start_rewind = Some(0.);
         }
 
         /*
@@ -71,7 +70,7 @@ pub fn player_input_system(
                 player_query.single_mut().actions.push(Action {
                     ghost_entity: player_entity,
                     action_type: ActionType::Interact,
-                    timestamp_seconds: elapsed_time_from_start_rewind.0.unwrap_or(0.),
+                    timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
                 });
                 let object_map = object_map_query.single();
                 let pos: Vec2i = player_transform.translation.into();

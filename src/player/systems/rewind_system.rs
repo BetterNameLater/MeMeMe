@@ -4,7 +4,6 @@ use crate::level::ressources::level_informations::LevelInformations;
 use crate::player::components::player::Player;
 use crate::player::events::rewind_event::RewindEvent;
 use crate::player::{Ghost, GhostActions};
-use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
 
 #[allow(clippy::too_many_arguments)]
@@ -14,8 +13,6 @@ pub fn rewind_system(
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
     mut level_infos: ResMut<LevelInformations>,
-    mut start_time: ResMut<StartTime>,
-    mut elapsed_time_from_start_rewind: ResMut<ElapsedTimeFromStartRewind>,
     mut ghost_actions: ResMut<GhostActions>,
     mut rewind_event: EventReader<RewindEvent>,
 ) {
@@ -23,6 +20,10 @@ pub fn rewind_system(
         return;
     }
     rewind_event.clear();
+    if level_infos.elapsed_time_from_start_rewind.is_none() {
+        debug!("Rewind without actual start");
+        return;
+    }
     debug!("Rewind");
     let (player_entity, mut player, mut player_transform, mut player_name) =
         player_query.single_mut();
@@ -34,9 +35,6 @@ pub fn rewind_system(
     });
     ghost_actions.index = 0;
     player.actions.clear();
-
-    start_time.0 = None;
-    elapsed_time_from_start_rewind.0 = None;
 
     let start_transform = level_infos
         .player_start_position
@@ -51,7 +49,6 @@ pub fn rewind_system(
 
     // change name
     player_name.set(format!("{}Ghost", level_infos.ghost_count));
-    level_infos.ghost_count += 1;
 
     // insert a new player to replace
     let new_player = Player::spawn_player(&mut commands, level_infos.player_start_position);
@@ -61,4 +58,6 @@ pub fn rewind_system(
     ghost_transform_query.for_each_mut(|mut ghost_transform| {
         *ghost_transform = start_transform;
     });
+
+    level_infos.rewind();
 }

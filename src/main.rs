@@ -10,7 +10,6 @@ mod math {
 mod menu;
 mod player;
 mod state;
-mod time;
 
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
@@ -18,7 +17,6 @@ use crate::level::ressources::level_informations::LevelInformations;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
 use crate::player::GhostActions;
-use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use bevy::window::WindowResolution;
@@ -58,8 +56,6 @@ fn main() {
         .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
         .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
-        .add_plugins(ResourceInspectorPlugin::<StartTime>::default())
-        .add_plugins(ResourceInspectorPlugin::<ElapsedTimeFromStartRewind>::default())
         // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()

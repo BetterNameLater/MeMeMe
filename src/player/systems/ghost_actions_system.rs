@@ -5,11 +5,11 @@ use crate::player::actions::{Action, ActionType};
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEvent;
 use crate::player::{Ghost, GhostNewPositionEvent};
-use crate::ElapsedTimeFromStartRewind;
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
 use bevy::prelude::{EventWriter, Reflect, Res, ResMut, Resource};
 use bevy::transform::components::Transform;
+use crate::level::ressources::level_informations::LevelInformations;
 
 #[derive(Resource, Debug, Default, Reflect)]
 pub struct GhostActions {
@@ -27,12 +27,12 @@ impl GhostActions {
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
-    elapsed_time_from_start_rewind: Res<ElapsedTimeFromStartRewind>,
+    level_informations: Res<LevelInformations>,
     mut ghost_new_position_event: EventWriter<GhostNewPositionEvent>,
     mut ghost_interact_event: EventWriter<InteractEvent<Ghost>>,
     object_map_query: Query<&Map, With<ObjectMap>>,
 ) {
-    if let Some(current_time) = elapsed_time_from_start_rewind.0 {
+    if let Some(current_time) = level_informations.elapsed_time_from_start_rewind {
         loop {
             if ghost_actions.index >= ghost_actions.actions.len() {
                 return;
