@@ -5,7 +5,7 @@ use crate::map_parser::map_repr::ObjectType;
 use crate::math::vec2i::Vec2i;
 use bevy::core::Name;
 use bevy::math::Vec2;
-use bevy::prelude::{default, Bundle, Color, Sprite};
+use bevy::prelude::{default, Bundle, Color, Component, Sprite};
 use bevy::sprite::SpriteBundle;
 
 /// Shared properties between all items
@@ -15,7 +15,11 @@ pub struct ItemBundle {
     is_usable: IsUsable,
     name: Name,
     sprite_bundle: SpriteBundle,
+    marker: Item,
 }
+
+#[derive(Component)]
+pub struct Item;
 
 impl ItemBundle {
     pub fn new(debug_name: &str, position: Vec2i, object_type: &ObjectType) -> Self {
@@ -44,6 +48,7 @@ impl ItemBundle {
                 transform: position.to_transform(1),
                 ..default()
             },
+            marker: Item,
         }
     }
 }
