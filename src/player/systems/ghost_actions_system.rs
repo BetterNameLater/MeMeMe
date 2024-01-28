@@ -8,10 +8,10 @@ use crate::player::{Ghost, GhostNewPositionEvent};
 use crate::ElapsedTimeFromStartRewind;
 use bevy::ecs::query::With;
 use bevy::ecs::system::Query;
-use bevy::prelude::{EventWriter, Res, ResMut, Resource};
+use bevy::prelude::{EventWriter, Reflect, Res, ResMut, Resource};
 use bevy::transform::components::Transform;
 
-#[derive(Resource, Debug, Default)]
+#[derive(Resource, Debug, Default, Reflect)]
 pub struct GhostActions {
     pub actions: Vec<Action>,
     pub index: usize,

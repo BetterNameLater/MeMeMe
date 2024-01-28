@@ -14,12 +14,16 @@ mod time;
 
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
+use crate::level::ressources::level_informations::LevelInformations;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
-use crate::time::ElapsedTimeFromStartRewind;
+use crate::player::GhostActions;
+use crate::time::{ElapsedTimeFromStartRewind, StartTime};
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
+use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
+use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
 use state::GameState;
 
 fn main() {
@@ -36,11 +40,26 @@ fn main() {
         .add_systems(Startup, loading_screen)
         .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
         // plugins
-        .add_plugins(DefaultPlugins.set(LogPlugin {
-            level: Level::INFO,
-            filter: "wgpu=error,bevy_render=info,bevy_ecs=info,me_me_me=trace".to_string(),
-        }))
+        .add_plugins(
+            DefaultPlugins
+                .set(LogPlugin {
+                    level: Level::INFO,
+                    filter: "wgpu=error,bevy_render=info,bevy_ecs=info,me_me_me=trace".to_string(),
+                })
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        resolution: WindowResolution::new(1600., 900.),
+                        ..default()
+                    }),
+                    ..default()
+                }),
+        )
         .add_plugins(LevelPlugin)
+        .add_plugins(WorldInspectorPlugin::new())
+        .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
+        .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
+        .add_plugins(ResourceInspectorPlugin::<StartTime>::default())
+        .add_plugins(ResourceInspectorPlugin::<ElapsedTimeFromStartRewind>::default())
         // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()

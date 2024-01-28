@@ -19,7 +19,6 @@ use crate::player::{Ghost, GhostActions, GhostNewPositionEvent, PlayerNewPositio
 use crate::state::GameState;
 use crate::time::{elapsed_time_from_start_rewind_system, ElapsedTimeFromStartRewind, StartTime};
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 pub struct LevelPlugin;
 
@@ -32,7 +31,6 @@ impl Plugin for LevelPlugin {
             .insert_resource(LevelInformations::default())
             .insert_resource(ElapsedTimeFromStartRewind(None))
             // plugins
-            .add_plugins(WorldInspectorPlugin::new())
             .add_plugins(PlayerPlugin)
             // events
             .add_event::<OnEnterEvent>()

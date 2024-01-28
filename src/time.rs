@@ -1,9 +1,9 @@
-use bevy::prelude::{Res, ResMut, Resource, Time};
+use bevy::prelude::{Reflect, Res, ResMut, Resource, Time};
 
-#[derive(Resource)]
+#[derive(Resource, Reflect)]
 pub struct StartTime(pub Option<f32>);
 
-#[derive(Resource)]
+#[derive(Resource, Reflect)]
 pub struct ElapsedTimeFromStartRewind(pub Option<f32>);
 
 pub fn elapsed_time_from_start_rewind_system(
