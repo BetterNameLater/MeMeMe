@@ -14,6 +14,7 @@ pub mod components {
     pub mod ghost_only;
     pub mod is_activated;
     pub mod is_usable;
+    pub mod killing;
     pub mod level_teleporter;
     pub mod people_on;
     pub mod player_only;

@@ -62,6 +62,8 @@ pub struct ObjectRepr {
     #[serde(default)]
     pub single_use: bool,
     #[serde(default)]
+    pub killing: bool,
+    #[serde(default)]
     pub start_timer: Option<f32>,
 }
 

@@ -93,6 +93,10 @@ pub fn populate_items(
             commands.entity(item).insert(SingleUse);
         }
 
+        if object.killing {
+            commands.entity(item).insert(Killing);
+        }
+
         if let Some(start_timer) = object.start_timer {
             commands.entity(item).insert(StartTimer(start_timer));
         }
