@@ -15,7 +15,7 @@ use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map_parser::{MapLoader, MapRepr};
-use crate::menu::loading_screen::{loading_screen, stop_loading_screen};
+use crate::menu::loading_screen::{error_screen, loading_screen, unload_message_screen};
 use crate::player::GhostActions;
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
@@ -31,12 +31,14 @@ fn main() {
         .add_loading_state(
             LoadingState::new(GameState::BootingGame)
                 .continue_to_state(GameState::LoadingLevel)
+                .on_failure_continue_to_state(GameState::ErrorInitialLoad)
                 .load_collection::<LevelAssets>(),
         )
         // systems
         .add_systems(Startup, setup)
         .add_systems(Startup, loading_screen)
-        .add_systems(OnExit(GameState::BootingGame), stop_loading_screen)
+        .add_systems(OnExit(GameState::BootingGame), unload_message_screen)
+        .add_systems(OnEnter(GameState::ErrorInitialLoad), error_screen)
         // plugins
         .add_plugins(
             DefaultPlugins

@@ -29,7 +29,10 @@ impl AssetLoader for MapLoader {
         Box::pin(async move {
             let mut bytes = Vec::new();
             reader.read_to_end(&mut bytes).await?;
-            Ok(serde_json::from_slice::<MapRepr>(&bytes).unwrap())
+            match serde_json::from_slice::<MapRepr>(&bytes) {
+                Ok(r) => Ok(r),
+                Err(e) => Err(e.into()),
+            }
         })
     }
 

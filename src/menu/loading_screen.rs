@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct LoadingScreen;
+pub struct MessageScreen;
 
-pub fn loading_screen(mut commands: Commands) {
+fn message_screen(mut commands: Commands, message: &str) {
     commands
         .spawn((
             NodeBundle {
@@ -18,12 +18,12 @@ pub fn loading_screen(mut commands: Commands) {
                 background_color: Color::rgb(0.15, 0.15, 0.15).into(),
                 ..default()
             },
-            LoadingScreen,
+            MessageScreen,
         ))
         .with_children(|parent| {
             parent.spawn((
                 TextBundle::from_section(
-                    "Loading...",
+                    message,
                     TextStyle {
                         font_size: 30.0,
                         ..default()
@@ -38,10 +38,21 @@ pub fn loading_screen(mut commands: Commands) {
         });
 }
 
-pub fn stop_loading_screen(
+pub fn loading_screen(commands: Commands) {
+    debug!("Load loading screen");
+    message_screen(commands, "Loading...")
+}
+
+pub fn error_screen(commands: Commands) {
+    debug!("Load error screen");
+    message_screen(commands, "An error occurred")
+}
+
+pub fn unload_message_screen(
     mut commands: Commands,
-    loading_screen_query: Query<Entity, With<LoadingScreen>>,
+    loading_screen_query: Query<Entity, With<MessageScreen>>,
 ) {
+    debug!("Unload message screen");
     let loading_screen = loading_screen_query.single();
     commands.entity(loading_screen).despawn_recursive();
 }

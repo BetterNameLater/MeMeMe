@@ -6,4 +6,5 @@ pub enum GameState {
     BootingGame,
     LoadingLevel,
     InLevel,
+    ErrorInitialLoad,
 }
