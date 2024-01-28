@@ -1,5 +1,4 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
-use crate::items::components::is_usable::IsUsable;
 use crate::map_parser::map_repr::ObjectType;
 use crate::math::vec2i::Vec2i;
 use bevy::core::Name;
@@ -10,7 +9,6 @@ use bevy::sprite::SpriteBundle;
 /// Shared properties between all items
 #[derive(Bundle)]
 pub struct ItemBundle {
-    is_usable: IsUsable,
     name: Name,
     sprite_bundle: SpriteBundle,
     marker: Item,
@@ -42,7 +40,6 @@ impl ItemBundle {
         };
 
         ItemBundle {
-            is_usable: IsUsable,
             name: Name::new(debug_name.to_string()),
             sprite_bundle: SpriteBundle {
                 sprite: Sprite {

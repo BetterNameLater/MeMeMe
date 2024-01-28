@@ -1,3 +1,4 @@
+use crate::items::bundle::item_bundle::Item;
 use crate::items::components::dependencies::{Dependencies, Off, On};
 use crate::items::components::is_activated::IsActivated;
 use crate::items::components::is_usable::IsUsable;
@@ -6,14 +7,18 @@ use bevy::prelude::*;
 pub fn update_is_usable_system(
     mut commands: Commands,
     entity_is_activated_query: Query<(Entity, &IsActivated)>,
-    entity_dependencies_query: Query<(Entity, &Dependencies<On>)>,
+    entity_dependencies_query: Query<(Entity, Option<&Dependencies<On>>), With<Item>>,
 ) {
-    for (item, is_usable_dependencies) in &entity_dependencies_query {
-        let one_is_not_activated = entity_is_activated_query
-            .iter()
-            .any(|(id, is_activated)| is_usable_dependencies.0.contains(&id) && !is_activated.0);
-        if one_is_not_activated {
-            commands.entity(item).remove::<IsUsable>();
+    for (item, some_dependencies) in &entity_dependencies_query {
+        if let Some(dependencies) = some_dependencies {
+            let one_is_not_activated = entity_is_activated_query
+                .iter()
+                .any(|(id, is_activated)| dependencies.0.contains(&id) && !is_activated.0);
+            if one_is_not_activated {
+                commands.entity(item).remove::<IsUsable>();
+            } else {
+                commands.entity(item).insert(IsUsable);
+            }
         } else {
             commands.entity(item).insert(IsUsable);
         }

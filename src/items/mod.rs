@@ -7,7 +7,7 @@ pub mod systems {
     pub mod people_enter_system;
     pub mod teleporter_system;
     pub mod toggle_on_system;
-    pub mod update_is_activated_system;
+    pub mod update_is_usable_system;
     pub mod visual_system;
 }
 pub mod components {
