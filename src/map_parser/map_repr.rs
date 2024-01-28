@@ -61,6 +61,8 @@ pub struct ObjectRepr {
     pub depends_on: HashMap<String, bool>,
     #[serde(default)]
     pub single_use: bool,
+    #[serde(default)]
+    pub start_timer: Option<f32>,
 }
 
 #[derive(Deserialize, Debug, Default)]

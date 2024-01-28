@@ -18,6 +18,7 @@ pub mod components {
     pub mod people_on;
     pub mod player_only;
     pub mod single_use;
+    pub mod start_timer;
     pub mod teleporter;
     pub mod toggle;
 }

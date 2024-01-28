@@ -12,6 +12,7 @@ use crate::items::components::ghost_only::GhostOnly;
 use crate::items::components::level_teleporter::LevelTeleporter;
 use crate::items::components::player_only::PlayerOnly;
 use crate::items::components::single_use::SingleUse;
+use crate::items::components::start_timer::StartTimer;
 use crate::items::components::teleporter::Teleporter;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
@@ -90,6 +91,10 @@ pub fn populate_items(
 
         if object.single_use {
             commands.entity(item).insert(SingleUse);
+        }
+
+        if let Some(start_timer) = object.start_timer {
+            commands.entity(item).insert(StartTimer(start_timer));
         }
     }
 
