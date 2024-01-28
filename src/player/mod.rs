@@ -12,8 +12,8 @@ pub mod components {
 }
 pub mod systems {
     pub mod ghost_actions_system;
-    pub mod on_player_rewind_system;
     pub mod player_input_system;
+    pub mod rewind_system;
 }
 pub mod move_direction;
 pub mod plugin;

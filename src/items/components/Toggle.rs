@@ -9,5 +9,5 @@ pub struct Enter;
 
 #[derive(Component, Default)]
 pub struct Toggle<T> {
-    pub marker: PhantomData<T>,
+    marker: PhantomData<T>,
 }

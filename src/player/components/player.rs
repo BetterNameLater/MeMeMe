@@ -1,6 +1,7 @@
 use crate::constantes::{CELL_LENGTH, PLAYER_Z};
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::Action;
+use bevy::core::Name;
 use bevy::math::Vec2;
 use bevy::prelude::{default, Color, Commands, Component, Entity, Sprite, SpriteBundle};
 
@@ -15,6 +16,7 @@ impl Player {
 
         return commands
             .spawn((
+                Name::new("Player"),
                 Player::default(),
                 SpriteBundle {
                     sprite: Sprite {

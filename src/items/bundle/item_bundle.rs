@@ -1,9 +1,9 @@
 use crate::constantes::CELL_LENGTH;
-use crate::items::components::debug_name::DebugName;
 use crate::items::components::is_activated::IsActivated;
 use crate::items::components::is_usable::IsUsable;
 use crate::map_parser::map_repr::ObjectType;
 use crate::math::vec2i::Vec2i;
+use bevy::core::Name;
 use bevy::math::Vec2;
 use bevy::prelude::{default, Bundle, Color, Sprite};
 use bevy::sprite::SpriteBundle;
@@ -13,7 +13,7 @@ use bevy::sprite::SpriteBundle;
 pub struct ItemBundle {
     is_activated: IsActivated,
     is_usable: IsUsable,
-    debug_name: DebugName,
+    name: Name,
     sprite_bundle: SpriteBundle,
 }
 
@@ -34,7 +34,7 @@ impl ItemBundle {
         ItemBundle {
             is_usable: IsUsable,
             is_activated: IsActivated(false),
-            debug_name: DebugName(debug_name.to_string()),
+            name: Name::new(debug_name.to_string()),
             sprite_bundle: SpriteBundle {
                 sprite: Sprite {
                     color,

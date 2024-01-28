@@ -53,8 +53,20 @@ pub fn load_level(
         .unwrap();
 
     let level = custom_assets.get(level_asset.clone()).unwrap();
+
+    let level_tag = commands
+        .spawn((
+            LevelTag,
+            SpriteBundle::default(),
+            Name::new(level_asset.path().unwrap().to_string()),
+        ))
+        .id();
+
     let mut world_map = Map::default();
-    let level_tag = commands.spawn((LevelTag, SpriteBundle::default())).id();
+    let world_map_entity = commands
+        .spawn((WorldMap, SpriteBundle::default(), Name::new("WorldMap")))
+        .id();
+
     let items = populate_items(&mut commands, level_tag, &level.objects);
     level
         .map
@@ -68,7 +80,7 @@ pub fn load_level(
                 .for_each(|(x, background_type)| {
                     world_map.spawn_cell(
                         &mut commands,
-                        level_tag,
+                        world_map_entity,
                         Vec2i {
                             x: x as i32,
                             y: y as i32,
@@ -78,11 +90,14 @@ pub fn load_level(
                 })
         });
 
+    commands.entity(world_map_entity).insert(world_map);
+    commands.entity(level_tag).add_child(world_map_entity);
+
     let start_position = find_start_position(&level.map);
 
-    let world_map_entity = commands.spawn((world_map, WorldMap)).id();
-    commands.entity(level_tag).add_child(world_map_entity);
-    let items_map_entity = commands.spawn((Map { cells: items }, ObjectMap)).id();
+    let items_map_entity = commands
+        .spawn((Map { cells: items }, ObjectMap, Name::new("ObjectMap")))
+        .id();
     commands.entity(level_tag).add_child(items_map_entity);
     let player = Player::spawn_player(&mut commands, start_position);
     commands.entity(level_tag).add_child(player);
@@ -94,5 +109,5 @@ pub fn load_level(
     start_time.0 = None;
     elapsed_time_from_start_rewind.0 = None;
     ghost_actions.reset();
-    level_infos.player_start_position = start_position;
+    level_infos.reset(start_position);
 }

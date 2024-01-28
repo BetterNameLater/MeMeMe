@@ -1,8 +1,8 @@
 use bevy::math::{Vec2, Vec3};
-use bevy::prelude::Transform;
+use bevy::prelude::{Reflect, Transform};
 use serde::Deserialize;
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug, Reflect)]
 pub struct Vec2i {
     pub x: i32,
     pub y: i32,
