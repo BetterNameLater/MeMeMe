@@ -8,6 +8,7 @@ use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_
 use crate::items::systems::update_is_activated_system::{
     update_is_unusable_system, update_is_usable_system,
 };
+use crate::items::systems::visual_system::visual_system;
 use crate::player::components::player::Player;
 use crate::player::{Ghost, GhostNewPositionEvent, PlayerNewPositionEvent};
 use crate::state::GameState;
@@ -26,6 +27,7 @@ impl Plugin for ItemsPlugin {
                 update_is_unusable_system.after(update_is_usable_system),
                 (
                     level_teleporter_system,
+                    visual_system,
                     count_people_on_system::<GhostOnly, Player>,
                     count_people_on_system::<PlayerOnly, Ghost>,
                     teleporter_system::<PlayerOnly, Ghost>,

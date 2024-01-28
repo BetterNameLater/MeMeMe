@@ -24,7 +24,7 @@ impl Player {
                         custom_size: Some(Vec2::new(size, size)),
                         ..default()
                     },
-                    transform: position.to_transform(PLAYER_Z as i32),
+                    transform: position.to_transform(PLAYER_Z),
                     ..default()
                 },
             ))
