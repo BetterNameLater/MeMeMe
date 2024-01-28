@@ -1,4 +1,5 @@
 pub mod events;
+pub mod plugin;
 pub mod populate_items;
 pub mod systems {
     pub mod count_people_on_system;
