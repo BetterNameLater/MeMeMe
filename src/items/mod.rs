@@ -9,7 +9,6 @@ pub mod systems {
     pub mod update_is_activated_system;
 }
 pub mod components {
-    pub mod debug_name;
     pub mod dependencies;
     pub mod enterable;
     pub mod ghost_only;
