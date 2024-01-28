@@ -12,12 +12,12 @@ impl<T: DependenciesType> Dependencies<T> {
     }
 }
 
-#[derive(Default)]
-pub struct On;
-#[derive(Default)]
-pub struct Off;
-
 pub trait DependenciesType {}
 
-impl DependenciesType for Off {}
+#[derive(Default)]
+pub struct On;
 impl DependenciesType for On {}
+
+#[derive(Default)]
+pub struct Off;
+impl DependenciesType for Off {}
