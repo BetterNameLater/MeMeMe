@@ -1,7 +1,5 @@
 use crate::constantes::PLAYER_Z;
-use crate::items::bundle::item_bundle::Item;
 use crate::items::components::is_activated::IsActivated;
-use crate::items::components::is_usable::IsUsable;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::player::components::player::Player;
