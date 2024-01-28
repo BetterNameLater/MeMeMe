@@ -1,8 +1,8 @@
 use crate::constantes::*;
 use bevy::math::Vec3;
-use bevy::prelude::KeyCode;
+use bevy::prelude::{KeyCode, Reflect};
 
-#[derive(Debug)]
+#[derive(Debug, Reflect)]
 pub enum MoveDirection {
     Up,
     Left,

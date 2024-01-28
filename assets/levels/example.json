@@ -20,9 +20,9 @@
       "data": {
         "type": "door"
       },
-      "depends_on": [
-        "plaque_1"
-      ],
+      "depends_on": {
+        "plaque_1": true
+      },
       "position": {
         "x": 2,
         "y": 3
@@ -37,9 +37,9 @@
         }
       },
       "interaction_type": "ghost_only",
-      "depends_on": [
-        "plaque_1"
-      ],
+      "depends_on": {
+        "plaque_1": true
+      },
       "position": {
         "x": 3,
         "y": 3
@@ -53,9 +53,9 @@
           "y": 3
         }
       },
-      "depends_on": [
-        "plaque_1"
-      ],
+      "depends_on": {
+        "plaque_1": true
+      },
       "position": {
         "x": 7,
         "y": 3
@@ -65,9 +65,9 @@
       "data": {
         "type": "lever"
       },
-      "depends_on": [
-        "plaque_1"
-      ],
+      "depends_on": {
+        "plaque_1": true
+      },
       "start_state": false,
       "position": {
         "x": 1,

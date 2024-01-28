@@ -1,9 +1,9 @@
-use bevy::prelude::{KeyCode, Transform};
+use bevy::prelude::KeyCode;
 
 pub const PLAYER_Z: f32 = 1.0;
-pub const PLAYER_START_TRANSFORM: Transform = Transform::from_xyz(0., 0., PLAYER_Z);
 
 pub const CELL_LENGTH: f32 = 32.;
+pub const CELL_LENGTH_USIZE: usize = CELL_LENGTH as usize;
 pub const CELL_GAP: f32 = 8.;
 
 // inputs

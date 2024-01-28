@@ -1,12 +1,17 @@
 {
-  "map": [
-    [1,1,1,1,1,1,1,1],
-    [1,0,0,0,0,0,3,1],
-    [1,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,1],
-    [1,1,1,1,1,1,1,1]
-  ],
+  "map": [],
   "objects": {
+    "level_game_jam": {
+      "data": {
+        "type": "level_teleporter",
+        "destination": "game_jam/entry_point"
+      },
+      "position": {
+        "x": 1,
+        "y": 1
+      },
+      "interaction_type": "player_only"
+    },
     "level_1": {
       "data": {
         "type": "level_teleporter",
@@ -15,6 +20,17 @@
       "position": {
         "x": 2,
         "y": 3
+      },
+      "interaction_type": "player_only"
+    },
+    "test_1": {
+      "data": {
+        "type": "level_teleporter",
+        "destination": "tests/test_dependencies"
+      },
+      "position": {
+        "x": 0,
+        "y": 1
       },
       "interaction_type": "player_only"
     }

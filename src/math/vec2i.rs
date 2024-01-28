@@ -1,8 +1,8 @@
 use bevy::math::{Vec2, Vec3};
-use bevy::prelude::Transform;
+use bevy::prelude::{Reflect, Transform};
 use serde::Deserialize;
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug, Reflect)]
 pub struct Vec2i {
     pub x: i32,
     pub y: i32,
@@ -30,7 +30,7 @@ impl Vec2i {
     pub fn new(x: i32, y: i32) -> Vec2i {
         Vec2i { x, y }
     }
-    pub fn to_initial_map_pos(self, z: i32) -> Transform {
+    pub fn to_transform(self, z: i32) -> Transform {
         Transform::from_xyz(self.x as f32, self.y as f32, z as f32)
     }
 }

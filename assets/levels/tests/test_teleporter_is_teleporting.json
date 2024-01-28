@@ -1,0 +1,25 @@
+{
+  "map": [
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0]
+  ],
+  "objects": {
+    "teleporter_1": {
+      "data": {
+        "type": "teleporter",
+        "destination": {
+          "x": 7,
+          "y": 3
+        }
+      },
+      "interaction_type": "ghost_only",
+      "position": {
+        "x": 3,
+        "y": 3
+      }
+    }
+  }
+}

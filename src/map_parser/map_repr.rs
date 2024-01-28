@@ -29,7 +29,10 @@ impl AssetLoader for MapLoader {
         Box::pin(async move {
             let mut bytes = Vec::new();
             reader.read_to_end(&mut bytes).await?;
-            Ok(serde_json::from_slice::<MapRepr>(&bytes).unwrap())
+            match serde_json::from_slice::<MapRepr>(&bytes) {
+                Ok(r) => Ok(r),
+                Err(e) => Err(e.into()),
+            }
         })
     }
 
@@ -38,7 +41,7 @@ impl AssetLoader for MapLoader {
     }
 }
 
-#[derive(Deserialize_repr, Debug)]
+#[derive(Deserialize_repr, Debug, PartialEq)]
 #[repr(u8)]
 pub enum BackgroundType {
     Floor = 0,
@@ -55,9 +58,13 @@ pub struct ObjectRepr {
     #[serde(rename = "data")]
     pub object_type: ObjectType,
     #[serde(default)]
-    pub depends_on: Vec<String>,
+    pub depends_on: HashMap<String, bool>,
     #[serde(default)]
     pub single_use: bool,
+    #[serde(default)]
+    pub killing: bool,
+    #[serde(default)]
+    pub start_timer: Option<f32>,
 }
 
 #[derive(Deserialize, Debug, Default)]
@@ -74,8 +81,10 @@ pub enum InteractionType {
 #[serde(tag = "type")]
 pub enum ObjectType {
     PressurePlate,
+    PressurePlateOnOff,
     Door,
     Teleporter { destination: Vec2i },
     LevelTeleporter { destination: String },
     Lever,
+    Button, // TODO avec le temps de cool-down variable ?
 }

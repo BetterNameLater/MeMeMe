@@ -1,0 +1,21 @@
+{
+  "map": [
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0]
+  ],
+  "objects": {
+    "pressure_plate_on_off_1": {
+      "data": {
+        "type": "pressure_plate_on_off"
+      },
+      "interaction_type": "all",
+      "position": {
+        "x": 1,
+        "y": 1
+      }
+    }
+  }
+}
