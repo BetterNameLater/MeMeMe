@@ -1,5 +1,5 @@
 use crate::items::components::is_activated::IsActivated;
-use crate::items::components::toggle::{Interact, Toggle};
+use crate::items::components::pressable::Pressable;
 use bevy::prelude::Bundle;
 
 /// Represent a button item
@@ -8,6 +8,6 @@ use bevy::prelude::Bundle;
 /// During the cool-down time no-body can interact with the button
 #[derive(Bundle, Default)]
 pub struct ButtonBundle {
-    pub toggle_interact: Toggle<Interact>,
+    pub pressed: Pressable,
     pub is_activated: IsActivated,
 }

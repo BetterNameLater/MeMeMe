@@ -1,9 +1,11 @@
 use crate::items::components::ghost_only::GhostOnly;
 use crate::items::components::player_only::PlayerOnly;
+use crate::items::systems::button_system::button_pressed_system;
 use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::level_teleporter_system;
 use crate::items::systems::people_enter_system::people_enter_system;
 use crate::items::systems::teleporter_system::{teleporter_activate_system, teleporter_system};
+use crate::items::systems::timer_system::cooldown_system;
 use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_interact_system};
 use crate::items::systems::update_is_usable_system::{
     update_is_unusable_system, update_is_usable_system,
@@ -21,13 +23,16 @@ impl Plugin for ItemsPlugin {
         app.add_systems(
             Update,
             (
-                update_is_usable_system
+                cooldown_system
                     .after(people_enter_system::<PlayerOnly, GhostNewPositionEvent>)
                     .after(people_enter_system::<GhostOnly, PlayerNewPositionEvent>),
+                update_is_usable_system.after(cooldown_system),
                 update_is_unusable_system.after(update_is_usable_system),
                 (
                     level_teleporter_system,
                     visual_system,
+                    button_pressed_system::<GhostOnly, Player>,
+                    button_pressed_system::<PlayerOnly, Ghost>,
                     count_people_on_system::<GhostOnly, Player>,
                     count_people_on_system::<PlayerOnly, Ghost>,
                     teleporter_system::<PlayerOnly, Ghost>,
