@@ -1,10 +1,11 @@
 use crate::items::components::enterable::EnterAble;
+use crate::items::components::player_only::PersonOnly;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::map::{Map, ObjectMap};
 use crate::player::events::new_position_event::NewPositionEvent;
-use bevy::prelude::{Component, EventReader, EventWriter, Query, With, Without};
+use bevy::prelude::*;
 
-pub fn people_enter_system<W: Component, E: NewPositionEvent>(
+pub fn people_enter_system<W: PersonOnly, E: NewPositionEvent>(
     mut player_new_position_event: EventReader<E>,
     player_only_people_on_query: Query<(With<EnterAble>, Without<W>)>,
     object_map_query: Query<&Map, With<ObjectMap>>,
