@@ -6,7 +6,6 @@ pub mod systems {
     pub mod button_system;
     pub mod count_people_on_system;
     pub mod level_teleporter_system;
-    pub mod people_enter_system;
     pub mod teleporter_system;
     pub mod timer_system;
     pub mod toggle_on_system;

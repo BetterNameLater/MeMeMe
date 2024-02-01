@@ -1,15 +1,16 @@
 use crate::constantes::*;
+use crate::items::components::enterable::EnterAble;
+use crate::items::components::player_only::PlayerOnly;
+use crate::items::events::OnEnterEvent;
+use crate::items::events::OnExitEvent;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::events::interact_event::InteractEvent;
-use crate::player::events::new_position_event::NewPositionEvent;
-use crate::player::{Ghost, GhostNewPositionEvent};
-use bevy::ecs::query::With;
-use bevy::ecs::system::Query;
-use bevy::prelude::{EventWriter, Reflect, Res, ResMut, Resource};
-use bevy::transform::components::Transform;
+use crate::player::events::new_position_event::NewPositionEventData;
+use crate::player::{systems::player_input_system::add_enter_exit_event, Ghost};
+use bevy::prelude::*;
 
 #[derive(Resource, Debug, Default, Reflect)]
 pub struct GhostActions {
@@ -28,9 +29,11 @@ pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
     level_informations: Res<LevelInformations>,
-    mut ghost_new_position_event: EventWriter<GhostNewPositionEvent>,
     mut ghost_interact_event: EventWriter<InteractEvent<Ghost>>,
     object_map_query: Query<&Map, With<ObjectMap>>,
+    player_only_people_on_query: Query<(With<EnterAble>, Without<PlayerOnly>)>,
+    mut on_enter_event_writer: EventWriter<OnEnterEvent>,
+    mut on_exit_event_writer: EventWriter<OnExitEvent>,
 ) {
     if let Some(current_time) = level_informations.elapsed_time_from_start_rewind {
         loop {
@@ -51,11 +54,19 @@ pub fn ghost_actions_system(
                     let direction = move_direction.to_vec3();
                     let before: Vec2i = ghost_transform.translation.into();
                     ghost_transform.translation += direction * CELL_LENGTH;
-                    ghost_new_position_event.send(GhostNewPositionEvent::new(
+
+                    let new_position_event = NewPositionEventData {
                         before,
-                        ghost_transform.translation.into(),
-                        *ghost_id,
-                    ));
+                        now: ghost_transform.translation.into(),
+                        entity: *ghost_id,
+                    };
+                    add_enter_exit_event(
+                        new_position_event,
+                        &object_map_query,
+                        &player_only_people_on_query,
+                        &mut on_enter_event_writer,
+                        &mut on_exit_event_writer,
+                    );
                 }
                 ActionType::Interact => {
                     let object_map = object_map_query.single();

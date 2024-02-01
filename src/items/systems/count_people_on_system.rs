@@ -24,7 +24,7 @@ pub fn count_people_on_system<W: PersonOnly, T: Person>(
             {
                 people_on.0 -= 1;
                 is_activated.0 = people_on.0 > 0;
-                println!("people on (on exit): {}", people_on.0);
+                debug!("people on (on exit): {}", people_on.0);
             }
         });
 
@@ -37,7 +37,7 @@ pub fn count_people_on_system<W: PersonOnly, T: Person>(
             {
                 people_on.0 += 1;
                 is_activated.0 = people_on.0 > 0;
-                println!("people on (on enter): {}", people_on.0);
+                debug!("people on (on enter): {}", people_on.0);
             }
         });
 }
