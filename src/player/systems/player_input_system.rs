@@ -64,7 +64,11 @@ pub fn player_input_system(
     if let Some(action_key) = action_key {
         match *action_key {
             INPUT_PLAYER_REWIND => {
-                rewind_event.send(RewindEvent);
+                if level_infos.elapsed_time_from_start_rewind.is_none() {
+                    debug!("Rewind without actual start");
+                } else {
+                    rewind_event.send(RewindEvent);
+                }
             }
             INPUT_PLAYER_INTERACT => {
                 player_query.single_mut().actions.push(Action {

@@ -1,6 +1,7 @@
 pub mod events;
 pub mod plugin;
 pub mod populate_items;
+pub mod reset_level_items;
 pub mod systems {
     pub mod button_system;
     pub mod count_people_on_system;

@@ -13,7 +13,7 @@ pub fn rewind_system(
     mut player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
-    mut is_activated_query: Query<&mut IsActivated>,
+    is_activated_query: Query<&mut IsActivated>,
     mut level_infos: ResMut<LevelInformations>,
     mut ghost_actions: ResMut<GhostActions>,
     mut rewind_event: EventReader<RewindEvent>,
@@ -60,11 +60,4 @@ pub fn rewind_system(
     });
 
     level_infos.rewind();
-
-    // reset items state
-    for mut item in &mut is_activated_query {
-        // TODO check if the player is on a pressure plate
-        // TODO check if a lever is set to `true` from the beginning ?
-        item.0 = false;
-    }
 }

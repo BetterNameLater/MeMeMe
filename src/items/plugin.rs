@@ -1,5 +1,6 @@
 use crate::items::components::ghost_only::GhostOnly;
 use crate::items::components::player_only::PlayerOnly;
+use crate::items::reset_level_items::reset_level_items;
 use crate::items::systems::button_system::button_pressed_system;
 use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::level_teleporter_system;
@@ -23,6 +24,7 @@ impl Plugin for ItemsPlugin {
         app.add_systems(
             Update,
             (
+                reset_level_items,
                 cooldown_system
                     .after(people_enter_system::<PlayerOnly, GhostNewPositionEvent>)
                     .after(people_enter_system::<GhostOnly, PlayerNewPositionEvent>),
