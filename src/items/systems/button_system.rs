@@ -29,7 +29,7 @@ pub fn button_pressed_system<W: PersonOnly, T: Person>(
                 commands
                     .entity(on_interact_event.item)
                     .insert(Cooldown::<IsActivated>::new(1.));
-                debug!("Pressing a button and adding a MeTimer for cooldown");
+                debug!("Pressing a button and adding a Cooldown");
             }
         }
     }

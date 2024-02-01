@@ -1,5 +1,4 @@
 use crate::constantes::PLAYER_Z;
-use crate::items::components::is_activated::IsActivated;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::player::components::player::Player;
@@ -13,7 +12,6 @@ pub fn rewind_system(
     mut player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
-    is_activated_query: Query<&mut IsActivated>,
     mut level_infos: ResMut<LevelInformations>,
     mut ghost_actions: ResMut<GhostActions>,
     mut rewind_event: EventReader<RewindEvent>,
