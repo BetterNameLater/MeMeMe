@@ -1,4 +1,4 @@
-use bevy::prelude::Component;
+use bevy::prelude::*;
 
 #[derive(Component, Default)]
-pub struct StartTimer(pub f32);
+pub struct StartTimer(pub Timer);

@@ -26,7 +26,7 @@
     "test_1": {
       "data": {
         "type": "level_teleporter",
-        "destination": "tests/test_dependencies"
+        "destination": "tests/test_start_timer"
       },
       "position": {
         "x": 0,

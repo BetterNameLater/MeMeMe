@@ -9,7 +9,15 @@ use bevy::prelude::*;
 
 // toggle entitie isActive when player enter it
 pub fn toggle_on_enter_system<W: PersonOnly, T: Person>(
-    mut toggle_query: Query<&mut IsActivated, (With<IsUsable>, With<Toggle<Enter>>, Without<W>)>,
+    mut toggle_query: Query<
+        &mut IsActivated,
+        (
+            With<IsUsable>,
+            With<Toggle<Enter>>,
+            Without<W>,
+            With<IsUsable>,
+        ),
+    >,
     person: Query<With<T>>,
     mut on_enter_event_reader: EventReader<OnEnterEvent>,
 ) {
@@ -25,7 +33,15 @@ pub fn toggle_on_enter_system<W: PersonOnly, T: Person>(
 }
 
 pub fn toggle_on_interact_system<W: PersonOnly, T: Person>(
-    mut toggle_query: Query<&mut IsActivated, (With<IsUsable>, With<Toggle<Interact>>, Without<W>)>,
+    mut toggle_query: Query<
+        &mut IsActivated,
+        (
+            With<IsUsable>,
+            With<Toggle<Interact>>,
+            Without<W>,
+            With<IsUsable>,
+        ),
+    >,
     person: Query<With<T>>,
     mut on_interact_event_reader: EventReader<InteractEvent<T>>,
 ) {

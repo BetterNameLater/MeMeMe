@@ -101,7 +101,10 @@ pub fn populate_items(
         }
 
         if let Some(start_timer) = object.start_timer {
-            commands.entity(item).insert(StartTimer(start_timer));
+            commands.entity(item).insert(StartTimer(Timer::from_seconds(
+                start_timer,
+                TimerMode::Once,
+            )));
         }
     }
 

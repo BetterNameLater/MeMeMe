@@ -1,5 +1,6 @@
 use crate::items::components::cooldown::Cooldown;
 use crate::items::components::is_activated::IsActivated;
+use crate::items::components::is_usable::IsUsable;
 use crate::items::components::player_only::PersonOnly;
 use crate::items::components::pressable::Pressable;
 use crate::player::components::player::Person;
@@ -10,7 +11,7 @@ pub fn button_pressed_system<W: PersonOnly, T: Person>(
     mut commands: Commands,
     mut cooldown_query: Query<
         (Option<&mut Cooldown<IsActivated>>, &mut IsActivated),
-        (Without<W>, With<Pressable>),
+        (Without<W>, With<Pressable>, With<IsUsable>),
     >,
     person: Query<With<T>>,
     mut on_interact_event_reader: EventReader<InteractEvent<T>>,

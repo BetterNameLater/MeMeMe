@@ -6,6 +6,7 @@ use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::level_teleporter_system;
 use crate::items::systems::teleporter_system::{teleporter_activate_system, teleporter_system};
 use crate::items::systems::timer_system::cooldown_system;
+use crate::items::systems::timer_system::start_timer_system;
 use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_interact_system};
 use crate::items::systems::update_is_usable_system::{
     update_is_unusable_system, update_is_usable_system,
@@ -26,6 +27,7 @@ impl Plugin for ItemsPlugin {
             Update,
             (
                 reset_level_items,
+                start_timer_system, // TODO order
                 cooldown_system
                     .after(player_move_input_system)
                     .after(player_action_input_system),
