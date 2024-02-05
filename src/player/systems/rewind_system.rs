@@ -36,9 +36,7 @@ pub fn rewind_system(
     ghost_actions.index = 0;
     player.actions.clear();
 
-    let start_transform = level_infos
-        .player_start_position
-        .to_transform(PLAYER_Z as i32);
+    let start_transform = level_infos.player_start_position.to_transform(PLAYER_Z);
 
     // reset the position of the current player, before turning im to a ghost
     *player_transform = start_transform;

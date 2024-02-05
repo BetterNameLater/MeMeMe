@@ -1,4 +1,5 @@
 use crate::items::components::enterable::EnterAble;
+use crate::items::components::is_activated::IsActivated;
 use crate::items::components::people_on::PeopleOn;
 use bevy::prelude::Bundle;
 
@@ -8,4 +9,5 @@ use bevy::prelude::Bundle;
 pub struct PressurePlateBundle {
     pub enterable: EnterAble,
     pub people_on: PeopleOn,
+    pub is_activated: IsActivated,
 }

@@ -1,11 +1,13 @@
 use crate::items::components::enterable::EnterAble;
 use crate::items::components::is_usable::IsUsable;
+use crate::items::components::player_only::PersonOnly;
 use crate::items::components::teleporter::Teleporter;
 use crate::items::events::OnEnterEvent;
+use crate::player::components::player::Person;
 use bevy::prelude::*;
 use bevy::utils::HashSet;
 
-pub fn teleporter_system<W: Component, T: Component>(
+pub fn teleporter_system<W: PersonOnly, T: Person>(
     teleporter_query: Query<&Teleporter, (With<IsUsable>, Without<W>, With<EnterAble>)>,
     mut person_query: Query<&mut Transform, With<T>>,
     mut on_enter_event_reader: EventReader<OnEnterEvent>,
@@ -21,7 +23,7 @@ pub fn teleporter_system<W: Component, T: Component>(
 
 // TODO Might be Refactored
 // teleport all entities already on the teleporter if it's activated
-pub fn teleporter_activate_system<W: Component, T: Component>(
+pub fn teleporter_activate_system<W: PersonOnly, T: Person>(
     teleporter_query: Query<(&Teleporter, &Transform), (Changed<IsUsable>, Without<W>)>,
     mut entities_query: Query<(Entity, &mut Transform), (With<T>, Without<Teleporter>)>,
 ) {

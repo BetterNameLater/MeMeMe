@@ -1,7 +1,7 @@
 use crate::constantes::CELL_LENGTH;
 use crate::items::bundle;
 use crate::items::bundle::door_bundle::DoorBundle;
-use crate::items::bundle::item_bundle::ItemBundle;
+use crate::items::bundle::item_bundle::{ItemBundle, ItemOutline, OutlineType};
 use crate::items::bundle::level_teleporter_bundle::LevelTeleporterBundle;
 use crate::items::bundle::lever_bundle::LeverBundle;
 use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
@@ -36,6 +36,8 @@ pub fn populate_items(
         let item = commands
             .spawn(ItemBundle::new(key, position, &object.object_type))
             .id();
+
+        add_debug_outlines(commands, item);
         commands.entity(parent).add_child(item);
         items_by_vec2i.insert(position, item);
         items_by_name.insert(key.clone(), item);
@@ -99,7 +101,10 @@ pub fn populate_items(
         }
 
         if let Some(start_timer) = object.start_timer {
-            commands.entity(item).insert(StartTimer(start_timer));
+            commands.entity(item).insert(StartTimer(Timer::from_seconds(
+                start_timer,
+                TimerMode::Once,
+            )));
         }
     }
 
@@ -136,4 +141,30 @@ pub fn populate_items(
 
     trace!("Items has been populated");
     items_by_vec2i
+}
+
+fn add_debug_outlines(commands: &mut Commands, item: Entity) {
+    const DISTANCE: f32 = 8.;
+    let mut s = SpriteBundle {
+        sprite: Sprite {
+            custom_size: Some(Vec2::new(5., 5.)),
+            ..default()
+        },
+        ..default()
+    };
+
+    s.transform.translation.z = -1.;
+    s.transform.translation.x = -DISTANCE;
+    let outline_usable = commands
+        .spawn((ItemOutline(item, OutlineType::IsUsable), s.clone()))
+        .id();
+
+    s.transform.translation.z = -2.;
+    s.transform.translation.x = DISTANCE;
+    let outline_activated = commands
+        .spawn((ItemOutline(item, OutlineType::IsActivated), s))
+        .id();
+
+    commands.entity(item).add_child(outline_usable);
+    commands.entity(item).add_child(outline_activated);
 }

@@ -5,10 +5,14 @@ use bevy::core::Name;
 use bevy::math::Vec2;
 use bevy::prelude::{default, Color, Commands, Component, Entity, Sprite, SpriteBundle};
 
+pub trait Person: Component + Default {}
+
 #[derive(Component, Default, Debug)]
 pub struct Player {
     pub actions: Vec<Action>,
 }
+
+impl Person for Player {}
 
 impl Player {
     pub fn spawn_player(commands: &mut Commands, position: Vec2i) -> Entity {
@@ -24,7 +28,7 @@ impl Player {
                         custom_size: Some(Vec2::new(size, size)),
                         ..default()
                     },
-                    transform: position.to_transform(PLAYER_Z as i32),
+                    transform: position.to_transform(PLAYER_Z),
                     ..default()
                 },
             ))

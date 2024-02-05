@@ -30,7 +30,7 @@ impl Vec2i {
     pub fn new(x: i32, y: i32) -> Vec2i {
         Vec2i { x, y }
     }
-    pub fn to_transform(self, z: i32) -> Transform {
-        Transform::from_xyz(self.x as f32, self.y as f32, z as f32)
+    pub fn to_transform(self, z: f32) -> Transform {
+        Transform::from_xyz(self.x as f32, self.y as f32, z)
     }
 }

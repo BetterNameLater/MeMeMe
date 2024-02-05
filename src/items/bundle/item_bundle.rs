@@ -1,20 +1,28 @@
-use crate::constantes::CELL_LENGTH;
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::is_usable::IsUsable;
+use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::map_parser::map_repr::ObjectType;
 use crate::math::vec2i::Vec2i;
 use bevy::core::Name;
 use bevy::math::Vec2;
-use bevy::prelude::{default, Bundle, Color, Sprite};
+use bevy::prelude::{default, Bundle, Color, Component, Entity, Sprite};
 use bevy::sprite::SpriteBundle;
 
 /// Shared properties between all items
 #[derive(Bundle)]
 pub struct ItemBundle {
-    is_activated: IsActivated,
-    is_usable: IsUsable,
     name: Name,
     sprite_bundle: SpriteBundle,
+    marker: Item,
+}
+
+#[derive(Component)]
+pub struct Item;
+
+#[derive(Component)]
+pub struct ItemOutline(pub Entity, pub OutlineType);
+
+pub enum OutlineType {
+    IsUsable,
+    IsActivated,
 }
 
 impl ItemBundle {
@@ -32,8 +40,6 @@ impl ItemBundle {
         };
 
         ItemBundle {
-            is_usable: IsUsable,
-            is_activated: IsActivated(false),
             name: Name::new(debug_name.to_string()),
             sprite_bundle: SpriteBundle {
                 sprite: Sprite {
@@ -41,9 +47,10 @@ impl ItemBundle {
                     custom_size: Some(Vec2::new(size, size)),
                     ..default()
                 },
-                transform: position.to_transform(1),
+                transform: position.to_transform(ITEMS_Z),
                 ..default()
             },
+            marker: Item,
         }
     }
 }

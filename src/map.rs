@@ -51,7 +51,7 @@ impl Map {
                             ..default()
                         },
                         transform: Transform::from_translation(Vec3::new(
-                            cell_pos.x, cell_pos.y, 0.,
+                            cell_pos.x, cell_pos.y, CELL_Z,
                         )),
                         ..default()
                     },

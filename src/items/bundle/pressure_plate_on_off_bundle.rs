@@ -1,4 +1,5 @@
 use crate::items::components::enterable::EnterAble;
+use crate::items::components::is_activated::IsActivated;
 use crate::items::components::toggle::{Enter, Toggle};
 use bevy::prelude::Bundle;
 
@@ -8,4 +9,5 @@ use bevy::prelude::Bundle;
 pub struct PressurePlateOnOffBundle {
     pub enterable: EnterAble,
     pub toggle_enter: Toggle<Enter>,
+    pub is_activated: IsActivated,
 }
