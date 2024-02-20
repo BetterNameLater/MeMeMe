@@ -43,11 +43,15 @@ pub fn load_level(
         .iter()
         .find(|a| {
             if let Some(path) = a.path() {
+                if cfg!(target_os = "windows") {
+                    let level_path = level_to_go.0 .0.to_string().replace("/", "\\");
+                    return format!("levels\\{}.json", level_path) == path.to_string();
+                }
                 return format!("levels/{}.json", level_to_go.0 .0) == path.to_string();
             }
             false
         })
-        .unwrap();
+        .expect(format!("could not find `levels/{}.json", level_to_go.0 .0).as_str());
 
     let level = custom_assets.get(level_asset.clone()).unwrap();
 
