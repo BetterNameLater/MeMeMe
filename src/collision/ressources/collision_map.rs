@@ -12,11 +12,19 @@ pub struct CollisionMap {
 }
 
 impl CollisionMap {
-    pub fn collide(&self, position: &Vec2i) -> bool {
-        if let Some(_) = self.map.get(position) {
+    pub fn collide(&self, position: &Vec3) -> bool {
+        if let Some(_) = self.map.get(&Vec2i::from(*position)) {
             true
         } else {
             false
         }
+    }
+
+    pub fn add_collision(&mut self, position: &Vec3) {
+        self.map
+            .insert(Vec2i {
+                    x: position.x as i32,
+                    y: position.y as i32},
+                CollisionMask { mask: true as u8 });
     }
 }

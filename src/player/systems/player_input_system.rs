@@ -7,7 +7,6 @@ use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
-use crate::math::vec2i;
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::components::player::Player;
@@ -52,8 +51,8 @@ pub fn player_move_input_system(
             level_infos.elapsed_time_from_start_rewind = Some(0.);
         }
         let new_position = player_transform.translation + CELL_LENGTH * move_direction.to_vec3();
-        if can_move(&new_position, &collision_map) {
-            player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
+        if !collision_map.collide(&new_position) {
+            player_transform.translation = new_position;
             let new_position_event = NewPositionEventData {
                 before,
                 now: player_transform.translation.into(),
@@ -68,11 +67,6 @@ pub fn player_move_input_system(
             );
         }
     }
-}
-
-fn can_move(position: &Vec3, collision_map: &Res<CollisionMap>) -> bool {
-    let vec2i_position = Vec2i::from(*position);
-    return !collision_map.collide(&vec2i_position);
 }
 
 pub fn add_enter_exit_event<W: PersonOnly>(
