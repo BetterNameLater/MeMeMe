@@ -31,7 +31,7 @@ pub fn ghost_actions_system(
     level_informations: Res<LevelInformations>,
     mut ghost_interact_event: EventWriter<InteractEvent<Ghost>>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    player_only_people_on_query: Query<(With<EnterAble>, Without<PlayerOnly>)>,
+    player_only_people_on_query: Query<(), (With<EnterAble>, Without<PlayerOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
 ) {

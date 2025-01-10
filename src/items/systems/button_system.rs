@@ -13,7 +13,7 @@ pub fn button_pressed_system<W: PersonOnly, T: Person>(
         (Option<&mut Cooldown<IsActivated>>, &mut IsActivated),
         (Without<W>, With<Pressable>, With<IsUsable>),
     >,
-    person: Query<With<T>>,
+    person: Query<(), With<T>>,
     mut on_interact_event_reader: EventReader<InteractEvent<T>>,
 ) {
     for on_interact_event in on_interact_event_reader.read() {

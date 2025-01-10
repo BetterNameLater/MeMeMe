@@ -19,11 +19,11 @@ use bevy::prelude::*;
 pub fn player_move_input_system(
     mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
-    key_inputs: Res<Input<KeyCode>>,
+    key_inputs: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
     mut level_infos: ResMut<LevelInformations>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    player_only_people_on_query: Query<(With<EnterAble>, Without<GhostOnly>)>,
+    player_only_people_on_query: Query<(), (With<EnterAble>, Without<GhostOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
 ) {
@@ -68,7 +68,7 @@ pub fn player_move_input_system(
 pub fn add_enter_exit_event<W: PersonOnly>(
     new_position_event: NewPositionEventData,
     object_map_query: &Query<&Map, With<ObjectMap>>,
-    player_only_people_on_query: &Query<(With<EnterAble>, Without<W>)>,
+    player_only_people_on_query: &Query<(), (With<EnterAble>, Without<W>)>,
     on_enter_event_writer: &mut EventWriter<OnEnterEvent>,
     on_exit_event_writer: &mut EventWriter<OnExitEvent>,
 ) {
@@ -105,7 +105,7 @@ pub fn add_enter_exit_event<W: PersonOnly>(
 pub fn player_action_input_system(
     mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
-    key_inputs: Res<Input<KeyCode>>,
+    key_inputs: Res<ButtonInput<KeyCode>>,
     level_infos: ResMut<LevelInformations>,
     mut rewind_event: EventWriter<RewindEvent>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,

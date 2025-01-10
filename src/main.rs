@@ -29,7 +29,7 @@ fn main() {
     MapRepr::json_schema();
     App::new()
         // states
-        .add_state::<GameState>()
+        .init_state::<GameState>()
         .add_loading_state(
             LoadingState::new(GameState::BootingGame)
                 .continue_to_state(GameState::LoadingLevel)
@@ -47,6 +47,7 @@ fn main() {
                 .set(LogPlugin {
                     level: Level::INFO,
                     filter: "wgpu=error,bevy_render=info,bevy_ecs=info,me_me_me=trace".to_string(),
+                    ..default()
                 })
                 .set(WindowPlugin {
                     primary_window: Some(Window {

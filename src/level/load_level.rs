@@ -51,7 +51,7 @@ pub fn load_level(
             }
             false
         })
-        .expect(format!("could not find `levels/{}.json", level_to_go.0 .0).as_str());
+        .unwrap_or_else(|| panic!("could not find `levels/{}.json", level_to_go.0 .0));
 
     let level = custom_assets.get(level_asset.clone()).unwrap();
 
