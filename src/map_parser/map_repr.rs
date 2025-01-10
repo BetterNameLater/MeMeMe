@@ -4,7 +4,11 @@ use bevy::asset::{Asset, AssetLoader, AsyncReadExt, BoxedFuture, LoadContext};
 use bevy::prelude::TypePath;
 use schemars::{schema_for, JsonSchema, Schema};
 use serde::Deserialize;
+use serde_json::json;
 use serde_repr::Deserialize_repr;
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::{BufWriter, Write};
 
 #[derive(Asset, TypePath, Deserialize, Debug, JsonSchema)]
 pub struct MapRepr {
@@ -59,7 +63,7 @@ impl AssetLoader for MapLoader {
     }
 }
 
-#[derive(Deserialize_repr, Debug, PartialEq)]
+#[derive(Deserialize_repr, Debug, PartialEq, JsonSchema)]
 #[repr(u8)]
 pub enum BackgroundType {
     Floor = 0,
@@ -68,7 +72,7 @@ pub enum BackgroundType {
     End = 3,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, JsonSchema)]
 pub struct ObjectRepr {
     pub position: Vec2i,
     #[serde(default)]
@@ -85,7 +89,7 @@ pub struct ObjectRepr {
     pub start_timer: Option<f32>,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum InteractionType {
     #[default]
@@ -94,7 +98,7 @@ pub enum InteractionType {
     PlayerOnly,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum ObjectType {

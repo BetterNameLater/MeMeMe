@@ -5,7 +5,7 @@
       "data": {
         "type": "lever"
       },
-	  "start_timer": 2.0,
+      "start_timer": 2.0,
       "interaction_type": "all",
       "position": {
         "x": 1,
