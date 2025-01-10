@@ -3,7 +3,7 @@ use crate::math::vec2i::Vec2i;
 use crate::player::actions::Action;
 use bevy::core::Name;
 use bevy::math::Vec2;
-use bevy::prelude::{default, Color, Commands, Component, Entity, Sprite, SpriteBundle};
+use bevy::prelude::{default, Commands, Component, Entity, Sprite, SpriteBundle};
 
 pub trait Person: Component + Default {}
 
@@ -24,7 +24,7 @@ impl Player {
                 Player::default(),
                 SpriteBundle {
                     sprite: Sprite {
-                        color: Color::BEIGE,
+                        color: bevy::color::palettes::css::BEIGE.into(),
                         custom_size: Some(Vec2::new(size, size)),
                         ..default()
                     },

@@ -3,7 +3,7 @@ use crate::map_parser::map_repr::ObjectType;
 use crate::math::vec2i::Vec2i;
 use bevy::core::Name;
 use bevy::math::Vec2;
-use bevy::prelude::{default, Bundle, Color, Component, Entity, Sprite};
+use bevy::prelude::{default, Bundle, Component, Entity, Sprite};
 use bevy::sprite::SpriteBundle;
 
 /// Shared properties between all items
@@ -30,13 +30,13 @@ impl ItemBundle {
         let size = CELL_LENGTH / 3.;
 
         let color = match object_type {
-            ObjectType::PressurePlate => Color::GREEN,
-            ObjectType::Teleporter { .. } => Color::GOLD,
-            ObjectType::Lever => Color::YELLOW,
-            ObjectType::Door => Color::MIDNIGHT_BLUE,
-            ObjectType::LevelTeleporter { .. } => Color::ALICE_BLUE,
-            ObjectType::PressurePlateOnOff => Color::AZURE,
-            ObjectType::Button => Color::DARK_GRAY,
+            ObjectType::PressurePlate => bevy::color::palettes::css::GREEN.into(),
+            ObjectType::Teleporter { .. } => bevy::color::palettes::css::GOLD.into(),
+            ObjectType::Lever => bevy::color::palettes::css::YELLOW.into(),
+            ObjectType::Door => bevy::color::palettes::css::MIDNIGHT_BLUE.into(),
+            ObjectType::LevelTeleporter { .. } => bevy::color::palettes::css::ALICE_BLUE.into(),
+            ObjectType::PressurePlateOnOff => bevy::color::palettes::css::AZURE.into(),
+            ObjectType::Button => bevy::color::palettes::css::DARK_GRAY.into(),
         };
 
         ItemBundle {

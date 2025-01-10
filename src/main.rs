@@ -28,14 +28,6 @@ fn main() {
     #[cfg(debug_assertions)]
     MapRepr::json_schema();
     App::new()
-        // states
-        .init_state::<GameState>()
-        .add_loading_state(
-            LoadingState::new(GameState::BootingGame)
-                .continue_to_state(GameState::LoadingLevel)
-                .on_failure_continue_to_state(GameState::ErrorInitialLoad)
-                .load_collection::<LevelAssets>(),
-        )
         // systems
         .add_systems(Startup, setup)
         .add_systems(Startup, loading_screen)
@@ -64,6 +56,14 @@ fn main() {
         // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()
+        // states
+        .init_state::<GameState>()
+        .add_loading_state(
+            LoadingState::new(GameState::BootingGame)
+                .continue_to_state(GameState::LoadingLevel)
+                .on_failure_continue_to_state(GameState::ErrorInitialLoad)
+                .load_collection::<LevelAssets>(),
+        )
         .run();
 }
 

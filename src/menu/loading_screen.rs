@@ -15,7 +15,7 @@ fn message_screen(mut commands: Commands, message: &str) {
                     align_content: AlignContent::Center,
                     ..default()
                 },
-                background_color: Color::rgb(0.15, 0.15, 0.15).into(),
+                background_color: Color::srgb(0.15, 0.15, 0.15).into(),
                 ..default()
             },
             MessageScreen,

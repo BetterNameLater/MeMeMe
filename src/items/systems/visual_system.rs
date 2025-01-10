@@ -12,17 +12,17 @@ pub fn visual_system(
             match outline.1 {
                 OutlineType::IsUsable => {
                     if is_usable.is_some() {
-                        outline_sprite.color = Color::GREEN;
+                        outline_sprite.color = bevy::color::palettes::css::GREEN.into();
                     } else {
-                        outline_sprite.color = Color::RED;
+                        outline_sprite.color = bevy::color::palettes::css::RED.into();
                     }
                 }
                 OutlineType::IsActivated => {
                     if let Some(is_activated) = is_activated {
                         if is_activated.0 {
-                            outline_sprite.color = Color::MIDNIGHT_BLUE;
+                            outline_sprite.color = bevy::color::palettes::css::MIDNIGHT_BLUE.into();
                         } else {
-                            outline_sprite.color = Color::GRAY;
+                            outline_sprite.color = bevy::color::palettes::css::GRAY.into();
                         }
                     } else {
                         outline_sprite.custom_size = Some(Vec2::default());

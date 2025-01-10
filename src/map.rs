@@ -1,6 +1,7 @@
 use crate::constantes::*;
 use crate::map_parser::BackgroundType;
 use crate::math::vec2i::Vec2i;
+use bevy::color::palettes::css;
 use bevy::prelude::*;
 use std::collections::HashMap;
 
@@ -40,10 +41,10 @@ impl Map {
                     SpriteBundle {
                         sprite: Sprite {
                             color: match background_type {
-                                BackgroundType::Floor => Color::BLUE,
-                                BackgroundType::Wall => Color::BLACK,
-                                BackgroundType::Start => Color::ALICE_BLUE,
-                                BackgroundType::End => Color::GREEN,
+                                BackgroundType::Floor => css::BLUE.into(),
+                                BackgroundType::Wall => css::BLACK.into(),
+                                BackgroundType::Start => css::ALICE_BLUE.into(),
+                                BackgroundType::End => css::GREEN.into(),
                             },
                             custom_size: Some(Vec2::new(
                                 CELL_LENGTH - CELL_GAP,

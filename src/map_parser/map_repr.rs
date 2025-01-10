@@ -1,6 +1,6 @@
 use crate::math::vec2i::Vec2i;
 use bevy::asset::io::Reader;
-use bevy::asset::{Asset, AssetLoader, AsyncReadExt, BoxedFuture, LoadContext};
+use bevy::asset::{Asset, AssetLoader, AsyncReadExt, LoadContext};
 use bevy::prelude::TypePath;
 use schemars::{schema_for, JsonSchema, Schema};
 use serde::Deserialize;
@@ -42,20 +42,18 @@ impl AssetLoader for MapLoader {
     type Settings = ();
     type Error = std::io::Error;
 
-    fn load<'a>(
+    async fn load<'a>(
         &'a self,
-        reader: &'a mut Reader,
+        reader: &'a mut Reader<'_>,
         _settings: &'a (),
-        _load_context: &'a mut LoadContext,
-    ) -> BoxedFuture<'a, Result<Self::Asset, Self::Error>> {
-        Box::pin(async move {
-            let mut bytes = Vec::new();
-            reader.read_to_end(&mut bytes).await?;
-            match serde_json::from_slice::<MapRepr>(&bytes) {
-                Ok(r) => Ok(r),
-                Err(e) => Err(e.into()),
-            }
-        })
+        _load_context: &'a mut LoadContext<'_>,
+    ) -> Result<Self::Asset, Self::Error> {
+        let mut bytes = Vec::new();
+        reader.read_to_end(&mut bytes).await?;
+        match serde_json::from_slice::<MapRepr>(&bytes) {
+            Ok(r) => Ok(r),
+            Err(e) => Err(e.into()),
+        }
     }
 
     fn extensions(&self) -> &[&str] {
