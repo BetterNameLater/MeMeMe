@@ -25,6 +25,8 @@ use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
 use state::GameState;
 
 fn main() {
+    #[cfg(debug_assertions)]
+    MapRepr::json_schema();
     App::new()
         // states
         .add_state::<GameState>()

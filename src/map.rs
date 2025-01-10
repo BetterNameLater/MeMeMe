@@ -1,7 +1,8 @@
 use crate::constantes::*;
 use crate::map_parser::BackgroundType;
 use crate::math::vec2i::Vec2i;
-use bevy::{prelude::*, utils::HashMap};
+use bevy::prelude::*;
+use std::collections::HashMap;
 
 #[derive(Component)]
 pub struct Cell;

@@ -18,7 +18,7 @@ use crate::items::components::teleporter::Teleporter;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
-use bevy::utils::HashMap;
+use std::collections::HashMap;
 
 pub fn populate_items(
     commands: &mut Commands,

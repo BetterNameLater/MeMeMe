@@ -2,14 +2,32 @@ use crate::math::vec2i::Vec2i;
 use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, AsyncReadExt, BoxedFuture, LoadContext};
 use bevy::prelude::TypePath;
-use bevy::utils::HashMap;
+use schemars::{schema_for, JsonSchema, Schema};
 use serde::Deserialize;
 use serde_repr::Deserialize_repr;
 
-#[derive(Asset, TypePath, Deserialize, Debug)]
+#[derive(Asset, TypePath, Deserialize, Debug, JsonSchema)]
 pub struct MapRepr {
     pub map: Vec<Vec<BackgroundType>>,
     pub objects: HashMap<String, ObjectRepr>,
+}
+
+impl MapRepr {
+    pub fn json_schema() {
+        let schema: Schema = schema_for!(MapRepr);
+        let mut v = schema.as_value().clone();
+        *v.get_mut("$defs")
+            .unwrap()
+            .get_mut("BackgroundType")
+            .unwrap() = json!({
+            "enum": [0,1,2,3,4]
+        });
+
+        let file = File::create("level_schema.json").expect("haha");
+        let mut writer = BufWriter::new(file);
+        serde_json::to_writer_pretty(&mut writer, &v).expect("haha");
+        writer.flush().expect("haha");
+    }
 }
 
 #[derive(Default)]

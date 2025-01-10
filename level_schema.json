@@ -1,0 +1,199 @@
+{
+  "$defs": {
+    "BackgroundType": {
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "InteractionType": {
+      "enum": [
+        "all",
+        "ghost_only",
+        "player_only"
+      ],
+      "type": "string"
+    },
+    "ObjectRepr": {
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/ObjectType"
+        },
+        "depends_on": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "default": {},
+          "type": "object"
+        },
+        "interaction_type": {
+          "$ref": "#/$defs/InteractionType"
+        },
+        "killing": {
+          "default": false,
+          "type": "boolean"
+        },
+        "position": {
+          "$ref": "#/$defs/Vec2i"
+        },
+        "single_use": {
+          "default": false,
+          "type": "boolean"
+        },
+        "start_timer": {
+          "default": null,
+          "format": "float",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "position",
+        "data"
+      ],
+      "type": "object"
+    },
+    "ObjectType": {
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "const": "pressure_plate",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "pressure_plate_on_off",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "door",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "destination": {
+              "$ref": "#/$defs/Vec2i"
+            },
+            "type": {
+              "const": "teleporter",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "destination"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "destination": {
+              "type": "string"
+            },
+            "type": {
+              "const": "level_teleporter",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "destination"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "lever",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "button",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Vec2i": {
+      "properties": {
+        "x": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "y": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "map": {
+      "items": {
+        "items": {
+          "$ref": "#/$defs/BackgroundType"
+        },
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "objects": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ObjectRepr"
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "map",
+    "objects"
+  ],
+  "title": "MapRepr",
+  "type": "object"
+}

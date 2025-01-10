@@ -1,0 +1,19 @@
+{
+  "format_on_save": "on",
+  "lsp": {
+    "json-language-server": {
+      "settings": {
+        "json": {
+          "schemas": [
+            {
+              "fileMatch": ["assets/levels/**/*.json"],
+              "schema": {
+                "$ref": "file:///Users/quentin/perso/Games/MeMeMe/level_schema.json"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
