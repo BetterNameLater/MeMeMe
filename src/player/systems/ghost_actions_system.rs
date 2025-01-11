@@ -1,3 +1,4 @@
+use crate::collision::ressources::collision_map::CollisionMap;
 use crate::constantes::*;
 use crate::items::components::enterable::EnterAble;
 use crate::items::components::player_only::PlayerOnly;
@@ -35,6 +36,7 @@ pub fn ghost_actions_system(
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<PlayerOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
+    collision_map: Res<CollisionMap>
 ) {
     if let Some(current_time) = level_informations.elapsed_time_from_start_rewind {
         loop {
@@ -52,22 +54,24 @@ pub fn ghost_actions_system(
             let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();
             match action_type {
                 ActionType::Move(move_direction) => {
-                    let direction = move_direction.to_vec3();
+                    let new_position = ghost_transform.translation + (move_direction.to_vec3() * CELL_LENGTH);
                     let before: Vec2i = ghost_transform.translation.into();
-                    ghost_transform.translation += direction * CELL_LENGTH;
-
-                    let new_position_event = NewPositionEventData {
-                        before,
-                        now: ghost_transform.translation.into(),
-                        entity: *ghost_id,
-                    };
-                    add_enter_exit_event(
-                        new_position_event,
-                        &object_map_query,
-                        &player_only_people_on_query,
-                        &mut on_enter_event_writer,
-                        &mut on_exit_event_writer,
-                    );
+                    if !collision_map.collide(&new_position) {
+                        ghost_transform.translation = new_position;
+    
+                        let new_position_event = NewPositionEventData {
+                            before,
+                            now: ghost_transform.translation.into(),
+                            entity: *ghost_id,
+                        };
+                        add_enter_exit_event(
+                            new_position_event,
+                            &object_map_query,
+                            &player_only_people_on_query,
+                            &mut on_enter_event_writer,
+                            &mut on_exit_event_writer,
+                        );
+                    }
                 }
                 ActionType::Interact => {
                     let object_map = object_map_query.single();

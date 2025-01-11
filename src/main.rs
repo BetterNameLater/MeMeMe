@@ -1,4 +1,5 @@
 #![allow(clippy::type_complexity)]
+mod collision;
 mod constantes;
 mod items;
 mod level;
@@ -11,6 +12,7 @@ mod menu;
 mod player;
 mod state;
 
+use crate::collision::plugin::CollisionPlugin;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
 use crate::level::ressources::level_informations::LevelInformations;
@@ -53,6 +55,7 @@ fn main() {
         .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
         .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
+        .add_plugins(CollisionPlugin)
         // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()

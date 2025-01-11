@@ -1,3 +1,4 @@
+use crate::collision::ressources::collision_map::CollisionMap;
 use crate::constantes::*;
 use crate::items::components::enterable::EnterAble;
 use crate::items::components::ghost_only::GhostOnly;
@@ -26,6 +27,7 @@ pub fn player_move_input_system(
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<GhostOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
+    collision_map: Res<CollisionMap>,
 ) {
     // move actions
     let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
@@ -39,7 +41,6 @@ pub fn player_move_input_system(
         let (mut player_transform, player_entity) = player_transform_query.single_mut();
         let move_direction = MoveDirection::from_key_code(*move_key);
         let before: Vec2i = player_transform.translation.into();
-        player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity,
             action_type: ActionType::Move(move_direction),
@@ -49,19 +50,22 @@ pub fn player_move_input_system(
             level_infos.start_time = Some(time.elapsed_secs());
             level_infos.elapsed_time_from_start_rewind = Some(0.);
         }
-
-        let new_position_event = NewPositionEventData {
-            before,
-            now: player_transform.translation.into(),
-            entity: player_entity,
-        };
-        add_enter_exit_event(
-            new_position_event,
-            &object_map_query,
-            &player_only_people_on_query,
-            &mut on_enter_event_writer,
-            &mut on_exit_event_writer,
-        );
+        let new_position = player_transform.translation + CELL_LENGTH * move_direction.to_vec3();
+        if !collision_map.collide(&new_position) {
+            player_transform.translation = new_position;
+            let new_position_event = NewPositionEventData {
+                before,
+                now: player_transform.translation.into(),
+                entity: player_entity,
+            };
+            add_enter_exit_event(
+                new_position_event,
+                &object_map_query,
+                &player_only_people_on_query,
+                &mut on_enter_event_writer,
+                &mut on_exit_event_writer,
+            );
+        }
     }
 }
 

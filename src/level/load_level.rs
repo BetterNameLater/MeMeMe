@@ -1,4 +1,5 @@
-use crate::constantes::CELL_LENGTH_USIZE;
+use crate::collision::ressources::collision_map::CollisionMap;
+use crate::constantes::{CELL_LENGTH, CELL_LENGTH_USIZE};
 use crate::items::populate_items::populate_items;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
@@ -36,6 +37,7 @@ pub fn load_level(
     level_to_go_query: Query<(&LevelToGo, Entity)>,
     mut ghost_actions: ResMut<GhostActions>,
     mut level_infos: ResMut<LevelInformations>,
+    mut collision_map: ResMut<CollisionMap>
 ) {
     let level_to_go = level_to_go_query.single();
     let level_asset = level_assets
@@ -79,6 +81,13 @@ pub fn load_level(
                 .iter()
                 .enumerate()
                 .for_each(|(x, background_type)| {
+                    if background_type == &BackgroundType::Wall {
+                        collision_map.add_collision(&Vec3 {
+                            x: x as f32 * CELL_LENGTH,
+                            y: y as f32 * CELL_LENGTH,
+                            z: 0.0});
+                        println!("Collision : {}, {}", x, y);
+                    }
                     world_map.spawn_cell(
                         &mut commands,
                         world_map_entity,
