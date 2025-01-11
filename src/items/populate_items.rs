@@ -5,7 +5,7 @@ use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
-use crate::items::pressure_plate_on_off::PressurePlateOnOffBundle;
+use crate::items::pressure_plate_on_off::PressurePlateOnOff;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::ghost_only::GhostOnly;
 use crate::items::primitive::killing::Killing;
@@ -73,9 +73,7 @@ pub fn populate_items(
                     .insert(LevelTeleporter(destination.clone()));
             }
             ObjectType::PressurePlateOnOff => {
-                commands
-                    .entity(item)
-                    .insert(PressurePlateOnOffBundle::default());
+                commands.entity(item).insert(PressurePlateOnOff);
             }
             ObjectType::Button => {
                 commands.entity(item).insert(ButtonItem);
