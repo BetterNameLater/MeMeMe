@@ -58,14 +58,14 @@ pub fn load_level(
     let level_tag = commands
         .spawn((
             LevelTag,
-            SpriteBundle::default(),
+            Sprite::default(),
             Name::new(level_asset.path().unwrap().to_string()),
         ))
         .id();
 
     let mut world_map = Map::default();
     let world_map_entity = commands
-        .spawn((WorldMap, SpriteBundle::default(), Name::new("WorldMap")))
+        .spawn((WorldMap, Sprite::default(), Name::new("WorldMap")))
         .id();
 
     let items = populate_items(&mut commands, level_tag, &level.objects);

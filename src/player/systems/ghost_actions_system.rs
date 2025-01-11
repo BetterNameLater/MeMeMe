@@ -25,6 +25,7 @@ impl GhostActions {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,

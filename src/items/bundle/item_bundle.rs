@@ -1,16 +1,14 @@
-use crate::constantes::{CELL_LENGTH, ITEMS_Z};
+use crate::constantes::CELL_LENGTH;
 use crate::map_parser::map_repr::ObjectType;
-use crate::math::vec2i::Vec2i;
 use bevy::core::Name;
 use bevy::math::Vec2;
 use bevy::prelude::{default, Bundle, Component, Entity, Sprite};
-use bevy::sprite::SpriteBundle;
 
 /// Shared properties between all items
 #[derive(Bundle)]
 pub struct ItemBundle {
     name: Name,
-    sprite_bundle: SpriteBundle,
+    sprite: Sprite,
     marker: Item,
 }
 
@@ -26,7 +24,7 @@ pub enum OutlineType {
 }
 
 impl ItemBundle {
-    pub fn new(debug_name: &str, position: Vec2i, object_type: &ObjectType) -> Self {
+    pub fn new(debug_name: &str, object_type: &ObjectType) -> Self {
         let size = CELL_LENGTH / 3.;
 
         let color = match object_type {
@@ -41,13 +39,9 @@ impl ItemBundle {
 
         ItemBundle {
             name: Name::new(debug_name.to_string()),
-            sprite_bundle: SpriteBundle {
-                sprite: Sprite {
-                    color,
-                    custom_size: Some(Vec2::new(size, size)),
-                    ..default()
-                },
-                transform: position.to_transform(ITEMS_Z),
+            sprite: Sprite {
+                color,
+                custom_size: Some(Vec2::new(size, size)),
                 ..default()
             },
             marker: Item,

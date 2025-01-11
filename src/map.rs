@@ -38,25 +38,20 @@ impl Map {
         commands.entity(parent).with_children(|parent| {
             let id = parent
                 .spawn((
-                    SpriteBundle {
-                        sprite: Sprite {
-                            color: match background_type {
-                                BackgroundType::Floor => css::BLUE.into(),
-                                BackgroundType::Wall => css::BLACK.into(),
-                                BackgroundType::Start => css::ALICE_BLUE.into(),
-                                BackgroundType::End => css::GREEN.into(),
-                            },
-                            custom_size: Some(Vec2::new(
-                                CELL_LENGTH - CELL_GAP,
-                                CELL_LENGTH - CELL_GAP,
-                            )),
-                            ..default()
+                    Sprite {
+                        color: match background_type {
+                            BackgroundType::Floor => css::BLUE.into(),
+                            BackgroundType::Wall => css::BLACK.into(),
+                            BackgroundType::Start => css::ALICE_BLUE.into(),
+                            BackgroundType::End => css::GREEN.into(),
                         },
-                        transform: Transform::from_translation(Vec3::new(
-                            cell_pos.x, cell_pos.y, CELL_Z,
+                        custom_size: Some(Vec2::new(
+                            CELL_LENGTH - CELL_GAP,
+                            CELL_LENGTH - CELL_GAP,
                         )),
                         ..default()
                     },
+                    Transform::from_translation(Vec3::new(cell_pos.x, cell_pos.y, CELL_Z)),
                     Cell,
                 ))
                 .id();

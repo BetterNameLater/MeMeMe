@@ -1,6 +1,6 @@
 use crate::math::vec2i::Vec2i;
 use bevy::asset::io::Reader;
-use bevy::asset::{Asset, AssetLoader, AsyncReadExt, LoadContext};
+use bevy::asset::{Asset, AssetLoader, LoadContext};
 use bevy::prelude::TypePath;
 use schemars::{schema_for, JsonSchema, Schema};
 use serde::Deserialize;
@@ -42,11 +42,11 @@ impl AssetLoader for MapLoader {
     type Settings = ();
     type Error = std::io::Error;
 
-    async fn load<'a>(
-        &'a self,
-        reader: &'a mut Reader<'_>,
-        _settings: &'a (),
-        _load_context: &'a mut LoadContext<'_>,
+    async fn load(
+        &self,
+        reader: &mut dyn Reader,
+        _: &Self::Settings,
+        _: &mut LoadContext<'_>,
     ) -> Result<Self::Asset, Self::Error> {
         let mut bytes = Vec::new();
         reader.read_to_end(&mut bytes).await?;

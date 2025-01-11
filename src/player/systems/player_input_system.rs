@@ -46,7 +46,7 @@ pub fn player_move_input_system(
             timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
         });
         if level_infos.elapsed_time_from_start_rewind.is_none() {
-            level_infos.start_time = Some(time.elapsed_seconds());
+            level_infos.start_time = Some(time.elapsed_secs());
             level_infos.elapsed_time_from_start_rewind = Some(0.);
         }
 
@@ -80,7 +80,7 @@ pub fn add_enter_exit_event<W: PersonOnly>(
                 entered_cell, new_position_event.entity
             );
             on_enter_event_writer.send(OnEnterEvent {
-                position: new_position_event.now,
+                _position: new_position_event.now,
                 item: *entered_cell,
                 person: new_position_event.entity,
             });
@@ -94,7 +94,7 @@ pub fn add_enter_exit_event<W: PersonOnly>(
                 leaved_cell, new_position_event.entity
             );
             on_exit_event_writer.send(OnExitEvent {
-                position: new_position_event.now,
+                _position: new_position_event.now,
                 item: *leaved_cell,
                 person: new_position_event.entity,
             });

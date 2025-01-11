@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 #[derive(Event, Debug)]
 pub struct InteractEvent<T> {
-    pub pos: Vec2i,
+    pub _pos: Vec2i,
     pub person: Entity,
     pub item: Entity,
     pub marker: PhantomData<T>,
@@ -13,7 +13,7 @@ pub struct InteractEvent<T> {
 impl<T> InteractEvent<T> {
     pub fn new(pos: Vec2i, person: Entity, item: Entity) -> Self {
         Self {
-            pos,
+            _pos: pos,
             person,
             item,
             marker: Default::default(),

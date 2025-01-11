@@ -1,4 +1,4 @@
-use crate::constantes::CELL_LENGTH;
+use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::items::bundle;
 use crate::items::bundle::door_bundle::DoorBundle;
 use crate::items::bundle::item_bundle::{ItemBundle, ItemOutline, OutlineType};
@@ -34,9 +34,13 @@ pub fn populate_items(
             object.position.y * CELL_LENGTH as i32,
         );
         let item = commands
-            .spawn(ItemBundle::new(key, position, &object.object_type))
+            .spawn((
+                ItemBundle::new(key, &object.object_type),
+                position.to_transform(ITEMS_Z),
+            ))
             .id();
 
+        #[cfg(debug_assertions)]
         add_debug_outlines(commands, item);
         commands.entity(parent).add_child(item);
         items_by_vec2i.insert(position, item);
@@ -143,28 +147,33 @@ pub fn populate_items(
     items_by_vec2i
 }
 
+#[cfg(debug_assertions)]
 fn add_debug_outlines(commands: &mut Commands, item: Entity) {
     const DISTANCE: f32 = 8.;
-    let mut s = SpriteBundle {
-        sprite: Sprite {
-            custom_size: Some(Vec2::new(5., 5.)),
-            ..default()
-        },
-        ..default()
-    };
 
-    s.transform.translation.z = -1.;
-    s.transform.translation.x = -DISTANCE;
     let outline_usable = commands
-        .spawn((ItemOutline(item, OutlineType::IsUsable), s.clone()))
+        .spawn((
+            ItemOutline(item, OutlineType::IsUsable),
+            Transform::from_xyz(-DISTANCE, 0., -1.),
+            Sprite {
+                custom_size: Some(Vec2::new(5., 5.)),
+                ..default()
+            },
+        ))
         .id();
 
-    s.transform.translation.z = -2.;
-    s.transform.translation.x = DISTANCE;
     let outline_activated = commands
-        .spawn((ItemOutline(item, OutlineType::IsActivated), s))
+        .spawn((
+            ItemOutline(item, OutlineType::IsActivated),
+            Transform::from_xyz(DISTANCE, 0., -1.),
+            Sprite {
+                custom_size: Some(Vec2::new(5., 5.)),
+                ..default()
+            },
+        ))
         .id();
 
-    commands.entity(item).add_child(outline_usable);
-    commands.entity(item).add_child(outline_activated);
+    commands
+        .entity(item)
+        .add_children(&[outline_usable, outline_activated]);
 }
