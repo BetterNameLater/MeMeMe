@@ -1,8 +1,8 @@
 use crate::constantes::*;
 use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
+use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::primitive::enterable::EnterAble;
-use crate::items::primitive::player_only::PlayerOnly;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
@@ -12,9 +12,10 @@ use crate::player::events::new_position_event::NewPositionEventData;
 use crate::player::{systems::player_input_system::add_enter_exit_event, Ghost};
 use bevy::prelude::*;
 
-#[derive(Resource, Debug, Default, Reflect)]
+#[derive(Resource, Debug, Default, Reflect, PartialEq)]
 pub struct GhostActions {
     pub actions: Vec<Action>,
+    /// index of the latest action to run
     pub index: usize,
 }
 
@@ -25,6 +26,7 @@ impl GhostActions {
     }
 }
 
+/// Process the ghost actions
 #[allow(clippy::too_many_arguments)]
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,

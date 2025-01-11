@@ -1,15 +1,15 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::items::button::Button as ButtonItem;
 use crate::items::door::Door;
+use crate::items::interaction_type::ghost_only::GhostOnly;
+use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
 use crate::items::pressure_plate_on_off::PressurePlateOnOff;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
-use crate::items::primitive::ghost_only::GhostOnly;
 use crate::items::primitive::item::{ItemOutline, OutlineType};
 use crate::items::primitive::killing::Killing;
-use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
 use crate::items::teleporter::Teleporter;

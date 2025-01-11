@@ -20,10 +20,10 @@ pub fn rewind_system(
         return;
     }
     rewind_event.clear();
-    if level_infos.elapsed_time_from_start_rewind.is_none() {
-        debug!("Rewind without actual start");
-        return;
-    }
+    assert!(
+        level_infos.elapsed_time_from_start_rewind.is_some(),
+        "Rewind without actual start"
+    );
     debug!("Rewind");
     let (player_entity, mut player, mut player_transform, mut player_name) =
         player_query.single_mut();
@@ -34,7 +34,6 @@ pub fn rewind_system(
             .unwrap()
     });
     ghost_actions.index = 0;
-    player.actions.clear();
 
     let start_transform = level_infos.player_start_position.to_transform(PLAYER_Z);
 

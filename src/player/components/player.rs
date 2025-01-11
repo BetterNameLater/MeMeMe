@@ -1,11 +1,10 @@
+use super::person::Person;
 use crate::constantes::{CELL_LENGTH, PLAYER_Z};
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::Action;
 use bevy::core::Name;
 use bevy::math::Vec2;
 use bevy::prelude::{default, Commands, Component, Entity, Sprite};
-
-pub trait Person: Component + Default {}
 
 #[derive(Component, Default, Debug)]
 pub struct Player {

@@ -1,12 +1,12 @@
 use crate::items::events::{OnEnterEvent, OnExitEvent};
+use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::items::primitive::people_on::PeopleOn;
-use crate::items::primitive::player_only::PersonOnly;
-use crate::player::components::player::Person;
+use crate::player::components::person::Person;
 use bevy::prelude::*;
 
-pub fn count_people_on_system<W: PersonOnly, T: Person>(
+pub fn count_people_on_system<W: InteractionType, T: Person>(
     mut player_only_people_on_query: Query<
         (&mut IsActivated, &mut PeopleOn),
         (With<IsUsable>, Without<W>),

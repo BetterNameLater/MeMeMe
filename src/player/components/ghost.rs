@@ -1,5 +1,5 @@
-use crate::player::components::player::Person;
-use bevy::prelude::*;
+use super::person::Person;
+use bevy::prelude::Component;
 
 #[derive(Component, Debug, Default)]
 pub struct Ghost;

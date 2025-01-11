@@ -6,6 +6,7 @@ pub mod events {
 }
 pub mod components {
     pub mod ghost;
+    pub mod person;
     pub mod player;
 }
 pub mod systems {
@@ -17,3 +18,6 @@ pub mod move_direction;
 pub mod plugin;
 pub use components::ghost::Ghost;
 pub use systems::ghost_actions_system::{ghost_actions_system, GhostActions};
+
+#[cfg(test)]
+mod tests;

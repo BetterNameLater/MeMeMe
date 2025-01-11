@@ -1,7 +1,7 @@
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 
-#[derive(Reflect, Resource, Debug, Default)]
+#[derive(Reflect, Resource, Debug, Default, PartialEq)]
 pub struct LevelInformations {
     pub player_start_position: Vec2i,
     pub ghost_count: usize,
