@@ -1,11 +1,9 @@
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::toggle::{Interact, Toggle};
-use bevy::prelude::Bundle;
+use bevy::prelude::Component;
 
 /// Represent a Lever (or switch) item
 /// When a person `Interact` it activate itself
-#[derive(Bundle, Default)]
-pub struct LeverBundle {
-    pub toggle: Toggle<Interact>,
-    pub is_activated: IsActivated,
-}
+#[derive(Component)]
+#[require(IsActivated, Toggle<Interact>)]
+pub struct Lever;

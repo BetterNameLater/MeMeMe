@@ -3,7 +3,7 @@ use crate::items::button::Button as ButtonItem;
 use crate::items::door::Door;
 use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporter;
-use crate::items::lever::LeverBundle;
+use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlateBundle;
 use crate::items::pressure_plate_on_off::PressurePlateOnOffBundle;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
@@ -62,7 +62,7 @@ pub fn populate_items(
                 });
             }
             ObjectType::Lever => {
-                commands.entity(item).insert(LeverBundle::default());
+                commands.entity(item).insert(Lever);
             }
             ObjectType::Door => {
                 commands.entity(item).insert(Door);
