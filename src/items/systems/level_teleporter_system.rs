@@ -1,5 +1,4 @@
 use crate::items::events::OnEnterEvent;
-use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
@@ -10,10 +9,7 @@ use bevy::prelude::*;
 pub fn level_teleporter_system(
     mut on_enter_event_reader: EventReader<OnEnterEvent>,
     mut commands: Commands,
-    level_teleporter_query: Query<
-        &LevelTeleporter,
-        (With<EnterAble>, With<IsUsable>, With<PlayerOnly>),
-    >,
+    level_teleporter_query: Query<&LevelTeleporter, (With<EnterAble>, With<IsUsable>)>,
     mut next_state: ResMut<NextState<GameState>>,
 ) {
     for on_enter_event in on_enter_event_reader.read() {
