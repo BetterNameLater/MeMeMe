@@ -1,6 +1,6 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::items::button::Button as ButtonItem;
-use crate::items::door::DoorBundle;
+use crate::items::door::Door;
 use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporterBundle;
 use crate::items::lever::LeverBundle;
@@ -66,7 +66,7 @@ pub fn populate_items(
                 commands.entity(item).insert(LeverBundle::default());
             }
             ObjectType::Door => {
-                commands.entity(item).insert(DoorBundle::default());
+                commands.entity(item).insert(Door);
             }
             ObjectType::LevelTeleporter { destination } => {
                 commands.entity(item).insert(LevelTeleporterBundle {

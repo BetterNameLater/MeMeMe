@@ -1,4 +1,4 @@
-use bevy::prelude::Bundle;
+use bevy::prelude::Component;
 
-#[derive(Bundle, Default)]
-pub struct DoorBundle {}
+#[derive(Component)]
+pub struct Door;
