@@ -16,18 +16,17 @@ pub mod primitive {
     pub mod cooldown;
     pub mod dependencies;
     pub mod enterable;
-    pub mod ghost_only;
     pub mod is_activated;
     pub mod is_usable;
     pub mod item;
     pub mod killing;
     pub mod people_on;
-    pub mod player_only;
     pub mod pressable;
     pub mod single_use;
     pub mod start_timer;
     pub mod toggle;
 }
+pub mod interaction_type;
 
 pub mod button;
 pub mod door;

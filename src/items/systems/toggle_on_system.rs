@@ -1,14 +1,14 @@
 use crate::items::events::OnEnterEvent;
+use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::is_usable::IsUsable;
-use crate::items::primitive::player_only::PersonOnly;
 use crate::items::primitive::toggle::{Enter, Interact, Toggle};
-use crate::player::components::player::Person;
+use crate::player::components::person::Person;
 use crate::player::events::interact_event::InteractEvent;
 use bevy::prelude::*;
 
 // toggle entitie isActive when player enter it
-pub fn toggle_on_enter_system<W: PersonOnly, T: Person>(
+pub fn toggle_on_enter_system<W: InteractionType, T: Person>(
     mut toggle_query: Query<
         &mut IsActivated,
         (
@@ -32,7 +32,7 @@ pub fn toggle_on_enter_system<W: PersonOnly, T: Person>(
     }
 }
 
-pub fn toggle_on_interact_system<W: PersonOnly, T: Person>(
+pub fn toggle_on_interact_system<W: InteractionType, T: Person>(
     mut toggle_query: Query<
         &mut IsActivated,
         (

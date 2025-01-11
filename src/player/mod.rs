@@ -6,6 +6,7 @@ pub mod events {
 }
 pub mod components {
     pub mod ghost;
+    pub mod person;
     pub mod player;
 }
 pub mod systems {

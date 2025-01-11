@@ -1,8 +1,8 @@
 use crate::constantes::*;
 use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
+use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::primitive::enterable::EnterAble;
-use crate::items::primitive::player_only::PlayerOnly;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;

@@ -1,13 +1,13 @@
+use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::cooldown::Cooldown;
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::is_usable::IsUsable;
-use crate::items::primitive::player_only::PersonOnly;
 use crate::items::primitive::pressable::Pressable;
-use crate::player::components::player::Person;
+use crate::player::components::person::Person;
 use crate::player::events::interact_event::InteractEvent;
 use bevy::prelude::*;
 
-pub fn button_pressed_system<W: PersonOnly, T: Person>(
+pub fn button_pressed_system<W: InteractionType, T: Person>(
     mut commands: Commands,
     mut cooldown_query: Query<
         (Option<&mut Cooldown<IsActivated>>, &mut IsActivated),

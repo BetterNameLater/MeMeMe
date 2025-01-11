@@ -1,9 +1,9 @@
 use crate::constantes::*;
 use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
+use crate::items::interaction_type::ghost_only::GhostOnly;
+use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::enterable::EnterAble;
-use crate::items::primitive::ghost_only::GhostOnly;
-use crate::items::primitive::player_only::PersonOnly;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
@@ -65,7 +65,7 @@ pub fn player_move_input_system(
     }
 }
 
-pub fn add_enter_exit_event<W: PersonOnly>(
+pub fn add_enter_exit_event<W: InteractionType>(
     new_position_event: NewPositionEventData,
     object_map_query: &Query<&Map, With<ObjectMap>>,
     player_only_people_on_query: &Query<(), (With<EnterAble>, Without<W>)>,
