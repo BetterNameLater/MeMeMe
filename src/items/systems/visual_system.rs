@@ -1,6 +1,6 @@
-use crate::items::bundle::item_bundle::{Item, ItemOutline, OutlineType};
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::is_usable::IsUsable;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::item::{Item, ItemOutline, OutlineType};
 use bevy::prelude::*;
 
 pub fn visual_system(

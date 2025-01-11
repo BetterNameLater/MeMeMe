@@ -1,8 +1,8 @@
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::is_usable::IsUsable;
-use crate::items::components::player_only::PersonOnly;
-use crate::items::components::teleporter::Teleporter;
 use crate::items::events::OnEnterEvent;
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::player_only::PersonOnly;
+use crate::items::teleporter::Teleporter;
 use crate::player::components::player::Person;
 use bevy::prelude::*;
 use bevy::utils::HashSet;

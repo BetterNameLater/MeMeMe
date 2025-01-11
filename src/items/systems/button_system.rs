@@ -1,8 +1,8 @@
-use crate::items::components::cooldown::Cooldown;
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::is_usable::IsUsable;
-use crate::items::components::player_only::PersonOnly;
-use crate::items::components::pressable::Pressable;
+use crate::items::primitive::cooldown::Cooldown;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::player_only::PersonOnly;
+use crate::items::primitive::pressable::Pressable;
 use crate::player::components::player::Person;
 use crate::player::events::interact_event::InteractEvent;
 use bevy::prelude::*;

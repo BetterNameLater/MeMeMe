@@ -1,24 +1,24 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
-use crate::items::bundle;
-use crate::items::bundle::door_bundle::DoorBundle;
-use crate::items::bundle::item_bundle::{ItemBundle, ItemOutline, OutlineType};
-use crate::items::bundle::level_teleporter_bundle::LevelTeleporterBundle;
-use crate::items::bundle::lever_bundle::LeverBundle;
-use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
-use crate::items::bundle::pressure_plate_on_off_bundle::PressurePlateOnOffBundle;
-use crate::items::bundle::teleporter_bundle::TeleporterBundle;
-use crate::items::components::dependencies::{Dependencies, Off, On};
-use crate::items::components::ghost_only::GhostOnly;
-use crate::items::components::killing::Killing;
-use crate::items::components::level_teleporter::LevelTeleporter;
-use crate::items::components::player_only::PlayerOnly;
-use crate::items::components::single_use::SingleUse;
-use crate::items::components::start_timer::StartTimer;
-use crate::items::components::teleporter::Teleporter;
+use crate::items::button::Button as ButtonItem;
+use crate::items::door::Door;
+use crate::items::level_teleporter::LevelTeleporter;
+use crate::items::lever::Lever;
+use crate::items::pressure_plate::PressurePlate;
+use crate::items::pressure_plate_on_off::PressurePlateOnOff;
+use crate::items::primitive::dependencies::{Dependencies, Off, On};
+use crate::items::primitive::ghost_only::GhostOnly;
+use crate::items::primitive::item::{ItemOutline, OutlineType};
+use crate::items::primitive::killing::Killing;
+use crate::items::primitive::player_only::PlayerOnly;
+use crate::items::primitive::single_use::SingleUse;
+use crate::items::primitive::start_timer::StartTimer;
+use crate::items::teleporter::Teleporter;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 use std::collections::HashMap;
+
+const ITEM_SIZE: f32 = CELL_LENGTH / 3.;
 
 pub fn populate_items(
     commands: &mut Commands,
@@ -35,7 +35,22 @@ pub fn populate_items(
         );
         let item = commands
             .spawn((
-                ItemBundle::new(key, &object.object_type),
+                Name::new(key.clone()),
+                Sprite {
+                    color: match object.object_type {
+                        ObjectType::PressurePlate => bevy::color::palettes::css::GREEN.into(),
+                        ObjectType::Teleporter { .. } => bevy::color::palettes::css::GOLD.into(),
+                        ObjectType::Lever => bevy::color::palettes::css::YELLOW.into(),
+                        ObjectType::Door => bevy::color::palettes::css::MIDNIGHT_BLUE.into(),
+                        ObjectType::LevelTeleporter { .. } => {
+                            bevy::color::palettes::css::ALICE_BLUE.into()
+                        }
+                        ObjectType::PressurePlateOnOff => bevy::color::palettes::css::AZURE.into(),
+                        ObjectType::Button => bevy::color::palettes::css::DARK_GRAY.into(),
+                    },
+                    custom_size: Some(Vec2::new(ITEM_SIZE, ITEM_SIZE)),
+                    ..default()
+                },
                 position.to_transform(ITEMS_Z),
             ))
             .id();
@@ -54,35 +69,30 @@ pub fn populate_items(
         match &object.object_type {
             ObjectType::PressurePlate => {
                 // TODO check if player begins here
-                commands.entity(item).insert(PressurePlateBundle::default());
+                commands.entity(item).insert(PressurePlate);
             }
             ObjectType::Teleporter { destination } => {
-                commands.entity(item).insert(TeleporterBundle {
-                    teleporter: Teleporter(Vec2i::new(destination.x * 32, destination.y * 32)),
-                    ..default()
-                });
+                commands.entity(item).insert(Teleporter(Vec2i::new(
+                    destination.x * 32,
+                    destination.y * 32,
+                )));
             }
             ObjectType::Lever => {
-                commands.entity(item).insert(LeverBundle::default());
+                commands.entity(item).insert(Lever);
             }
             ObjectType::Door => {
-                commands.entity(item).insert(DoorBundle::default());
+                commands.entity(item).insert(Door);
             }
             ObjectType::LevelTeleporter { destination } => {
-                commands.entity(item).insert(LevelTeleporterBundle {
-                    level_teleporter: LevelTeleporter(destination.clone()),
-                    ..default()
-                });
+                commands
+                    .entity(item)
+                    .insert(LevelTeleporter(destination.clone()));
             }
             ObjectType::PressurePlateOnOff => {
-                commands
-                    .entity(item)
-                    .insert(PressurePlateOnOffBundle::default());
+                commands.entity(item).insert(PressurePlateOnOff);
             }
             ObjectType::Button => {
-                commands
-                    .entity(item)
-                    .insert(bundle::button_bundle::ButtonBundle::default());
+                commands.entity(item).insert(ButtonItem);
             }
         };
 

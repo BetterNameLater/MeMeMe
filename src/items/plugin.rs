@@ -1,5 +1,5 @@
-use crate::items::components::ghost_only::GhostOnly;
-use crate::items::components::player_only::PlayerOnly;
+use crate::items::primitive::ghost_only::GhostOnly;
+use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::reset_level_items::reset_level_items;
 use crate::items::systems::button_system::button_pressed_system;
 use crate::items::systems::count_people_on_system::count_people_on_system;
