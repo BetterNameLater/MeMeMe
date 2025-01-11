@@ -1,5 +1,5 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
-use crate::items::button::ButtonBundle;
+use crate::items::button::Button as ButtonItem;
 use crate::items::door::DoorBundle;
 use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporterBundle;
@@ -80,7 +80,7 @@ pub fn populate_items(
                     .insert(PressurePlateOnOffBundle::default());
             }
             ObjectType::Button => {
-                commands.entity(item).insert(ButtonBundle::default());
+                commands.entity(item).insert(ButtonItem);
             }
         };
 
