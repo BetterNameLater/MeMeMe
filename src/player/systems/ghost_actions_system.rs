@@ -12,9 +12,10 @@ use crate::player::events::new_position_event::NewPositionEventData;
 use crate::player::{systems::player_input_system::add_enter_exit_event, Ghost};
 use bevy::prelude::*;
 
-#[derive(Resource, Debug, Default, Reflect)]
+#[derive(Resource, Debug, Default, Reflect, PartialEq)]
 pub struct GhostActions {
     pub actions: Vec<Action>,
+    /// index of the latest action to run
     pub index: usize,
 }
 
@@ -25,6 +26,7 @@ impl GhostActions {
     }
 }
 
+/// Apply the ghost actions
 #[allow(clippy::too_many_arguments)]
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,

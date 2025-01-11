@@ -1,3 +1,4 @@
+mod ghost_actions;
 mod movement;
 mod rewind;
 
@@ -17,6 +18,7 @@ mod utils {
     use bevy::prelude::*;
 
     pub const PLAYER_ORIGIN: Transform = Transform::from_xyz(0., 0., PLAYER_Z);
+    pub const SECOND: Duration = Duration::from_secs(1);
 
     pub fn base_init() -> App {
         let mut app = App::new();
