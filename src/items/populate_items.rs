@@ -4,7 +4,7 @@ use crate::items::door::Door;
 use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::Lever;
-use crate::items::pressure_plate::PressurePlateBundle;
+use crate::items::pressure_plate::PressurePlate;
 use crate::items::pressure_plate_on_off::PressurePlateOnOffBundle;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::ghost_only::GhostOnly;
@@ -53,7 +53,7 @@ pub fn populate_items(
         match &object.object_type {
             ObjectType::PressurePlate => {
                 // TODO check if player begins here
-                commands.entity(item).insert(PressurePlateBundle::default());
+                commands.entity(item).insert(PressurePlate);
             }
             ObjectType::Teleporter { destination } => {
                 commands.entity(item).insert(TeleporterBundle {
