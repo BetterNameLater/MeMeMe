@@ -1,13 +1,13 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::items::button::Button as ButtonItem;
 use crate::items::door::Door;
-use crate::items::item::{Item, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
 use crate::items::pressure_plate_on_off::PressurePlateOnOff;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::ghost_only::GhostOnly;
+use crate::items::primitive::item::{ItemOutline, OutlineType};
 use crate::items::primitive::killing::Killing;
 use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::primitive::single_use::SingleUse;
@@ -51,7 +51,6 @@ pub fn populate_items(
                     custom_size: Some(Vec2::new(ITEM_SIZE, ITEM_SIZE)),
                     ..default()
                 },
-                Item,
                 position.to_transform(ITEMS_Z),
             ))
             .id();

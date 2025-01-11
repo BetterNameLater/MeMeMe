@@ -19,6 +19,7 @@ pub mod primitive {
     pub mod ghost_only;
     pub mod is_activated;
     pub mod is_usable;
+    pub mod item;
     pub mod killing;
     pub mod people_on;
     pub mod player_only;
@@ -30,7 +31,6 @@ pub mod primitive {
 
 pub mod button;
 pub mod door;
-pub mod item;
 pub mod level_teleporter;
 pub mod lever;
 pub mod pressure_plate;

@@ -1,4 +1,5 @@
 use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::item::Item;
 use crate::items::primitive::pressable::Pressable;
 use bevy::prelude::Component;
 
@@ -7,5 +8,5 @@ use bevy::prelude::Component;
 /// It waits a (Variable ??TODO?) cool-down time and unset [`crate::items::components::is_activated::IsActivated`]
 /// During the cool-down time no-body can interact with the button
 #[derive(Component)]
-#[require(Pressable, IsActivated)]
+#[require(Item, Pressable, IsActivated)]
 pub struct Button;

@@ -1,7 +1,7 @@
-use crate::items::item::Item;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::item::Item;
 use bevy::prelude::*;
 
 pub fn update_is_usable_system(

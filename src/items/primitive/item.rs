@@ -2,7 +2,7 @@ use bevy::core::Name;
 use bevy::prelude::{Component, Entity, Sprite};
 
 /// Shared properties between all items
-#[derive(Component)]
+#[derive(Component, Default)]
 #[require(Name, Sprite)]
 pub struct Item;
 

@@ -1,5 +1,6 @@
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::item::Item;
 use crate::items::primitive::toggle::{Enter, Toggle};
 use bevy::prelude::Component;
 
@@ -7,5 +8,5 @@ use bevy::prelude::Component;
 /// When more a person enter on the plate toggle [`crate::items::components::is_activated::IsActivated`]
 
 #[derive(Component)]
-#[require(EnterAble, Toggle<Enter>, IsActivated)]
+#[require(Item, EnterAble, Toggle<Enter>, IsActivated)]
 pub struct PressurePlateOnOff;
