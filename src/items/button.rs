@@ -1,5 +1,5 @@
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::pressable::Pressable;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::pressable::Pressable;
 use bevy::prelude::Bundle;
 
 /// Represent a button item

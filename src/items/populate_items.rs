@@ -1,12 +1,11 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
-use crate::items::bundle;
-use crate::items::bundle::door_bundle::DoorBundle;
-use crate::items::bundle::item_bundle::{ItemBundle, ItemOutline, OutlineType};
-use crate::items::bundle::level_teleporter_bundle::LevelTeleporterBundle;
-use crate::items::bundle::lever_bundle::LeverBundle;
-use crate::items::bundle::pressure_plate_bundle::PressurePlateBundle;
-use crate::items::bundle::pressure_plate_on_off_bundle::PressurePlateOnOffBundle;
-use crate::items::bundle::teleporter_bundle::TeleporterBundle;
+use crate::items::button::ButtonBundle;
+use crate::items::door::DoorBundle;
+use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
+use crate::items::level_teleporter::LevelTeleporterBundle;
+use crate::items::lever::LeverBundle;
+use crate::items::pressure_plate::PressurePlateBundle;
+use crate::items::pressure_plate_on_off::PressurePlateOnOffBundle;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::ghost_only::GhostOnly;
 use crate::items::primitive::killing::Killing;
@@ -15,6 +14,7 @@ use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
 use crate::items::primitive::teleporter::Teleporter;
+use crate::items::teleporter::TeleporterBundle;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
@@ -80,9 +80,7 @@ pub fn populate_items(
                     .insert(PressurePlateOnOffBundle::default());
             }
             ObjectType::Button => {
-                commands
-                    .entity(item)
-                    .insert(bundle::button_bundle::ButtonBundle::default());
+                commands.entity(item).insert(ButtonBundle::default());
             }
         };
 

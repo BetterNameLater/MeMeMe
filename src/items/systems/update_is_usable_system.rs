@@ -1,4 +1,4 @@
-use crate::items::bundle::item_bundle::Item;
+use crate::items::item::Item;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::is_usable::IsUsable;

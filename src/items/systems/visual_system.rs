@@ -1,4 +1,4 @@
-use crate::items::bundle::item_bundle::{Item, ItemOutline, OutlineType};
+use crate::items::item::{Item, ItemOutline, OutlineType};
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::is_usable::IsUsable;
 use bevy::prelude::*;
