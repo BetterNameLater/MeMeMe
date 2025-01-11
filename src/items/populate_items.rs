@@ -1,7 +1,7 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::items::button::Button as ButtonItem;
 use crate::items::door::Door;
-use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
+use crate::items::item::{Item, ItemOutline, OutlineType};
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
@@ -18,6 +18,8 @@ use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
 use std::collections::HashMap;
 
+const ITEM_SIZE: f32 = CELL_LENGTH / 3.;
+
 pub fn populate_items(
     commands: &mut Commands,
     parent: Entity,
@@ -33,7 +35,23 @@ pub fn populate_items(
         );
         let item = commands
             .spawn((
-                ItemBundle::new(key, &object.object_type),
+                Name::new(key.clone()),
+                Sprite {
+                    color: match object.object_type {
+                        ObjectType::PressurePlate => bevy::color::palettes::css::GREEN.into(),
+                        ObjectType::Teleporter { .. } => bevy::color::palettes::css::GOLD.into(),
+                        ObjectType::Lever => bevy::color::palettes::css::YELLOW.into(),
+                        ObjectType::Door => bevy::color::palettes::css::MIDNIGHT_BLUE.into(),
+                        ObjectType::LevelTeleporter { .. } => {
+                            bevy::color::palettes::css::ALICE_BLUE.into()
+                        }
+                        ObjectType::PressurePlateOnOff => bevy::color::palettes::css::AZURE.into(),
+                        ObjectType::Button => bevy::color::palettes::css::DARK_GRAY.into(),
+                    },
+                    custom_size: Some(Vec2::new(ITEM_SIZE, ITEM_SIZE)),
+                    ..default()
+                },
+                Item,
                 position.to_transform(ITEMS_Z),
             ))
             .id();
