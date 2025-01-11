@@ -3,14 +3,14 @@ use bevy::prelude::*;
 
 #[derive(Event, Debug)]
 pub struct OnEnterEvent {
-    pub position: Vec2i,
+    pub _position: Vec2i,
     pub item: Entity,
     pub person: Entity,
 }
 
 #[derive(Event, Debug)]
 pub struct OnExitEvent {
-    pub position: Vec2i,
+    pub _position: Vec2i,
     pub item: Entity,
     pub person: Entity,
 }

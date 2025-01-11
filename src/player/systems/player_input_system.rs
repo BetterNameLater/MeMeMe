@@ -19,11 +19,11 @@ use bevy::prelude::*;
 pub fn player_move_input_system(
     mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
-    key_inputs: Res<Input<KeyCode>>,
+    key_inputs: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
     mut level_infos: ResMut<LevelInformations>,
     object_map_query: Query<&Map, With<ObjectMap>>,
-    player_only_people_on_query: Query<(With<EnterAble>, Without<GhostOnly>)>,
+    player_only_people_on_query: Query<(), (With<EnterAble>, Without<GhostOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
 ) {
@@ -46,7 +46,7 @@ pub fn player_move_input_system(
             timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
         });
         if level_infos.elapsed_time_from_start_rewind.is_none() {
-            level_infos.start_time = Some(time.elapsed_seconds());
+            level_infos.start_time = Some(time.elapsed_secs());
             level_infos.elapsed_time_from_start_rewind = Some(0.);
         }
 
@@ -68,7 +68,7 @@ pub fn player_move_input_system(
 pub fn add_enter_exit_event<W: PersonOnly>(
     new_position_event: NewPositionEventData,
     object_map_query: &Query<&Map, With<ObjectMap>>,
-    player_only_people_on_query: &Query<(With<EnterAble>, Without<W>)>,
+    player_only_people_on_query: &Query<(), (With<EnterAble>, Without<W>)>,
     on_enter_event_writer: &mut EventWriter<OnEnterEvent>,
     on_exit_event_writer: &mut EventWriter<OnExitEvent>,
 ) {
@@ -80,7 +80,7 @@ pub fn add_enter_exit_event<W: PersonOnly>(
                 entered_cell, new_position_event.entity
             );
             on_enter_event_writer.send(OnEnterEvent {
-                position: new_position_event.now,
+                _position: new_position_event.now,
                 item: *entered_cell,
                 person: new_position_event.entity,
             });
@@ -94,7 +94,7 @@ pub fn add_enter_exit_event<W: PersonOnly>(
                 leaved_cell, new_position_event.entity
             );
             on_exit_event_writer.send(OnExitEvent {
-                position: new_position_event.now,
+                _position: new_position_event.now,
                 item: *leaved_cell,
                 person: new_position_event.entity,
             });
@@ -105,7 +105,7 @@ pub fn add_enter_exit_event<W: PersonOnly>(
 pub fn player_action_input_system(
     mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
-    key_inputs: Res<Input<KeyCode>>,
+    key_inputs: Res<ButtonInput<KeyCode>>,
     level_infos: ResMut<LevelInformations>,
     mut rewind_event: EventWriter<RewindEvent>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,

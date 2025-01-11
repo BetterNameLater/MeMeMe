@@ -6,34 +6,26 @@ pub struct MessageScreen;
 fn message_screen(mut commands: Commands, message: &str) {
     commands
         .spawn((
-            NodeBundle {
-                style: Style {
-                    width: Val::Percent(100.),
-                    height: Val::Percent(100.),
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
-                    align_content: AlignContent::Center,
-                    ..default()
-                },
-                background_color: Color::rgb(0.15, 0.15, 0.15).into(),
+            Node {
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                align_content: AlignContent::Center,
                 ..default()
             },
+            BackgroundColor(Color::srgb(0.15, 0.15, 0.15)),
             MessageScreen,
         ))
         .with_children(|parent| {
             parent.spawn((
-                TextBundle::from_section(
-                    message,
-                    TextStyle {
-                        font_size: 30.0,
-                        ..default()
-                    },
-                )
-                .with_style(Style {
+                Node {
                     margin: UiRect::all(Val::Px(5.)),
                     ..default()
-                }),
+                },
+                Text::new(message),
                 Label,
+                TextFont::from_font_size(60.),
             ));
         });
 }

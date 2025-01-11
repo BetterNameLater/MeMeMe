@@ -11,7 +11,7 @@ pub fn count_people_on_system<W: PersonOnly, T: Person>(
         (&mut IsActivated, &mut PeopleOn),
         (With<IsUsable>, Without<W>),
     >,
-    person: Query<With<T>>,
+    person: Query<(), With<T>>,
     mut on_exit_event_reader: EventReader<OnExitEvent>,
     mut on_enter_event_reader: EventReader<OnEnterEvent>,
 ) {

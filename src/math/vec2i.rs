@@ -1,8 +1,9 @@
 use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{Reflect, Transform};
+use schemars::JsonSchema;
 use serde::Deserialize;
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug, Reflect)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug, Reflect, JsonSchema)]
 pub struct Vec2i {
     pub x: i32,
     pub y: i32,

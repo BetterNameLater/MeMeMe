@@ -25,15 +25,9 @@ use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
 use state::GameState;
 
 fn main() {
+    #[cfg(debug_assertions)]
+    MapRepr::json_schema();
     App::new()
-        // states
-        .add_state::<GameState>()
-        .add_loading_state(
-            LoadingState::new(GameState::BootingGame)
-                .continue_to_state(GameState::LoadingLevel)
-                .on_failure_continue_to_state(GameState::ErrorInitialLoad)
-                .load_collection::<LevelAssets>(),
-        )
         // systems
         .add_systems(Startup, setup)
         .add_systems(Startup, loading_screen)
@@ -45,6 +39,7 @@ fn main() {
                 .set(LogPlugin {
                     level: Level::INFO,
                     filter: "wgpu=error,bevy_render=info,bevy_ecs=info,me_me_me=trace".to_string(),
+                    ..default()
                 })
                 .set(WindowPlugin {
                     primary_window: Some(Window {
@@ -61,11 +56,19 @@ fn main() {
         // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()
+        // states
+        .init_state::<GameState>()
+        .add_loading_state(
+            LoadingState::new(GameState::BootingGame)
+                .continue_to_state(GameState::LoadingLevel)
+                .on_failure_continue_to_state(GameState::ErrorInitialLoad)
+                .load_collection::<LevelAssets>(),
+        )
         .run();
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
     commands.spawn(LevelToGo("entry_point".to_string()));
 }
 

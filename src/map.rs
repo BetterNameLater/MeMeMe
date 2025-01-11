@@ -1,7 +1,9 @@
 use crate::constantes::*;
 use crate::map_parser::BackgroundType;
 use crate::math::vec2i::Vec2i;
-use bevy::{prelude::*, utils::HashMap};
+use bevy::color::palettes::css;
+use bevy::prelude::*;
+use std::collections::HashMap;
 
 #[derive(Component)]
 pub struct Cell;
@@ -36,25 +38,20 @@ impl Map {
         commands.entity(parent).with_children(|parent| {
             let id = parent
                 .spawn((
-                    SpriteBundle {
-                        sprite: Sprite {
-                            color: match background_type {
-                                BackgroundType::Floor => Color::BLUE,
-                                BackgroundType::Wall => Color::BLACK,
-                                BackgroundType::Start => Color::ALICE_BLUE,
-                                BackgroundType::End => Color::GREEN,
-                            },
-                            custom_size: Some(Vec2::new(
-                                CELL_LENGTH - CELL_GAP,
-                                CELL_LENGTH - CELL_GAP,
-                            )),
-                            ..default()
+                    Sprite {
+                        color: match background_type {
+                            BackgroundType::Floor => css::BLUE.into(),
+                            BackgroundType::Wall => css::BLACK.into(),
+                            BackgroundType::Start => css::ALICE_BLUE.into(),
+                            BackgroundType::End => css::GREEN.into(),
                         },
-                        transform: Transform::from_translation(Vec3::new(
-                            cell_pos.x, cell_pos.y, CELL_Z,
+                        custom_size: Some(Vec2::new(
+                            CELL_LENGTH - CELL_GAP,
+                            CELL_LENGTH - CELL_GAP,
                         )),
                         ..default()
                     },
+                    Transform::from_translation(Vec3::new(cell_pos.x, cell_pos.y, CELL_Z)),
                     Cell,
                 ))
                 .id();

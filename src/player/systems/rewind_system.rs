@@ -53,9 +53,11 @@ pub fn rewind_system(
     commands.entity(level_query.single()).add_child(new_player);
 
     // reset ghost position
-    ghost_transform_query.for_each_mut(|mut ghost_transform| {
-        *ghost_transform = start_transform;
-    });
+    ghost_transform_query
+        .iter_mut()
+        .for_each(|mut ghost_transform| {
+            *ghost_transform = start_transform;
+        });
 
     level_infos.rewind();
 }

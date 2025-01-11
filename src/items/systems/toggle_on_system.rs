@@ -18,7 +18,7 @@ pub fn toggle_on_enter_system<W: PersonOnly, T: Person>(
             With<IsUsable>,
         ),
     >,
-    person: Query<With<T>>,
+    person: Query<(), With<T>>,
     mut on_enter_event_reader: EventReader<OnEnterEvent>,
 ) {
     for on_enter_event in on_enter_event_reader.read() {
@@ -42,7 +42,7 @@ pub fn toggle_on_interact_system<W: PersonOnly, T: Person>(
             With<IsUsable>,
         ),
     >,
-    person: Query<With<T>>,
+    person: Query<(), With<T>>,
     mut on_interact_event_reader: EventReader<InteractEvent<T>>,
 ) {
     for on_interact_event in on_interact_event_reader.read() {

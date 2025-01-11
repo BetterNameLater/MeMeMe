@@ -51,21 +51,21 @@ pub fn load_level(
             }
             false
         })
-        .expect(format!("could not find `levels/{}.json", level_to_go.0 .0).as_str());
+        .unwrap_or_else(|| panic!("could not find `levels/{}.json", level_to_go.0 .0));
 
-    let level = custom_assets.get(level_asset.clone()).unwrap();
+    let level = custom_assets.get(level_asset).unwrap();
 
     let level_tag = commands
         .spawn((
             LevelTag,
-            SpriteBundle::default(),
+            Sprite::default(),
             Name::new(level_asset.path().unwrap().to_string()),
         ))
         .id();
 
     let mut world_map = Map::default();
     let world_map_entity = commands
-        .spawn((WorldMap, SpriteBundle::default(), Name::new("WorldMap")))
+        .spawn((WorldMap, Sprite::default(), Name::new("WorldMap")))
         .id();
 
     let items = populate_items(&mut commands, level_tag, &level.objects);

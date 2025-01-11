@@ -9,5 +9,5 @@ pub fn elapsed_time_from_start_rewind_system(
         return;
     }
     level_informations.elapsed_time_from_start_rewind =
-        Some(time.elapsed_seconds() - level_informations.start_time.unwrap());
+        Some(time.elapsed_secs() - level_informations.start_time.unwrap());
 }

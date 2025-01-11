@@ -1,12 +1,11 @@
 {
   "map": [],
   "objects": {
-    "lever_1": {
+    "that_button": {
       "data": {
-        "type": "lever"
+        "type": "button"
       },
-	  "start_timer": 2.0,
-      "interaction_type": "all",
+      "interaction_type": "player_only",
       "position": {
         "x": 1,
         "y": 1
