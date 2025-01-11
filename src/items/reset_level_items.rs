@@ -1,6 +1,6 @@
-use crate::items::components::cooldown::Cooldown;
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::people_on::PeopleOn;
+use crate::items::primitive::cooldown::Cooldown;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::people_on::PeopleOn;
 use crate::player::events::rewind_event::RewindEvent;
 use bevy::prelude::*;
 

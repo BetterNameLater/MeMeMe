@@ -1,7 +1,7 @@
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::is_usable::IsUsable;
-use crate::items::components::player_only::PersonOnly;
-use crate::items::components::toggle::{Enter, Interact, Toggle};
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::player_only::PersonOnly;
+use crate::items::primitive::toggle::{Enter, Interact, Toggle};
 use crate::items::events::OnEnterEvent;
 use crate::player::components::player::Person;
 use crate::player::events::interact_event::InteractEvent;

@@ -1,5 +1,5 @@
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::teleporter::Teleporter;
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::teleporter::Teleporter;
 use bevy::prelude::Bundle;
 
 /// Represent a Teleporter item

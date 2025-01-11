@@ -1,6 +1,6 @@
 use crate::constantes::*;
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::player_only::PlayerOnly;
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
 use crate::level::ressources::level_informations::LevelInformations;

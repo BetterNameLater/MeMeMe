@@ -1,7 +1,7 @@
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::is_usable::IsUsable;
-use crate::items::components::people_on::PeopleOn;
-use crate::items::components::player_only::PersonOnly;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::people_on::PeopleOn;
+use crate::items::primitive::player_only::PersonOnly;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::player::components::player::Person;
 use bevy::prelude::*;

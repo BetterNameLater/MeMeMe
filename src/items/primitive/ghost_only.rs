@@ -1,4 +1,4 @@
-use crate::items::components::player_only::PersonOnly;
+use crate::items::primitive::player_only::PersonOnly;
 use bevy::prelude::Component;
 
 /// Items that can only interact with ghosts

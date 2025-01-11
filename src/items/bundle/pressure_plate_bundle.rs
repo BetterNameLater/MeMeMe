@@ -1,6 +1,6 @@
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::people_on::PeopleOn;
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::people_on::PeopleOn;
 use bevy::prelude::Bundle;
 
 /// Represent a Pressure Plate item

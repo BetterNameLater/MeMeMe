@@ -12,7 +12,7 @@ pub mod systems {
     pub mod update_is_usable_system;
     pub mod visual_system;
 }
-pub mod components {
+pub mod primitive {
     pub mod cooldown;
     pub mod dependencies;
     pub mod enterable;

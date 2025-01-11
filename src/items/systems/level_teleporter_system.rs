@@ -1,7 +1,7 @@
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::is_usable::IsUsable;
-use crate::items::components::level_teleporter::LevelTeleporter;
-use crate::items::components::player_only::PlayerOnly;
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::level_teleporter::LevelTeleporter;
+use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::events::OnEnterEvent;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::state::GameState;

@@ -1,6 +1,6 @@
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::toggle::{Enter, Toggle};
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::toggle::{Enter, Toggle};
 use bevy::prelude::Bundle;
 
 /// Represent a Pressure Plate On Off (light) item

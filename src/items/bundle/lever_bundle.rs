@@ -1,5 +1,5 @@
-use crate::items::components::is_activated::IsActivated;
-use crate::items::components::toggle::{Interact, Toggle};
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::primitive::toggle::{Interact, Toggle};
 use bevy::prelude::Bundle;
 
 /// Represent a Lever (or switch) item

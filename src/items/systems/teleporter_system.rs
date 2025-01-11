@@ -1,7 +1,7 @@
-use crate::items::components::enterable::EnterAble;
-use crate::items::components::is_usable::IsUsable;
-use crate::items::components::player_only::PersonOnly;
-use crate::items::components::teleporter::Teleporter;
+use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_usable::IsUsable;
+use crate::items::primitive::player_only::PersonOnly;
+use crate::items::primitive::teleporter::Teleporter;
 use crate::items::events::OnEnterEvent;
 use crate::player::components::player::Person;
 use bevy::prelude::*;
