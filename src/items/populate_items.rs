@@ -12,8 +12,7 @@ use crate::items::primitive::killing::Killing;
 use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
-use crate::items::primitive::teleporter::Teleporter;
-use crate::items::teleporter::TeleporterBundle;
+use crate::items::teleporter::Teleporter;
 use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
 use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
@@ -56,10 +55,10 @@ pub fn populate_items(
                 commands.entity(item).insert(PressurePlate);
             }
             ObjectType::Teleporter { destination } => {
-                commands.entity(item).insert(TeleporterBundle {
-                    teleporter: Teleporter(Vec2i::new(destination.x * 32, destination.y * 32)),
-                    ..default()
-                });
+                commands.entity(item).insert(Teleporter(Vec2i::new(
+                    destination.x * 32,
+                    destination.y * 32,
+                )));
             }
             ObjectType::Lever => {
                 commands.entity(item).insert(Lever);

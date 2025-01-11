@@ -1,11 +1,9 @@
 use crate::items::primitive::enterable::EnterAble;
-use crate::items::primitive::teleporter::Teleporter;
-use bevy::prelude::Bundle;
+use crate::math::vec2i::Vec2i;
+use bevy::prelude::Component;
 
 /// Represent a Teleporter item
 /// When a person enter the teleporter, it moves the person to the destination
-#[derive(Bundle, Default)]
-pub struct TeleporterBundle {
-    pub enterable: EnterAble,
-    pub teleporter: Teleporter,
-}
+#[derive(Component, Default)]
+#[require(EnterAble)]
+pub struct Teleporter(pub Vec2i);

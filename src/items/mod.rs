@@ -25,7 +25,6 @@ pub mod primitive {
     pub mod pressable;
     pub mod single_use;
     pub mod start_timer;
-    pub mod teleporter;
     pub mod toggle;
 }
 
