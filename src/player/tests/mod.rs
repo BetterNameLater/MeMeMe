@@ -36,53 +36,74 @@ mod utils {
         Player::spawn_player(&mut app.world_mut().commands(), Vec2i::default());
         app.update();
 
-        assert_eq!(get_player(&mut app).actions.len(), 0);
+        assert_eq!(player(&mut app).actions.len(), 0);
         assert_eq!(
-            get_player_pos(&mut app),
+            player_transform(&mut app),
             &Vec2i::default().to_transform(PLAYER_Z)
         );
         app
     }
 
-    pub fn query_single<T: Component>(app: &mut App) -> &T {
-        app.world_mut().query::<&T>().single(app.world())
+    pub fn player(app: &mut App) -> &Player {
+        query_single!(app, Player)
     }
 
-    pub fn get_player(app: &mut App) -> &Player {
-        query_single(app)
-    }
-
-    pub fn get_player_pos(app: &mut App) -> &Transform {
+    pub fn player_transform(app: &mut App) -> &Transform {
         app.world_mut()
             .query_filtered::<&Transform, With<Player>>()
             .single(app.world())
     }
 
+    macro_rules! query_single {
+        ($app:ident, $t:tt ) => {
+            $app.world_mut().query::<&$t>().single($app.world())
+        };
+    }
+
     macro_rules! resource {
-        ($t:tt, $app:ident ) => {
+        ($app:ident, $t:tt) => {
             $app.world().resource::<$t>()
         };
     }
-    pub(crate) use resource;
 
     macro_rules! resource_mut {
-        ($t:tt, $app:ident ) => {
+        ($app:ident, $t:tt) => {
             $app.world_mut().resource_mut::<$t>()
         };
     }
+
+    macro_rules! advance_to {
+        ($app:ident, $duration:expr) => {{
+            use bevy::time::Time as MacroSecretTimeType;
+            resource_mut!($app, MacroSecretTimeType).advance_to($duration);
+        }};
+    }
+
+    macro_rules! advance_by {
+        ($app:ident, $duration:expr) => {{
+            use bevy::time::Time as MacroSecretTimeType;
+            resource_mut!($app, MacroSecretTimeType).advance_by($duration);
+        }};
+    }
+
+    macro_rules! press_key_and_update {
+        ($app:ident, $key:expr) => {{
+            use bevy::input::ButtonInput as MacroSecretButtonInput;
+            use bevy::prelude::KeyCode as MacroSecretKeyCode;
+            type Input = MacroSecretButtonInput<MacroSecretKeyCode>;
+
+            resource_mut!($app, Input).press($key);
+            $app.update();
+            resource_mut!($app, Input).clear();
+        }};
+    }
+
+    pub(crate) use advance_by;
+    pub(crate) use advance_to;
+    pub(crate) use press_key_and_update;
+    pub(crate) use query_single;
+    pub(crate) use resource;
     pub(crate) use resource_mut;
-
-    pub fn advance_to(app: &mut App, duration: Duration) {
-        resource_mut!(Time, app).advance_to(duration);
-    }
-
-    pub fn press_key_and_update(app: &mut App, key: KeyCode) {
-        type Input = ButtonInput<KeyCode>;
-
-        resource_mut!(Input, app).press(key);
-        app.update();
-        resource_mut!(Input, app).clear();
-    }
 }
 
 /// Test if the time logic for tests in working
@@ -93,31 +114,42 @@ mod time {
     #[test]
     fn start_at_0() {
         let app = base_init();
-        assert_eq!(resource!(Time, app).elapsed_secs(), 0.);
+        assert_eq!(resource!(app, Time).elapsed_secs(), 0.);
     }
 
     #[test]
     fn update_do_not_advance() {
         let mut app = base_init();
-        assert_eq!(resource!(Time, app).elapsed_secs(), 0.);
+        assert_eq!(resource!(app, Time).elapsed_secs(), 0.);
 
         app.update();
         app.update();
         app.update();
         app.update();
 
-        assert_eq!(resource!(Time, app).elapsed_secs(), 0.);
+        assert_eq!(resource!(app, Time).elapsed_secs(), 0.);
     }
 
     #[test]
     fn advance_to_() {
         let mut app = base_init();
 
-        advance_to(&mut app, Duration::from_secs(6));
-        assert_eq!(resource!(Time, app).elapsed_secs(), 6.);
+        advance_to!(app, Duration::from_secs(6));
+        assert_eq!(resource!(app, Time).elapsed_secs(), 6.);
 
-        advance_to(&mut app, Duration::from_secs(12));
-        assert_eq!(resource!(Time, app).elapsed_secs(), 12.);
+        advance_to!(app, Duration::from_secs(12));
+        assert_eq!(resource!(app, Time).elapsed_secs(), 12.);
+    }
+
+    #[test]
+    fn advance_by_() {
+        let mut app = base_init();
+
+        advance_by!(app, Duration::from_secs(6));
+        assert_eq!(resource!(app, Time).elapsed_secs(), 6.);
+
+        advance_by!(app, Duration::from_secs(6));
+        assert_eq!(resource!(app, Time).elapsed_secs(), 12.);
     }
 
     #[test]
@@ -125,10 +157,10 @@ mod time {
     fn advance_to_past_panic() {
         let mut app = base_init();
 
-        advance_to(&mut app, Duration::from_secs(6));
-        assert_eq!(resource!(Time, app).elapsed_secs(), 6.);
+        advance_to!(app, Duration::from_secs(6));
+        assert_eq!(resource!(app, Time).elapsed_secs(), 6.);
 
         // this should panic
-        advance_to(&mut app, Duration::from_secs(0));
+        advance_to!(app, Duration::from_secs(0));
     }
 }

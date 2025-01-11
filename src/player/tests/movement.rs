@@ -13,50 +13,50 @@ fn init() -> bevy::prelude::App {
 fn move_up() {
     let mut app = init();
 
-    press_key_and_update(&mut app, INPUT_PLAYER_UP);
+    press_key_and_update!(app, INPUT_PLAYER_UP);
 
     assert_eq!(
-        get_player_pos(&mut app),
+        player_transform(&mut app),
         &Vec2i::new(0, CELL_LENGTH as i32).to_transform(PLAYER_Z)
     );
-    assert_eq!(get_player(&mut app).actions.len(), 1);
+    assert_eq!(player(&mut app).actions.len(), 1);
 }
 
 #[test]
 fn move_twice() {
     let mut app = init();
 
-    press_key_and_update(&mut app, INPUT_PLAYER_UP);
-    press_key_and_update(&mut app, INPUT_PLAYER_RIGHT);
+    press_key_and_update!(app, INPUT_PLAYER_UP);
+    press_key_and_update!(app, INPUT_PLAYER_RIGHT);
 
     assert_eq!(
-        get_player_pos(&mut app),
+        player_transform(&mut app),
         &Vec2i::new(CELL_LENGTH as i32, CELL_LENGTH as i32).to_transform(PLAYER_Z)
     );
-    assert_eq!(get_player(&mut app).actions.len(), 2);
+    assert_eq!(player(&mut app).actions.len(), 2);
 }
 
 #[test]
 fn move_back_to_start() {
     let mut app = init();
 
-    press_key_and_update(&mut app, INPUT_PLAYER_UP);
-    press_key_and_update(&mut app, INPUT_PLAYER_RIGHT);
-    press_key_and_update(&mut app, INPUT_PLAYER_DOWN);
-    press_key_and_update(&mut app, INPUT_PLAYER_LEFT);
+    press_key_and_update!(app, INPUT_PLAYER_UP);
+    press_key_and_update!(app, INPUT_PLAYER_RIGHT);
+    press_key_and_update!(app, INPUT_PLAYER_DOWN);
+    press_key_and_update!(app, INPUT_PLAYER_LEFT);
 
-    assert_eq!(get_player_pos(&mut app), &PLAYER_ORIGIN);
-    assert_eq!(get_player(&mut app).actions.len(), 4);
+    assert_eq!(player_transform(&mut app), &PLAYER_ORIGIN);
+    assert_eq!(player(&mut app).actions.len(), 4);
 }
 
 #[test]
 fn moving_starts_level_time() {
     let mut app = init();
-    advance_to(&mut app, Duration::from_secs(6));
-    press_key_and_update(&mut app, INPUT_PLAYER_UP);
+    advance_to!(app, Duration::from_secs(6));
+    press_key_and_update!(app, INPUT_PLAYER_UP);
 
     assert_eq!(
-        resource!(LevelInformations, app),
+        resource!(app, LevelInformations),
         &LevelInformations {
             start_time: Some(6.),
             elapsed_time_from_start_rewind: Some(0.),
