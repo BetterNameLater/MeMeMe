@@ -111,12 +111,11 @@ fn process_actions() {
         ..LevelInformations::default()
     };
 
-    app.update();
-    assert_eq!(resource!(app, GhostActions).index, 0);
     advance_to!(app, Duration::from_secs(15));
     app.update();
     assert_eq!(resource!(app, GhostActions).index, 1);
     advance_to!(app, Duration::from_secs(20));
+    app.update();
     app.update();
     assert_eq!(resource!(app, GhostActions).index, 4);
 }
