@@ -18,3 +18,8 @@ pub mod move_direction;
 pub mod plugin;
 pub use components::ghost::Ghost;
 pub use systems::ghost_actions_system::{ghost_actions_system, GhostActions};
+
+#[cfg(test)]
+mod tests {
+    mod movement;
+}
