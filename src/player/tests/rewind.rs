@@ -31,6 +31,7 @@ fn it_reset_player() {
 
     press_key_and_update(&mut app, INPUT_PLAYER_UP);
     press_key_and_update(&mut app, INPUT_PLAYER_REWIND);
+    app.update();
 
     assert_eq!(get_player_pos(&mut app), &PLAYER_ORIGIN);
     assert_eq!(get_player(&mut app).actions.len(), 0);

@@ -58,13 +58,25 @@ mod utils {
             .single(app.world())
     }
 
+    macro_rules! resource {
+        ($t:tt, $app:ident ) => {
+            $app.world_mut().resource::<$t>()
+        };
+    }
+    pub(crate) use resource;
+
+    macro_rules! resource_mut {
+        ($t:tt, $app:ident ) => {
+            $app.world_mut().resource_mut::<$t>()
+        };
+    }
+    pub(crate) use resource_mut;
+
     pub fn press_key_and_update(app: &mut App, key: KeyCode) {
-        app.world_mut()
-            .resource_mut::<ButtonInput<KeyCode>>()
-            .press(key);
+        type Input = ButtonInput<KeyCode>;
+
+        resource_mut!(Input, app).press(key);
         app.update();
-        app.world_mut()
-            .resource_mut::<ButtonInput<KeyCode>>()
-            .clear();
+        resource_mut!(Input, app).clear();
     }
 }
