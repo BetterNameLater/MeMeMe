@@ -34,7 +34,6 @@ pub fn rewind_system(
             .unwrap()
     });
     ghost_actions.index = 0;
-    player.actions.clear();
 
     let start_transform = level_infos.player_start_position.to_transform(PLAYER_Z);
 

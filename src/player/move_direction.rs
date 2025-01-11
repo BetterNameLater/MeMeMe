@@ -21,7 +21,7 @@ impl MoveDirection {
         }
     }
 
-    pub fn to_vec3(&self) -> Vec3 {
+    pub fn to_vec3(self) -> Vec3 {
         match self {
             MoveDirection::Up => Vec3::Y,
             MoveDirection::Left => Vec3::NEG_X,

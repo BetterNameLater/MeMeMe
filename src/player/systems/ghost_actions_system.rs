@@ -26,7 +26,7 @@ impl GhostActions {
     }
 }
 
-/// Apply the ghost actions
+/// Process the ghost actions
 #[allow(clippy::too_many_arguments)]
 pub fn ghost_actions_system(
     mut ghost_actions: ResMut<GhostActions>,

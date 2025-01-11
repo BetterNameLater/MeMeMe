@@ -62,6 +62,14 @@ mod utils {
         };
     }
 
+    macro_rules! query_single_mut {
+        ($app:ident, $t:tt ) => {
+            $app.world_mut()
+                .query::<&mut $t>()
+                .single_mut($app.world_mut())
+        };
+    }
+
     macro_rules! resource {
         ($app:ident, $t:tt) => {
             $app.world().resource::<$t>()
@@ -104,6 +112,7 @@ mod utils {
     pub(crate) use advance_to;
     pub(crate) use press_key_and_update;
     pub(crate) use query_single;
+    pub(crate) use query_single_mut;
     pub(crate) use resource;
     pub(crate) use resource_mut;
 }
