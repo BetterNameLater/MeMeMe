@@ -20,7 +20,6 @@ pub mod primitive {
     pub mod is_activated;
     pub mod is_usable;
     pub mod killing;
-    pub mod level_teleporter;
     pub mod people_on;
     pub mod player_only;
     pub mod pressable;

@@ -2,14 +2,13 @@ use crate::constantes::{CELL_LENGTH, ITEMS_Z};
 use crate::items::button::Button as ButtonItem;
 use crate::items::door::Door;
 use crate::items::item::{ItemBundle, ItemOutline, OutlineType};
-use crate::items::level_teleporter::LevelTeleporterBundle;
+use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::LeverBundle;
 use crate::items::pressure_plate::PressurePlateBundle;
 use crate::items::pressure_plate_on_off::PressurePlateOnOffBundle;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::ghost_only::GhostOnly;
 use crate::items::primitive::killing::Killing;
-use crate::items::primitive::level_teleporter::LevelTeleporter;
 use crate::items::primitive::player_only::PlayerOnly;
 use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
@@ -69,10 +68,9 @@ pub fn populate_items(
                 commands.entity(item).insert(Door);
             }
             ObjectType::LevelTeleporter { destination } => {
-                commands.entity(item).insert(LevelTeleporterBundle {
-                    level_teleporter: LevelTeleporter(destination.clone()),
-                    ..default()
-                });
+                commands
+                    .entity(item)
+                    .insert(LevelTeleporter(destination.clone()));
             }
             ObjectType::PressurePlateOnOff => {
                 commands
