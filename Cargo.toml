@@ -3,9 +3,6 @@ name = "me_me_me"
 version = "0.1.0"
 edition = "2021"
 
-[toolchain]
-channel = "nightly"
-
 #Enable small amount of optimisation in debug mode
 [profile.dev]
 opt-level = 1
