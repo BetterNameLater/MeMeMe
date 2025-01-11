@@ -1,4 +1,3 @@
-mod ghost_actions;
 mod movement;
 
 mod utils {
@@ -7,7 +6,6 @@ mod utils {
     pub use crate::math::vec2i::Vec2i;
 
     use crate::map::{Map, ObjectMap};
-    use crate::player::events::rewind_event::RewindEvent;
     use crate::{
         items::events::{OnEnterEvent, OnExitEvent},
         level::ressources::level_informations::LevelInformations,
