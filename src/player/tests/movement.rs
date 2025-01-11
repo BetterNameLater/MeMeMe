@@ -48,3 +48,19 @@ fn move_back_to_start() {
     assert_eq!(get_player_pos(&mut app), &PLAYER_ORIGIN);
     assert_eq!(get_player(&mut app).actions.len(), 4);
 }
+
+#[test]
+fn moving_starts_level_time() {
+    let mut app = init();
+    advance_to(&mut app, Duration::from_secs(6));
+    press_key_and_update(&mut app, INPUT_PLAYER_UP);
+
+    assert_eq!(
+        resource!(LevelInformations, app),
+        &LevelInformations {
+            start_time: Some(6.),
+            elapsed_time_from_start_rewind: Some(0.),
+            ..LevelInformations::default()
+        }
+    )
+}
