@@ -1,3 +1,4 @@
+use super::ressources::level_informations::StartPosition;
 use crate::constantes::*;
 use crate::items::populate_items::populate_items;
 use crate::items::primitive::colliding::Colliding;
@@ -36,8 +37,6 @@ pub fn load_level(
     custom_assets: Res<Assets<MapRepr>>,
     mut next_state: ResMut<NextState<GameState>>,
     level_to_go_query: Query<(&LevelToGo, Entity)>,
-    mut ghost_actions: ResMut<GhostActions>,
-    mut level_infos: ResMut<LevelInformations>,
 ) {
     let level_to_go = level_to_go_query.single();
     let level_asset = level_assets
@@ -103,9 +102,10 @@ pub fn load_level(
     next_state.set(GameState::InLevel);
     commands.entity(level_to_go.1).despawn();
 
-    // reset ressources
-    ghost_actions.reset();
-    level_infos.reset(start_position);
+    // insert resources
+    commands.insert_resource(GhostActions::default());
+    commands.insert_resource(LevelInformations::default());
+    commands.insert_resource(StartPosition::new(start_position));
 }
 
 fn map_to_local(pos: Vec2i) -> Vec2 {

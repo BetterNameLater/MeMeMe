@@ -50,7 +50,6 @@ fn it_set_level_infos() {
             ghost_count: 1,
             start_time: None,
             elapsed_time_from_start_rewind: None,
-            ..LevelInformations::default()
         }
     );
 

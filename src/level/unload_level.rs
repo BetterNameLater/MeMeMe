@@ -1,6 +1,8 @@
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
+use crate::level::ressources::level_informations::{LevelInformations, StartPosition};
 use crate::map_parser::MapRepr;
+use crate::player::GhostActions;
 use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
@@ -17,6 +19,10 @@ pub fn unload_level(
     level_to_go_query: Query<&LevelToGo>,
 ) {
     info!("Unloading current level");
+
+    commands.remove_resource::<GhostActions>();
+    commands.remove_resource::<LevelInformations>();
+    commands.remove_resource::<StartPosition>();
 
     // TODO pas tres elegant de verifier ca
     if level_to_go_query.get_single().is_ok() {

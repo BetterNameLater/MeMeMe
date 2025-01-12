@@ -21,13 +21,6 @@ pub struct GhostActions {
     pub index: usize,
 }
 
-impl GhostActions {
-    pub fn reset(&mut self) {
-        self.actions.clear();
-        self.index = 0;
-    }
-}
-
 /// Process the ghost actions
 #[allow(clippy::too_many_arguments)]
 pub fn ghost_actions_system(

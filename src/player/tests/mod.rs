@@ -4,11 +4,12 @@ mod rewind;
 
 mod utils {
     pub use crate::constantes::*;
-    use crate::level::components::level_tag::LevelTag;
     pub use crate::level::ressources::level_informations::LevelInformations;
     pub use crate::math::vec2i::Vec2i;
     pub use std::time::Duration;
 
+    use crate::level::components::level_tag::LevelTag;
+    use crate::level::ressources::level_informations::StartPosition;
     use crate::map::ObjectMap;
     use crate::{
         items::events::{OnEnterEvent, OnExitEvent},
@@ -26,6 +27,7 @@ mod utils {
         app.init_resource::<Time>()
             .insert_resource(ButtonInput::<KeyCode>::default())
             .insert_resource(GhostActions::default())
+            .insert_resource(StartPosition::new(Vec2i::default()))
             .insert_resource(LevelInformations::default())
             .add_event::<OnEnterEvent>()
             .add_event::<OnExitEvent>();
