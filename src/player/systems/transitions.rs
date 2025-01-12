@@ -2,12 +2,32 @@ use crate::constantes::PLAYER_Z;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::ressources::level_informations::{LevelInformations, StartPosition};
 use crate::player::components::player::Player;
-use crate::player::events::rewind_event::RewindEvent;
 use crate::player::{Ghost, GhostActions};
 use bevy::prelude::*;
 
 #[allow(clippy::too_many_arguments)]
-pub fn rewind_system(
+pub fn enter_rewind(
+    commands: Commands,
+    player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
+    ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
+    level_query: Query<Entity, With<LevelTag>>,
+    level_infos: ResMut<LevelInformations>,
+    start_position: ResMut<StartPosition>,
+    ghost_actions: ResMut<GhostActions>,
+) {
+    rewind_system(
+        commands,
+        player_query,
+        ghost_transform_query,
+        level_query,
+        level_infos,
+        start_position,
+        ghost_actions,
+    );
+}
+
+#[allow(clippy::too_many_arguments)]
+fn rewind_system(
     mut commands: Commands,
     mut player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
@@ -15,12 +35,7 @@ pub fn rewind_system(
     mut level_infos: ResMut<LevelInformations>,
     start_position: ResMut<StartPosition>,
     mut ghost_actions: ResMut<GhostActions>,
-    mut rewind_event: EventReader<RewindEvent>,
 ) {
-    if rewind_event.is_empty() {
-        return;
-    }
-    rewind_event.clear();
     assert!(
         level_infos.elapsed_time_from_start_rewind.is_some(),
         "Rewind without actual start"

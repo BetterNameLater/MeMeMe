@@ -1,22 +1,30 @@
 use crate::items::primitive::cooldown::Cooldown;
 use crate::items::primitive::is_activated::IsActivated;
 use crate::items::primitive::people_on::PeopleOn;
-use crate::player::events::rewind_event::RewindEvent;
 use bevy::prelude::*;
 
+pub fn enter_rewind(
+    commands: Commands,
+    is_activated_query: Query<&mut IsActivated>,
+    cooldown_query: Query<Entity, With<Cooldown<IsActivated>>>,
+    player_only_people_on_query: Query<&mut PeopleOn>,
+) {
+    reset_level_items(
+        commands,
+        is_activated_query,
+        cooldown_query,
+        player_only_people_on_query,
+    );
+}
+
 /// Rewind items to theyre initial state
-pub fn reset_level_items(
+fn reset_level_items(
     mut commands: Commands,
     mut is_activated_query: Query<&mut IsActivated>,
     cooldown_query: Query<Entity, With<Cooldown<IsActivated>>>,
-    mut rewind_event: EventReader<RewindEvent>,
     mut player_only_people_on_query: Query<&mut PeopleOn>,
 ) {
-    if rewind_event.is_empty() {
-        return;
-    }
-    rewind_event.clear();
-    debug!("Rewind");
+    debug!("Reset level itmes");
     for item in cooldown_query.iter() {
         commands.entity(item).remove::<Cooldown<IsActivated>>();
     }

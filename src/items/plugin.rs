@@ -1,7 +1,6 @@
 use crate::game_state::GameState;
 use crate::items::interaction_type::ghost_only::GhostOnly;
 use crate::items::interaction_type::player_only::PlayerOnly;
-use crate::items::reset_level_items::reset_level_items;
 use crate::items::systems::button_system::button_pressed_system;
 use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::level_teleporter_system;
@@ -9,10 +8,12 @@ use crate::items::systems::teleporter_system::{teleporter_activate_system, telep
 use crate::items::systems::timer_system::cooldown_system;
 use crate::items::systems::timer_system::start_timer_system;
 use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_interact_system};
+use crate::items::systems::transitions::enter_rewind;
 use crate::items::systems::update_is_usable_system::{
     update_is_unusable_system, update_is_usable_system,
 };
 use crate::items::systems::visual_system::visual_system;
+use crate::level::level_state::LevelState;
 use crate::player::components::player::Player;
 use crate::player::systems::player_input_system::player_action_input_system;
 use crate::player::systems::player_input_system::player_move_input_system;
@@ -26,7 +27,6 @@ impl Plugin for ItemsPlugin {
         app.add_systems(
             Update,
             (
-                reset_level_items,
                 start_timer_system, // TODO order
                 cooldown_system
                     .after(player_move_input_system)
@@ -53,5 +53,12 @@ impl Plugin for ItemsPlugin {
             )
                 .run_if(in_state(GameState::InLevel)),
         );
+        self.register_transitions(app);
+    }
+}
+
+impl ItemsPlugin {
+    fn register_transitions(&self, app: &mut App) {
+        app.add_systems(OnEnter(LevelState::Rewind), enter_rewind);
     }
 }

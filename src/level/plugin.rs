@@ -1,10 +1,11 @@
 use super::level_state::LevelState;
+use super::load_level::load_level;
+use super::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
+use super::systems::transitions::enter_rewind;
+use super::unload_level::unload_level;
 use crate::game_state::GameState;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::plugin::ItemsPlugin;
-use crate::level::load_level::load_level;
-use crate::level::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
-use crate::level::unload_level::unload_level;
 use crate::log_transitions;
 use crate::player::plugin::PlayerPlugin;
 use bevy::prelude::*;
@@ -29,8 +30,15 @@ impl Plugin for LevelPlugin {
                 Update,
                 (elapsed_time_from_start_rewind_system).run_if(in_state(GameState::InLevel)),
             );
+        self.register_transition(app);
 
         #[cfg(debug_assertions)]
         app.add_systems(Update, log_transitions::<LevelState>);
+    }
+}
+
+impl LevelPlugin {
+    fn register_transition(&self, app: &mut App) {
+        app.add_systems(OnEnter(LevelState::Rewind), enter_rewind);
     }
 }

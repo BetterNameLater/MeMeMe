@@ -6,6 +6,7 @@ use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
+use crate::level::level_state::LevelState;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::ObjectMap;
 use crate::math::vec2i::Vec2i;
@@ -13,7 +14,6 @@ use crate::player::actions::{Action, ActionType};
 use crate::player::components::player::Player;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEventData;
-use crate::player::events::rewind_event::RewindEvent;
 use crate::player::move_direction::MoveDirection;
 use bevy::prelude::*;
 
@@ -124,9 +124,9 @@ pub fn player_action_input_system(
     mut player_query: Query<&mut Player>,
     key_inputs: Res<ButtonInput<KeyCode>>,
     level_infos: ResMut<LevelInformations>,
-    mut rewind_event: EventWriter<RewindEvent>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,
     object_map_query: Query<&ObjectMap>,
+    mut next_state: ResMut<NextState<LevelState>>,
 ) {
     let action_key = key_inputs
         .get_just_pressed()
@@ -138,7 +138,7 @@ pub fn player_action_input_system(
                 if level_infos.elapsed_time_from_start_rewind.is_none() {
                     debug!("Rewind without actual start");
                 } else {
-                    rewind_event.send(RewindEvent);
+                    next_state.set(LevelState::Rewind);
                 }
             }
             INPUT_PLAYER_INTERACT => {

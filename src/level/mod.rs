@@ -8,6 +8,7 @@ pub mod ressources {
 pub mod level_state;
 pub mod systems {
     pub mod elapsed_time_from_start_rewind_system;
+    pub mod transitions;
 }
 pub mod load_level;
 pub mod plugin;

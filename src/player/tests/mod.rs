@@ -4,10 +4,12 @@ mod rewind;
 
 mod utils {
     pub use crate::constantes::*;
+    pub use crate::level::level_state::LevelState;
     pub use crate::level::ressources::level_informations::LevelInformations;
     pub use crate::math::vec2i::Vec2i;
     pub use std::time::Duration;
 
+    use crate::game_state::GameState;
     use crate::level::components::level_tag::LevelTag;
     use crate::level::ressources::level_informations::StartPosition;
     use crate::map::ObjectMap;
@@ -17,27 +19,44 @@ mod utils {
     };
     use bevy::prelude::KeyCode;
     use bevy::prelude::*;
+    use bevy::state::app::StatesPlugin;
 
     pub const PLAYER_ORIGIN: Transform = Transform::from_xyz(0., 0., PLAYER_Z);
     pub const SECOND: Duration = Duration::from_secs(1);
 
+    type SGameState = State<GameState>;
+
     pub fn base_init() -> App {
         let mut app = App::new();
 
-        app.init_resource::<Time>()
+        app.add_plugins(StatesPlugin)
+            .init_resource::<Time>()
             .insert_resource(ButtonInput::<KeyCode>::default())
+            .init_state::<GameState>()
+            .add_sub_state::<LevelState>()
             .insert_resource(GhostActions::default())
             .insert_resource(StartPosition::new(Vec2i::default()))
             .insert_resource(LevelInformations::default())
             .add_event::<OnEnterEvent>()
             .add_event::<OnExitEvent>();
 
+        // transition systems
+        app.add_systems(
+            OnEnter(LevelState::Rewind),
+            (
+                crate::player::systems::transitions::enter_rewind,
+                crate::level::systems::transitions::enter_rewind,
+            ),
+        );
+
         // spawn Player, Map, LevelTag
         app.world_mut().commands().spawn(ObjectMap::default());
         app.world_mut().commands().spawn(LevelTag);
         Player::spawn_player(&mut app.world_mut().commands(), Vec2i::default());
+        app.world_mut().commands().set_state(GameState::InLevel);
         app.update();
 
+        assert_eq!(resource!(app, SGameState), &GameState::InLevel);
         assert_eq!(player(&mut app).actions.len(), 0);
         assert_eq!(
             player_transform(&mut app),

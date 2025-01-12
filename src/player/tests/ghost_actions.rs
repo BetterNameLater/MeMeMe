@@ -2,7 +2,6 @@ use super::utils::*;
 use crate::player::{
     actions::{Action, ActionType},
     components::player::Player,
-    events::rewind_event::RewindEvent,
     move_direction::MoveDirection,
     GhostActions,
 };
@@ -11,9 +10,7 @@ use bevy::prelude::*;
 fn init() -> App {
     use crate::level::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
     use crate::player::{
-        components::player::Player,
-        events::{interact_event::InteractEvent, rewind_event::RewindEvent},
-        systems, Ghost,
+        components::player::Player, events::interact_event::InteractEvent, systems, Ghost,
     };
     use bevy::app::Update;
 
@@ -23,12 +20,10 @@ fn init() -> App {
         (
             systems::player_input_system::player_move_input_system,
             systems::player_input_system::player_action_input_system,
-            systems::rewind_system::rewind_system,
             elapsed_time_from_start_rewind_system,
             systems::ghost_actions_system::ghost_actions_system,
         ),
     )
-    .add_event::<RewindEvent>()
     .add_event::<InteractEvent<Player>>()
     .add_event::<InteractEvent<Ghost>>();
     app
@@ -102,7 +97,7 @@ fn process_actions() {
         start_time: Some(0.),
         ..LevelInformations::default()
     };
-    app.world_mut().send_event(RewindEvent);
+    app.world_mut().commands().set_state(LevelState::Rewind);
     app.update();
     // start
     *resource_mut!(app, LevelInformations) = LevelInformations {
