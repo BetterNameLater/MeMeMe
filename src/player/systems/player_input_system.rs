@@ -7,7 +7,7 @@ use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::level_state::LevelState;
-use crate::level::ressources::level_informations::LevelInformations;
+use crate::level::ressources::level_informations::PlayingTime;
 use crate::map::ObjectMap;
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
@@ -22,8 +22,7 @@ pub fn player_move_input_system(
     mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
     key_inputs: Res<ButtonInput<KeyCode>>,
-    time: Res<Time>,
-    mut level_infos: ResMut<LevelInformations>,
+    level_infos: Option<ResMut<PlayingTime>>, // Ideally, this not be optional -> system that run in Idle just to launch
     object_map_query: Query<&ObjectMap>,
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<GhostOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
@@ -32,6 +31,8 @@ pub fn player_move_input_system(
         (&Colliding, &Transform, Option<&IsUsable>),
         (Without<GhostOnly>, Without<Player>),
     >,
+    current_state: Res<State<LevelState>>,
+    mut next_state: ResMut<NextState<LevelState>>,
 ) {
     // move actions
     let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
@@ -48,11 +49,10 @@ pub fn player_move_input_system(
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity,
             action_type: ActionType::Move(move_direction),
-            timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
+            timestamp_seconds: level_infos.map_or_else(|| 0., |i| i.1),
         });
-        if level_infos.elapsed_time_from_start_rewind.is_none() {
-            level_infos.start_time = Some(time.elapsed_secs());
-            level_infos.elapsed_time_from_start_rewind = Some(0.);
+        if current_state.get() == &LevelState::Idle {
+            next_state.set(LevelState::Playing);
         }
 
         let new_position = player_transform.translation + CELL_LENGTH * move_direction.to_vec3();
@@ -123,10 +123,11 @@ pub fn player_action_input_system(
     mut player_transform_query: Query<(&mut Transform, Entity), With<Player>>,
     mut player_query: Query<&mut Player>,
     key_inputs: Res<ButtonInput<KeyCode>>,
-    level_infos: ResMut<LevelInformations>,
+    level_infos: ResMut<PlayingTime>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,
     object_map_query: Query<&ObjectMap>,
     mut next_state: ResMut<NextState<LevelState>>,
+    current_state: Res<State<LevelState>>,
 ) {
     let action_key = key_inputs
         .get_just_pressed()
@@ -135,8 +136,8 @@ pub fn player_action_input_system(
         let (player_transform, player_entity) = player_transform_query.single_mut();
         match *action_key {
             INPUT_PLAYER_REWIND => {
-                if level_infos.elapsed_time_from_start_rewind.is_none() {
-                    debug!("Rewind without actual start");
+                if current_state.get() == &LevelState::Idle {
+                    debug!("Trying rewind in Idle State");
                 } else {
                     next_state.set(LevelState::Rewind);
                 }
@@ -145,7 +146,7 @@ pub fn player_action_input_system(
                 player_query.single_mut().actions.push(Action {
                     ghost_entity: player_entity,
                     action_type: ActionType::Interact,
-                    timestamp_seconds: level_infos.elapsed_time_from_start_rewind.unwrap_or(0.),
+                    timestamp_seconds: level_infos.1,
                 });
                 let object_map = object_map_query.single();
                 let pos: Vec2i = player_transform.translation.into();

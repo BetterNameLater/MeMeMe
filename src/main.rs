@@ -13,7 +13,7 @@ mod player;
 
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
-use crate::level::ressources::level_informations::LevelInformations;
+use crate::level::ressources::level_informations::PlayingTime;
 use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{error_screen, loading_screen, unload_message_screen};
 use crate::player::GhostActions;
@@ -69,7 +69,7 @@ fn main() {
     #[cfg(debug_assertions)]
     app.add_plugins(WorldInspectorPlugin::new())
         .add_plugins(ResourceInspectorPlugin::<StartPosition>::default())
-        .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
+        .add_plugins(ResourceInspectorPlugin::<PlayingTime>::default())
         .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
         .add_plugins(ResourceInspectorPlugin::<GhostCount>::default())
         .add_systems(Update, log_transitions::<GameState>);

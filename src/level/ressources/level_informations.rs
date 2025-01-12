@@ -19,15 +19,8 @@ impl StartPosition {
 #[derive(Reflect, Resource, Debug, PartialEq)]
 pub struct GhostCount(pub usize);
 
+/// Time information for the current run. Only available in LevelState::Playing
+///
+/// Tuple (start_time, elapsed_time_from_start_rewind)
 #[derive(Reflect, Resource, Debug, Default, PartialEq)]
-pub struct LevelInformations {
-    pub start_time: Option<f32>,
-    pub elapsed_time_from_start_rewind: Option<f32>,
-}
-
-impl LevelInformations {
-    pub fn rewind(&mut self) {
-        self.start_time = None;
-        self.elapsed_time_from_start_rewind = None;
-    }
-}
+pub struct PlayingTime(pub f32, pub f32);

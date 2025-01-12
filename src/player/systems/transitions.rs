@@ -1,31 +1,35 @@
 use crate::constantes::PLAYER_Z;
 use crate::level::components::level_tag::LevelTag;
-use crate::level::ressources::level_informations::{GhostCount, LevelInformations, StartPosition};
+use crate::level::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
 use crate::player::components::player::Player;
 use crate::player::{Ghost, GhostActions};
 use bevy::prelude::*;
 
 #[allow(clippy::too_many_arguments)]
 pub fn enter_rewind(
-    commands: Commands,
+    mut commands: Commands,
     player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
     ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
-    level_infos: ResMut<LevelInformations>,
     ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
     ghost_actions: ResMut<GhostActions>,
 ) {
+    commands.remove_resource::<PlayingTime>();
+
     rewind_system(
         commands,
         player_query,
         ghost_transform_query,
         level_query,
-        level_infos,
         ghost_count,
         start_position,
         ghost_actions,
     );
+}
+
+pub fn enter_playing(mut commands: Commands, time: Res<Time>) {
+    commands.insert_resource(PlayingTime(time.elapsed_secs(), 0.));
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -34,15 +38,10 @@ fn rewind_system(
     mut player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
-    mut level_infos: ResMut<LevelInformations>,
     mut ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
     mut ghost_actions: ResMut<GhostActions>,
 ) {
-    assert!(
-        level_infos.elapsed_time_from_start_rewind.is_some(),
-        "Rewind without actual start"
-    );
     debug!("Rewind");
     let (player_entity, mut player, mut player_transform, mut player_name) =
         player_query.single_mut();
@@ -77,6 +76,5 @@ fn rewind_system(
             *ghost_transform = start_transform;
         });
 
-    level_infos.rewind();
     ghost_count.0 += 1;
 }

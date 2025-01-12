@@ -5,7 +5,6 @@ use crate::items::populate_items::populate_items;
 use crate::items::primitive::colliding::Colliding;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
-use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{ObjectMap, WorldMap};
 use crate::map_parser::{BackgroundType, MapRepr};
 use crate::math::vec2i::Vec2i;
@@ -105,7 +104,6 @@ pub fn load_level(
     // insert resources
     commands.insert_resource(GhostActions::default());
     commands.insert_resource(GhostCount(0));
-    commands.insert_resource(LevelInformations::default());
     commands.insert_resource(StartPosition::new(start_position));
 }
 

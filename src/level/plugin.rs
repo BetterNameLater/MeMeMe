@@ -28,7 +28,7 @@ impl Plugin for LevelPlugin {
             .add_systems(OnEnter(GameState::LoadingLevel), load_level)
             .add_systems(
                 Update,
-                (elapsed_time_from_start_rewind_system).run_if(in_state(GameState::InLevel)),
+                (elapsed_time_from_start_rewind_system).run_if(in_state(LevelState::Playing)),
             );
         self.register_transition(app);
 
