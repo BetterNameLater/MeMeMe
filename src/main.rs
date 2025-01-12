@@ -23,7 +23,7 @@ use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
 use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
 use game_state::GameState;
-use level::ressources::level_informations::StartPosition;
+use level::ressources::level_informations::{GhostCount, StartPosition};
 
 fn main() {
     #[cfg(debug_assertions)]
@@ -71,6 +71,7 @@ fn main() {
         .add_plugins(ResourceInspectorPlugin::<StartPosition>::default())
         .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
         .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
+        .add_plugins(ResourceInspectorPlugin::<GhostCount>::default())
         .add_systems(Update, log_transitions::<GameState>);
 
     app.run();

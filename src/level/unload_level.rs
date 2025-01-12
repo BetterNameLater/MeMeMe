@@ -1,7 +1,7 @@
 use crate::game_state::GameState;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
-use crate::level::ressources::level_informations::{LevelInformations, StartPosition};
+use crate::level::ressources::level_informations::{GhostCount, LevelInformations, StartPosition};
 use crate::map_parser::MapRepr;
 use crate::player::GhostActions;
 use crate::LevelAssets;
@@ -21,6 +21,7 @@ pub fn unload_level(
     info!("Unloading current level");
 
     commands.remove_resource::<GhostActions>();
+    commands.remove_resource::<GhostCount>();
     commands.remove_resource::<LevelInformations>();
     commands.remove_resource::<StartPosition>();
 

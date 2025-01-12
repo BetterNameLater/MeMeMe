@@ -1,4 +1,4 @@
-use super::ressources::level_informations::StartPosition;
+use super::ressources::level_informations::{GhostCount, StartPosition};
 use crate::constantes::*;
 use crate::game_state::GameState;
 use crate::items::populate_items::populate_items;
@@ -104,6 +104,7 @@ pub fn load_level(
 
     // insert resources
     commands.insert_resource(GhostActions::default());
+    commands.insert_resource(GhostCount(0));
     commands.insert_resource(LevelInformations::default());
     commands.insert_resource(StartPosition::new(start_position));
 }

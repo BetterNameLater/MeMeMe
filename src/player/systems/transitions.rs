@@ -1,6 +1,6 @@
 use crate::constantes::PLAYER_Z;
 use crate::level::components::level_tag::LevelTag;
-use crate::level::ressources::level_informations::{LevelInformations, StartPosition};
+use crate::level::ressources::level_informations::{GhostCount, LevelInformations, StartPosition};
 use crate::player::components::player::Player;
 use crate::player::{Ghost, GhostActions};
 use bevy::prelude::*;
@@ -12,6 +12,7 @@ pub fn enter_rewind(
     ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
     level_infos: ResMut<LevelInformations>,
+    ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
     ghost_actions: ResMut<GhostActions>,
 ) {
@@ -21,6 +22,7 @@ pub fn enter_rewind(
         ghost_transform_query,
         level_query,
         level_infos,
+        ghost_count,
         start_position,
         ghost_actions,
     );
@@ -33,6 +35,7 @@ fn rewind_system(
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
     mut level_infos: ResMut<LevelInformations>,
+    mut ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
     mut ghost_actions: ResMut<GhostActions>,
 ) {
@@ -61,7 +64,7 @@ fn rewind_system(
         .insert(Ghost);
 
     // change name
-    player_name.set(format!("{}Ghost", level_infos.ghost_count));
+    player_name.set(format!("{}Ghost", ghost_count.0));
 
     // insert a new player to replace
     let new_player = Player::spawn_player(&mut commands, *start_position.get());
@@ -75,4 +78,5 @@ fn rewind_system(
         });
 
     level_infos.rewind();
+    ghost_count.0 += 1;
 }
