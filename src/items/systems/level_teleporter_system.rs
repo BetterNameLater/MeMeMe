@@ -1,9 +1,9 @@
+use crate::game_state::GameState;
 use crate::items::events::OnEnterEvent;
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::components::level_to_go::LevelToGo;
-use crate::state::GameState;
 use bevy::prelude::*;
 
 pub fn level_teleporter_system(

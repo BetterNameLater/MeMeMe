@@ -1,10 +1,10 @@
 use super::{ghost_actions_system, Ghost};
+use crate::game_state::GameState;
 use crate::player::components::player::Player;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::rewind_event::RewindEvent;
 use crate::player::systems::player_input_system::*;
 use crate::player::systems::rewind_system::rewind_system;
-use crate::state::GameState;
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;

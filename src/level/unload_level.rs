@@ -1,9 +1,9 @@
+use crate::game_state::GameState;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::ressources::level_informations::{LevelInformations, StartPosition};
 use crate::map_parser::MapRepr;
 use crate::player::GhostActions;
-use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::hierarchy::DespawnRecursiveExt;

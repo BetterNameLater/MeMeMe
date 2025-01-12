@@ -1,3 +1,4 @@
+use crate::game_state::GameState;
 use crate::items::interaction_type::ghost_only::GhostOnly;
 use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::reset_level_items::reset_level_items;
@@ -16,7 +17,6 @@ use crate::player::components::player::Player;
 use crate::player::systems::player_input_system::player_action_input_system;
 use crate::player::systems::player_input_system::player_move_input_system;
 use crate::player::Ghost;
-use crate::state::GameState;
 use bevy::prelude::*;
 
 pub struct ItemsPlugin;

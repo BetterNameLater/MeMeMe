@@ -7,9 +7,9 @@ mod map_parser;
 mod math {
     pub mod vec2i;
 }
+mod game_state;
 mod menu;
 mod player;
-mod state;
 
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
@@ -22,8 +22,8 @@ use bevy::prelude::*;
 use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
 use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
+use game_state::GameState;
 use level::ressources::level_informations::StartPosition;
-use state::GameState;
 
 fn main() {
     #[cfg(debug_assertions)]

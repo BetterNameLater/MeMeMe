@@ -1,5 +1,6 @@
 use super::ressources::level_informations::StartPosition;
 use crate::constantes::*;
+use crate::game_state::GameState;
 use crate::items::populate_items::populate_items;
 use crate::items::primitive::colliding::Colliding;
 use crate::level::components::level_tag::LevelTag;
@@ -10,7 +11,6 @@ use crate::map_parser::{BackgroundType, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::components::player::Player;
 use crate::player::GhostActions;
-use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::color::palettes::css;

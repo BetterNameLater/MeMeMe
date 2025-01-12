@@ -1,10 +1,10 @@
+use crate::game_state::GameState;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::plugin::ItemsPlugin;
 use crate::level::load_level::load_level;
 use crate::level::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
 use crate::level::unload_level::unload_level;
 use crate::player::plugin::PlayerPlugin;
-use crate::state::GameState;
 use bevy::prelude::*;
 
 pub struct LevelPlugin;
