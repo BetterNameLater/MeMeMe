@@ -1,5 +1,15 @@
 {
   "format_on_save": "on",
+  "languages": {
+    "JSON": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}", "--print-width=80"]
+        }
+      }
+    }
+  },
   "lsp": {
     "json-language-server": {
       "settings": {

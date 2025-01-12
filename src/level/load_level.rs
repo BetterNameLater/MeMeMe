@@ -69,32 +69,29 @@ pub fn load_level(
         .id();
 
     let items = populate_items(&mut commands, level_tag, &level.objects);
-    level
-        .map
-        .iter()
-        .rev()
-        .enumerate()
-        .for_each(|(y, map_slice)| {
-            map_slice
-                .iter()
-                .enumerate()
-                .for_each(|(x, background_type)| {
-                    world_map.spawn_cell(
-                        &mut commands,
-                        world_map_entity,
-                        Vec2i {
-                            x: x as i32,
-                            y: y as i32,
-                        },
-                        background_type,
-                    )
-                })
-        });
+    let map = level.map();
+    map.iter().rev().enumerate().for_each(|(y, map_slice)| {
+        map_slice
+            .iter()
+            .enumerate()
+            .filter(|(_, t)| !matches!(t, &BackgroundType::Void))
+            .for_each(|(x, background_type)| {
+                world_map.spawn_cell(
+                    &mut commands,
+                    world_map_entity,
+                    Vec2i {
+                        x: x as i32,
+                        y: y as i32,
+                    },
+                    background_type,
+                )
+            })
+    });
 
     commands.entity(world_map_entity).insert(world_map);
     commands.entity(level_tag).add_child(world_map_entity);
 
-    let start_position = find_start_position(&level.map);
+    let start_position = find_start_position(&map);
 
     let items_map_entity = commands
         .spawn((Map { cells: items }, ObjectMap, Name::new("ObjectMap")))

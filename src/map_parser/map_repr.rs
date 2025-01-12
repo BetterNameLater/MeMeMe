@@ -4,32 +4,37 @@ use bevy::asset::{Asset, AssetLoader, LoadContext};
 use bevy::prelude::TypePath;
 use schemars::{schema_for, JsonSchema, Schema};
 use serde::Deserialize;
-use serde_json::json;
-use serde_repr::Deserialize_repr;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
 #[derive(Asset, TypePath, Deserialize, Debug, JsonSchema)]
 pub struct MapRepr {
-    pub map: Vec<Vec<BackgroundType>>,
+    map: Vec<String>,
     pub objects: HashMap<String, ObjectRepr>,
 }
 
 impl MapRepr {
+    pub fn map(&self) -> Vec<Vec<BackgroundType>> {
+        self.map
+            .iter()
+            .map(|line| {
+                line.chars()
+                    .map(|background_type| {
+                        background_type
+                            .try_into()
+                            .expect("background type not recognized")
+                    })
+                    .collect()
+            })
+            .collect()
+    }
+
     pub fn json_schema() {
         let schema: Schema = schema_for!(MapRepr);
-        let mut v = schema.as_value().clone();
-        *v.get_mut("$defs")
-            .unwrap()
-            .get_mut("BackgroundType")
-            .unwrap() = json!({
-            "enum": [0,1,2,3,4]
-        });
-
         let file = File::create("level_schema.json").expect("haha");
         let mut writer = BufWriter::new(file);
-        serde_json::to_writer_pretty(&mut writer, &v).expect("haha");
+        serde_json::to_writer_pretty(&mut writer, &schema).expect("haha");
         writer.flush().expect("haha");
     }
 }
@@ -61,13 +66,28 @@ impl AssetLoader for MapLoader {
     }
 }
 
-#[derive(Deserialize_repr, Debug, PartialEq, JsonSchema)]
-#[repr(u8)]
+#[derive(Deserialize, Debug, PartialEq, JsonSchema)]
 pub enum BackgroundType {
-    Floor = 0,
-    Wall = 1,
-    Start = 2,
-    End = 3,
+    Void,
+    Floor,
+    Wall,
+    Start,
+    End,
+}
+
+impl TryFrom<char> for BackgroundType {
+    type Error = ();
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        match value {
+            ' ' => Ok(BackgroundType::Void),
+            '0' => Ok(BackgroundType::Floor),
+            '1' => Ok(BackgroundType::Wall),
+            '2' => Ok(BackgroundType::Start),
+            '3' => Ok(BackgroundType::End),
+            _ => Err(()),
+        }
+    }
 }
 
 #[derive(Deserialize, Debug, JsonSchema)]

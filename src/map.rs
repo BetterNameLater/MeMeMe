@@ -44,6 +44,7 @@ impl Map {
                             BackgroundType::Wall => css::BLACK.into(),
                             BackgroundType::Start => css::ALICE_BLUE.into(),
                             BackgroundType::End => css::GREEN.into(),
+                            BackgroundType::Void => unreachable!("should not try spawning void"),
                         },
                         custom_size: Some(Vec2::new(
                             CELL_LENGTH - CELL_GAP,
