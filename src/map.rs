@@ -5,9 +5,6 @@ use bevy::color::palettes::css;
 use bevy::prelude::*;
 use std::collections::HashMap;
 
-#[derive(Component)]
-pub struct Cell;
-
 #[derive(Component, Default)]
 pub struct Map {
     pub cells: HashMap<Vec2i, Entity>,
@@ -53,7 +50,6 @@ impl Map {
                         ..default()
                     },
                     Transform::from_translation(Vec3::new(cell_pos.x, cell_pos.y, CELL_Z)),
-                    Cell,
                 ))
                 .id();
             self.cells.insert(pos, id);
