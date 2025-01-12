@@ -88,7 +88,7 @@ struct LevelAssets {
 }
 
 /// print when an Event transition happens
-fn log_transitions<T: States>(mut transitions: EventReader<StateTransitionEvent<T>>) {
+pub fn log_transitions<T: States>(mut transitions: EventReader<StateTransitionEvent<T>>) {
     for transition in transitions.read() {
         info!(
             "transition: {:?} => {:?}",

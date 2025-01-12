@@ -5,6 +5,7 @@ pub mod components {
 pub mod ressources {
     pub mod level_informations;
 }
+pub mod level_state;
 pub mod systems {
     pub mod elapsed_time_from_start_rewind_system;
 }
