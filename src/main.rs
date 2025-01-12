@@ -22,12 +22,16 @@ use bevy::prelude::*;
 use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
 use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
+use level::ressources::level_informations::StartPosition;
 use state::GameState;
 
 fn main() {
     #[cfg(debug_assertions)]
     MapRepr::json_schema();
-    App::new()
+
+    let mut app = App::new();
+
+    app
         // systems
         .add_systems(Startup, setup)
         .add_systems(Startup, loading_screen)
@@ -50,9 +54,6 @@ fn main() {
                 }),
         )
         .add_plugins(LevelPlugin)
-        .add_plugins(WorldInspectorPlugin::new())
-        .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
-        .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
         // assets
         .init_asset_loader::<MapLoader>()
         .init_asset::<MapRepr>()
@@ -63,8 +64,16 @@ fn main() {
                 .continue_to_state(GameState::LoadingLevel)
                 .on_failure_continue_to_state(GameState::ErrorInitialLoad)
                 .load_collection::<LevelAssets>(),
-        )
-        .run();
+        );
+
+    #[cfg(debug_assertions)]
+    app.add_plugins(WorldInspectorPlugin::new())
+        .add_plugins(ResourceInspectorPlugin::<StartPosition>::default())
+        .add_plugins(ResourceInspectorPlugin::<LevelInformations>::default())
+        .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
+        .add_systems(Update, log_transitions::<GameState>);
+
+    app.run();
 }
 
 fn setup(mut commands: Commands) {
@@ -76,4 +85,14 @@ fn setup(mut commands: Commands) {
 struct LevelAssets {
     #[asset(path = "levels", collection(typed))]
     levels: Vec<Handle<MapRepr>>,
+}
+
+/// print when an Event transition happens
+fn log_transitions<T: States>(mut transitions: EventReader<StateTransitionEvent<T>>) {
+    for transition in transitions.read() {
+        info!(
+            "transition: {:?} => {:?}",
+            transition.exited, transition.entered
+        );
+    }
 }
