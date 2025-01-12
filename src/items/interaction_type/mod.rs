@@ -3,4 +3,5 @@ pub mod player_only;
 
 use bevy::prelude::Component;
 
-pub trait InteractionType: Component + Default {}
+/// Marker [`bevy::prelude::Component`] giving an indication on how we interact with it
+pub trait InteractionType: Component {}
