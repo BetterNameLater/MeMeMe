@@ -6,7 +6,7 @@ use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::LevelInformations;
-use crate::map::{Map, ObjectMap};
+use crate::map::ObjectMap;
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::events::interact_event::InteractEvent;
@@ -35,7 +35,7 @@ pub fn ghost_actions_system(
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
     level_informations: Res<LevelInformations>,
     mut ghost_interact_event: EventWriter<InteractEvent<Ghost>>,
-    object_map_query: Query<&Map, With<ObjectMap>>,
+    object_map_query: Query<&ObjectMap>,
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<PlayerOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
@@ -91,7 +91,7 @@ pub fn ghost_actions_system(
                 ActionType::Interact => {
                     let object_map = object_map_query.single();
                     let pos: Vec2i = ghost_transform.translation.into();
-                    if let Some(item) = object_map.cells.get(&pos) {
+                    if let Some(item) = object_map.0.get(&pos) {
                         ghost_interact_event.send(InteractEvent::new(
                             ghost_transform.translation.into(),
                             *ghost_id,

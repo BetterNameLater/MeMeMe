@@ -7,7 +7,7 @@ use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::LevelInformations;
-use crate::map::{Map, ObjectMap};
+use crate::map::ObjectMap;
 use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::components::player::Player;
@@ -24,7 +24,7 @@ pub fn player_move_input_system(
     key_inputs: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
     mut level_infos: ResMut<LevelInformations>,
-    object_map_query: Query<&Map, With<ObjectMap>>,
+    object_map_query: Query<&ObjectMap>,
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<GhostOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
@@ -84,13 +84,13 @@ pub fn player_move_input_system(
 
 pub fn add_enter_exit_event<W: InteractionType>(
     new_position_event: NewPositionEventData,
-    object_map_query: &Query<&Map, With<ObjectMap>>,
+    object_map_query: &Query<&ObjectMap>,
     player_only_people_on_query: &Query<(), (With<EnterAble>, Without<W>)>,
     on_enter_event_writer: &mut EventWriter<OnEnterEvent>,
     on_exit_event_writer: &mut EventWriter<OnExitEvent>,
 ) {
     let object_map = object_map_query.single();
-    if let Some(entered_cell) = object_map.cells.get(&new_position_event.now) {
+    if let Some(entered_cell) = object_map.0.get(&new_position_event.now) {
         if player_only_people_on_query.contains(*entered_cell) {
             debug!(
                 "{:?} was entered by {:?}!",
@@ -104,7 +104,7 @@ pub fn add_enter_exit_event<W: InteractionType>(
         }
     }
 
-    if let Some(leaved_cell) = object_map.cells.get(&new_position_event.before) {
+    if let Some(leaved_cell) = object_map.0.get(&new_position_event.before) {
         if player_only_people_on_query.contains(*leaved_cell) {
             debug!(
                 "{:?} was exit by {:?}!",
@@ -126,7 +126,7 @@ pub fn player_action_input_system(
     level_infos: ResMut<LevelInformations>,
     mut rewind_event: EventWriter<RewindEvent>,
     mut player_interact_event: EventWriter<InteractEvent<Player>>,
-    object_map_query: Query<&Map, With<ObjectMap>>,
+    object_map_query: Query<&ObjectMap>,
 ) {
     let action_key = key_inputs
         .get_just_pressed()
@@ -149,7 +149,7 @@ pub fn player_action_input_system(
                 });
                 let object_map = object_map_query.single();
                 let pos: Vec2i = player_transform.translation.into();
-                if let Some(item) = object_map.cells.get(&pos) {
+                if let Some(item) = object_map.0.get(&pos) {
                     player_interact_event.send(InteractEvent::new(
                         player_transform.translation.into(),
                         player_entity,

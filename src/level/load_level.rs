@@ -1,9 +1,10 @@
-use crate::constantes::CELL_LENGTH_USIZE;
+use crate::constantes::*;
 use crate::items::populate_items::populate_items;
+use crate::items::primitive::colliding::Colliding;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::ressources::level_informations::LevelInformations;
-use crate::map::{Map, ObjectMap, WorldMap};
+use crate::map::{ObjectMap, WorldMap};
 use crate::map_parser::{BackgroundType, MapRepr};
 use crate::math::vec2i::Vec2i;
 use crate::player::components::player::Player;
@@ -11,6 +12,7 @@ use crate::player::GhostActions;
 use crate::state::GameState;
 use crate::LevelAssets;
 use bevy::asset::Assets;
+use bevy::color::palettes::css;
 use bevy::prelude::*;
 
 fn find_start_position(map: &[Vec<BackgroundType>]) -> Vec2i {
@@ -63,7 +65,6 @@ pub fn load_level(
         ))
         .id();
 
-    let mut world_map = Map::default();
     let world_map_entity = commands
         .spawn((WorldMap, Sprite::default(), Name::new("WorldMap")))
         .id();
@@ -76,7 +77,7 @@ pub fn load_level(
             .enumerate()
             .filter(|(_, t)| !matches!(t, &BackgroundType::Void))
             .for_each(|(x, background_type)| {
-                world_map.spawn_cell(
+                spawn_cell_into_parent(
                     &mut commands,
                     world_map_entity,
                     Vec2i {
@@ -84,17 +85,16 @@ pub fn load_level(
                         y: y as i32,
                     },
                     background_type,
-                )
+                );
             })
     });
 
-    commands.entity(world_map_entity).insert(world_map);
     commands.entity(level_tag).add_child(world_map_entity);
 
     let start_position = find_start_position(&map);
 
     let items_map_entity = commands
-        .spawn((Map { cells: items }, ObjectMap, Name::new("ObjectMap")))
+        .spawn((ObjectMap(items), Name::new("ObjectMap")))
         .id();
     commands.entity(level_tag).add_child(items_map_entity);
     let player = Player::spawn_player(&mut commands, start_position);
@@ -106,4 +106,41 @@ pub fn load_level(
     // reset ressources
     ghost_actions.reset();
     level_infos.reset(start_position);
+}
+
+fn map_to_local(pos: Vec2i) -> Vec2 {
+    Vec2 {
+        x: CELL_LENGTH * pos.x as f32,
+        y: CELL_LENGTH * pos.y as f32,
+    }
+}
+
+fn spawn_cell_into_parent(
+    commands: &mut Commands,
+    parent: Entity,
+    pos: Vec2i,
+    background_type: &BackgroundType,
+) {
+    let Vec2 { x, y } = map_to_local(Vec2i::new(pos.x, pos.y));
+
+    commands.entity(parent).with_children(|parent| {
+        let _ = parent
+            .spawn((
+                Sprite {
+                    color: match background_type {
+                        BackgroundType::Floor => css::BLUE.into(),
+                        BackgroundType::Wall => css::BLACK.into(),
+                        BackgroundType::Start => css::ALICE_BLUE.into(),
+                        BackgroundType::End => css::GREEN.into(),
+                        BackgroundType::Void => unreachable!("should not try spawning void"),
+                    },
+                    custom_size: Some(Vec2::new(CELL_LENGTH - CELL_GAP, CELL_LENGTH - CELL_GAP)),
+                    ..default()
+                },
+                Transform::from_translation(Vec3::new(x, y, CELL_Z)),
+            ))
+            .insert_if(Colliding, || {
+                matches!(background_type, BackgroundType::Wall)
+            });
+    });
 }

@@ -9,7 +9,7 @@ mod utils {
     pub use crate::math::vec2i::Vec2i;
     pub use std::time::Duration;
 
-    use crate::map::{Map, ObjectMap};
+    use crate::map::ObjectMap;
     use crate::{
         items::events::{OnEnterEvent, OnExitEvent},
         player::{components::player::Player, GhostActions},
@@ -31,10 +31,8 @@ mod utils {
             .add_event::<OnExitEvent>();
 
         // spawn Player, Map, LevelTag
-        app.world_mut()
-            .commands()
-            .spawn((Map::default(), ObjectMap));
-        app.world_mut().commands().spawn((Map::default(), LevelTag));
+        app.world_mut().commands().spawn(ObjectMap::default());
+        app.world_mut().commands().spawn(LevelTag);
         Player::spawn_player(&mut app.world_mut().commands(), Vec2i::default());
         app.update();
 
