@@ -7,9 +7,14 @@
     "11111111111111"
   ],
   "objects": {
-    "pressure_plate_1": {
+    "pressure_plate": {
       "position": { "x": 6, "y": 2 },
       "data": { "type": "pressure_plate" }
+    },
+    "door": {
+      "position": { "x": 12, "y": 4 },
+      "data": { "type": "door" },
+      "depends_on": { "pressure_plate": true }
     }
   }
 }

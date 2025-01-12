@@ -13,6 +13,7 @@ pub mod systems {
     pub mod visual_system;
 }
 pub mod primitive {
+    pub mod colliding;
     pub mod cooldown;
     pub mod dependencies;
     pub mod enterable;

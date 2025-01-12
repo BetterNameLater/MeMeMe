@@ -1,4 +1,5 @@
 use crate::constantes::*;
+use crate::items::primitive::colliding::Colliding;
 use crate::map_parser::BackgroundType;
 use crate::math::vec2i::Vec2i;
 use bevy::color::palettes::css;
@@ -51,6 +52,9 @@ impl Map {
                     },
                     Transform::from_translation(Vec3::new(cell_pos.x, cell_pos.y, CELL_Z)),
                 ))
+                .insert_if(Colliding, || {
+                    matches!(background_type, BackgroundType::Wall)
+                })
                 .id();
             self.cells.insert(pos, id);
         });

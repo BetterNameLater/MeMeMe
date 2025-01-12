@@ -7,3 +7,5 @@
 - `LevelInformations` : `player_start_position` why mutable ? should be set by the level asset config ?
 - (pour player_plugin notament) : n'enregistrer les systeme que quand on est dans le bon state
 - sub-state pour in-level (genre : `Idle`, `Playing`, `Winning`, `Reseting`, ...)
+- renomer `IsActivated` en `IsEmitting`, ou quelque chose de plus clair (quand la plaque de pression est activée)
+  - aussi, peut etre evité le `bool` dedans, pour juste faire avec les queries

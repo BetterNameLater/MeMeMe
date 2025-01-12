@@ -3,7 +3,9 @@ use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
 use crate::items::interaction_type::ghost_only::GhostOnly;
 use crate::items::interaction_type::InteractionType;
+use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
@@ -26,6 +28,10 @@ pub fn player_move_input_system(
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<GhostOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
+    colliding_query: Query<
+        (&Colliding, &Transform, Option<&IsUsable>),
+        (Without<GhostOnly>, Without<Player>),
+    >,
 ) {
     // move actions
     let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
@@ -39,7 +45,6 @@ pub fn player_move_input_system(
         let (mut player_transform, player_entity) = player_transform_query.single_mut();
         let move_direction = MoveDirection::from_key_code(*move_key);
         let before: Vec2i = player_transform.translation.into();
-        player_transform.translation += CELL_LENGTH * move_direction.to_vec3();
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity,
             action_type: ActionType::Move(move_direction),
@@ -50,18 +55,30 @@ pub fn player_move_input_system(
             level_infos.elapsed_time_from_start_rewind = Some(0.);
         }
 
-        let new_position_event = NewPositionEventData {
-            before,
-            now: player_transform.translation.into(),
-            entity: player_entity,
-        };
-        add_enter_exit_event(
-            new_position_event,
-            &object_map_query,
-            &player_only_people_on_query,
-            &mut on_enter_event_writer,
-            &mut on_exit_event_writer,
-        );
+        let new_position = player_transform.translation + CELL_LENGTH * move_direction.to_vec3();
+        // TODO: should we record the action, even if the player collides ?
+        let collide = colliding_query
+            .iter()
+            .any(|(_, colliding_transform, is_usable)| {
+                colliding_transform.translation.x == new_position.x
+                    && colliding_transform.translation.y == new_position.y
+                    && is_usable.is_none()
+            });
+        if !collide {
+            player_transform.translation = new_position;
+            let new_position_event = NewPositionEventData {
+                before,
+                now: player_transform.translation.into(),
+                entity: player_entity,
+            };
+            add_enter_exit_event(
+                new_position_event,
+                &object_map_query,
+                &player_only_people_on_query,
+                &mut on_enter_event_writer,
+                &mut on_exit_event_writer,
+            );
+        }
     }
 }
 

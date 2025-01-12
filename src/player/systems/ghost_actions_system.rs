@@ -2,7 +2,9 @@ use crate::constantes::*;
 use crate::items::events::OnEnterEvent;
 use crate::items::events::OnExitEvent;
 use crate::items::interaction_type::player_only::PlayerOnly;
+use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::LevelInformations;
 use crate::map::{Map, ObjectMap};
 use crate::math::vec2i::Vec2i;
@@ -37,6 +39,10 @@ pub fn ghost_actions_system(
     player_only_people_on_query: Query<(), (With<EnterAble>, Without<PlayerOnly>)>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
+    colliding_query: Query<
+        (&Colliding, &Transform, Option<&IsUsable>),
+        (Without<PlayerOnly>, Without<Ghost>),
+    >,
 ) {
     if let Some(current_time) = level_informations.elapsed_time_from_start_rewind {
         loop {
@@ -54,22 +60,33 @@ pub fn ghost_actions_system(
             let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();
             match action_type {
                 ActionType::Move(move_direction) => {
-                    let direction = move_direction.to_vec3();
                     let before: Vec2i = ghost_transform.translation.into();
-                    ghost_transform.translation += direction * CELL_LENGTH;
+                    let new_position =
+                        ghost_transform.translation + CELL_LENGTH * move_direction.to_vec3();
 
-                    let new_position_event = NewPositionEventData {
-                        before,
-                        now: ghost_transform.translation.into(),
-                        entity: *ghost_id,
-                    };
-                    add_enter_exit_event(
-                        new_position_event,
-                        &object_map_query,
-                        &player_only_people_on_query,
-                        &mut on_enter_event_writer,
-                        &mut on_exit_event_writer,
-                    );
+                    let collide =
+                        colliding_query
+                            .iter()
+                            .any(|(_, colliding_transform, is_usable)| {
+                                colliding_transform.translation.x == new_position.x
+                                    && colliding_transform.translation.y == new_position.y
+                                    && is_usable.is_none()
+                            });
+                    if !collide {
+                        ghost_transform.translation = new_position;
+                        let new_position_event = NewPositionEventData {
+                            before,
+                            now: ghost_transform.translation.into(),
+                            entity: *ghost_id,
+                        };
+                        add_enter_exit_event(
+                            new_position_event,
+                            &object_map_query,
+                            &player_only_people_on_query,
+                            &mut on_enter_event_writer,
+                            &mut on_exit_event_writer,
+                        );
+                    }
                 }
                 ActionType::Interact => {
                     let object_map = object_map_query.single();
