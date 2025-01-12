@@ -1,0 +1,45 @@
+{
+  "map": [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ],
+  "objects": {
+    "pressure_plate_up_1": {
+      "position": { "x": 2, "y": 5 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_up_2": {
+      "position": { "x": 5, "y": 5 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_up_3": {
+      "position": { "x": 8, "y": 5 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_up_4": {
+      "position": { "x": 11, "y": 5 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_down_1": {
+      "position": { "x": 2, "y": 1 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_down_2": {
+      "position": { "x": 5, "y": 1 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_down_3": {
+      "position": { "x": 8, "y": 1 },
+      "data": { "type": "pressure_plate" }
+    },
+    "pressure_plate_down_4": {
+      "position": { "x": 11, "y": 1 },
+      "data": { "type": "pressure_plate" }
+    }
+  }
+}
