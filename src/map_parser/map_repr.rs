@@ -81,7 +81,7 @@ impl TryFrom<char> for BackgroundType {
     fn try_from(value: char) -> Result<Self, Self::Error> {
         match value {
             ' ' => Ok(BackgroundType::Void),
-            '0' => Ok(BackgroundType::Floor),
+            '0' | '+' | '-' => Ok(BackgroundType::Floor),
             '1' => Ok(BackgroundType::Wall),
             '2' => Ok(BackgroundType::Start),
             '3' => Ok(BackgroundType::End),
