@@ -6,7 +6,7 @@ mod utils {
     pub use crate::constantes::*;
     pub use crate::level::level_state::LevelState;
     pub use crate::level::ressources::level_informations::PlayingTime;
-    pub use crate::math::vec2i::Vec2i;
+    pub use maths::Vec2i;
     pub use std::time::Duration;
 
     use crate::game_state::GameState;

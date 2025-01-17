@@ -6,14 +6,14 @@ use crate::items::primitive::colliding::Colliding;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::map::{ObjectMap, WorldMap};
-use crate::map_parser::{BackgroundType, MapRepr};
-use crate::math::vec2i::Vec2i;
 use crate::player::components::player::Player;
 use crate::player::GhostActions;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::color::palettes::css;
 use bevy::prelude::*;
+use level_parser::{BackgroundType, MapRepr};
+use maths::Vec2i;
 
 fn find_start_position(map: &[Vec<BackgroundType>]) -> Vec2i {
     for (y, row) in map.iter().rev().enumerate() {

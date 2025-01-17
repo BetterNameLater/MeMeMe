@@ -2,13 +2,13 @@ use crate::game_state::GameState;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
-use crate::map_parser::MapRepr;
 use crate::player::GhostActions;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::hierarchy::DespawnRecursiveExt;
 use bevy::log::{debug, info};
 use bevy::prelude::{Commands, Entity, NextState, Query, Res, ResMut, With};
+use level_parser::MapRepr;
 
 pub fn unload_level(
     mut commands: Commands,

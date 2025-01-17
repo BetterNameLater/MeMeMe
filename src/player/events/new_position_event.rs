@@ -1,5 +1,5 @@
-use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
+use maths::Vec2i;
 
 pub struct NewPositionEventData {
     pub before: Vec2i,

@@ -9,13 +9,13 @@ use crate::items::primitive::is_usable::IsUsable;
 use crate::level::level_state::LevelState;
 use crate::level::ressources::level_informations::PlayingTime;
 use crate::map::ObjectMap;
-use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::components::player::Player;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEventData;
 use crate::player::move_direction::MoveDirection;
 use bevy::prelude::*;
+use maths::Vec2i;
 
 #[allow(clippy::too_many_arguments)]
 pub fn player_move_input_system(

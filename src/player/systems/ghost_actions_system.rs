@@ -7,12 +7,12 @@ use crate::items::primitive::enterable::EnterAble;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::PlayingTime;
 use crate::map::ObjectMap;
-use crate::math::vec2i::Vec2i;
 use crate::player::actions::{Action, ActionType};
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEventData;
 use crate::player::{systems::player_input_system::add_enter_exit_event, Ghost};
 use bevy::prelude::*;
+use maths::Vec2i;
 
 #[derive(Resource, Debug, Default, Reflect, PartialEq)]
 pub struct GhostActions {

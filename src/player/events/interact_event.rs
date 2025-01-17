@@ -1,5 +1,6 @@
-use crate::{math::vec2i::Vec2i, player::components::person::Person};
+use crate::player::components::person::Person;
 use bevy::prelude::*;
+use maths::Vec2i;
 use std::marker::PhantomData;
 
 #[derive(Event, Debug)]

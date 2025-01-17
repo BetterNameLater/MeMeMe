@@ -1,20 +1,15 @@
 #![allow(clippy::type_complexity)]
 mod constantes;
+mod game_state;
 mod items;
 mod level;
 mod map;
-mod map_parser;
-mod math {
-    pub mod vec2i;
-}
-mod game_state;
 mod menu;
 mod player;
 
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
 use crate::level::ressources::level_informations::PlayingTime;
-use crate::map_parser::{MapLoader, MapRepr};
 use crate::menu::loading_screen::{error_screen, loading_screen, unload_message_screen};
 use crate::player::GhostActions;
 use bevy::log::{Level, LogPlugin};
@@ -24,6 +19,7 @@ use bevy_asset_loader::prelude::*;
 use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
 use game_state::GameState;
 use level::ressources::level_informations::{GhostCount, StartPosition};
+use level_parser::{MapLoader, MapRepr};
 
 fn main() {
     #[cfg(debug_assertions)]

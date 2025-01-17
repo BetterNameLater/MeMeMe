@@ -13,9 +13,9 @@ use crate::items::primitive::killing::Killing;
 use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
 use crate::items::teleporter::Teleporter;
-use crate::map_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
-use crate::math::vec2i::Vec2i;
 use bevy::prelude::*;
+use level_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
+use maths::Vec2i;
 use std::collections::HashMap;
 
 const ITEM_SIZE: f32 = CELL_LENGTH / 3.;

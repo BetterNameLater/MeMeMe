@@ -3,20 +3,36 @@ name = "me_me_me"
 version = "0.1.0"
 edition = "2021"
 
-#Enable small amount of optimisation in debug mode
 [profile.dev]
 opt-level = 1
 
-# Enable high optimisation for dependencies (incl. Bevy)
 [profile.dev.package."*"]
 opt-level = 3
 
-[dependencies]
+[workspace]
+resolver = "2"
+members = ["level_parser", "maths"]
+
+[workspace.dependencies]
 bevy = { version = "^0.15", features = ["dynamic_linking"] }
 bevy_asset_loader = "^0.22"
-bevy-inspector-egui = "^0.28"
+
 # not bevy-related
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_repr = "0.1"
 schemars = { version = "1.0.0-alpha.17" }
+maths = { path = "maths" }
+
+[dependencies]
+bevy-inspector-egui = "^0.28"
+bevy = { workspace = true }
+bevy_asset_loader = { workspace = true }
+
+# not bevy-related
+serde_json = { workspace = true }
+serde = { workspace = true }
+serde_repr = { workspace = true }
+schemars = { workspace = true }
+level_parser = { path = "level_parser" }
+maths = { workspace = true }

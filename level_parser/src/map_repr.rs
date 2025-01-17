@@ -1,7 +1,7 @@
-use crate::math::vec2i::Vec2i;
 use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, LoadContext};
 use bevy::prelude::TypePath;
+use maths::Vec2i;
 use schemars::{schema_for, JsonSchema, Schema};
 use serde::Deserialize;
 use std::collections::HashMap;
