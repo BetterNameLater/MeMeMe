@@ -10,7 +10,7 @@ pub mod components {
 }
 pub mod systems {
     pub mod actions_system;
-    pub mod player_input_system;
+    pub mod input_system;
     pub mod transitions;
 }
 pub mod move_direction;

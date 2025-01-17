@@ -14,9 +14,8 @@ use crate::items::systems::update_is_usable_system::{
 };
 use crate::items::systems::visual_system::visual_system;
 use crate::level::level_state::LevelState;
+use crate::player::actions_system;
 use crate::player::components::player::Player;
-use crate::player::systems::player_input_system::player_action_input_system;
-use crate::player::systems::player_input_system::player_move_input_system;
 use crate::player::Ghost;
 use bevy::prelude::*;
 
@@ -29,8 +28,8 @@ impl Plugin for ItemsPlugin {
             (
                 start_timer_system, // TODO order
                 cooldown_system
-                    .after(player_move_input_system)
-                    .after(player_action_input_system),
+                    .after(actions_system::<Player, GhostOnly>)
+                    .after(actions_system::<Ghost, PlayerOnly>),
                 update_is_usable_system.after(cooldown_system),
                 update_is_unusable_system.after(update_is_usable_system),
                 (
