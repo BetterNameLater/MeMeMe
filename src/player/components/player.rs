@@ -7,6 +7,7 @@ use bevy::prelude::{default, Commands, Component, Entity, Sprite};
 use maths::Vec2i;
 
 #[derive(Component, Default, Debug)]
+#[require(Name(||Name::new("Player")))]
 pub struct Player {
     pub actions: Vec<Action>,
 }
@@ -19,7 +20,6 @@ impl Player {
 
         commands
             .spawn((
-                Name::new("Player"),
                 Player::default(),
                 Sprite {
                     color: bevy::color::palettes::css::BEIGE.into(),
