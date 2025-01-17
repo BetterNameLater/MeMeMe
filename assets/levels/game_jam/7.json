@@ -13,6 +13,16 @@
     "111111111          "
   ],
   "objects": {
+    "door": {
+      "data": { "type": "door" },
+      "position": { "x": 2, "y": 4 },
+      "depends_on": {
+        "button_1": true,
+        "button_2": true,
+        "button_3": true,
+        "button_4": true
+      }
+    },
     "button_1": {
       "position": { "x": 4, "y": 3 },
       "data": { "type": "button" },
@@ -41,6 +51,24 @@
     "teleporter_1_b": {
       "position": { "x": 3, "y": 7 },
       "data": { "type": "teleporter", "destination": { "x": 6, "y": 2 } }
+    },
+
+    "teleporter_2_a": {
+      "position": { "x": 7, "y": 7 },
+      "data": { "type": "teleporter", "destination": { "x": 11, "y": 3 } }
+    },
+    "teleporter_2_b": {
+      "position": { "x": 11, "y": 3 },
+      "data": { "type": "teleporter", "destination": { "x": 7, "y": 7 } }
+    },
+
+    "teleporter_3_a": {
+      "position": { "x": 15, "y": 3 },
+      "data": { "type": "teleporter", "destination": { "x": 12, "y": 8 } }
+    },
+    "teleporter_3_b": {
+      "position": { "x": 12, "y": 8 },
+      "data": { "type": "teleporter", "destination": { "x": 15, "y": 3 } }
     }
   }
 }
