@@ -92,19 +92,11 @@ fn process_actions() {
     // setup actions
     query_single_mut!(app, Player).actions = move_from_keys(keys, ghost_entity);
     advance_to!(app, Duration::from_secs(10));
-    *resource_mut!(app, LevelInformations) = LevelInformations {
-        elapsed_time_from_start_rewind: Some(10.),
-        start_time: Some(0.),
-        ..LevelInformations::default()
-    };
+    *resource_mut!(app, PlayingTime) = PlayingTime(0., 10.);
     app.world_mut().commands().set_state(LevelState::Rewind);
     app.update();
     // start
-    *resource_mut!(app, LevelInformations) = LevelInformations {
-        elapsed_time_from_start_rewind: Some(0.),
-        start_time: Some(15.),
-        ..LevelInformations::default()
-    };
+    *resource_mut!(app, PlayingTime) = PlayingTime(15., 0.);
 
     advance_to!(app, Duration::from_secs(15));
     app.update();

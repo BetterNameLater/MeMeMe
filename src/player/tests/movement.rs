@@ -55,12 +55,5 @@ fn moving_starts_level_time() {
     advance_to!(app, Duration::from_secs(6));
     press_key_and_update!(app, INPUT_PLAYER_UP);
 
-    assert_eq!(
-        resource!(app, LevelInformations),
-        &LevelInformations {
-            start_time: Some(6.),
-            elapsed_time_from_start_rewind: Some(0.),
-            ..LevelInformations::default()
-        }
-    )
+    assert_eq!(resource!(app, PlayingTime), &PlayingTime(6., 0.))
 }

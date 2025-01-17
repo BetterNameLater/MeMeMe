@@ -5,7 +5,7 @@ mod rewind;
 mod utils {
     pub use crate::constantes::*;
     pub use crate::level::level_state::LevelState;
-    pub use crate::level::ressources::level_informations::LevelInformations;
+    pub use crate::level::ressources::level_informations::PlayingTime;
     pub use crate::math::vec2i::Vec2i;
     pub use std::time::Duration;
 
@@ -36,7 +36,7 @@ mod utils {
             .add_sub_state::<LevelState>()
             .insert_resource(GhostActions::default())
             .insert_resource(StartPosition::new(Vec2i::default()))
-            .insert_resource(LevelInformations::default())
+            .insert_resource(PlayingTime::default())
             .add_event::<OnEnterEvent>()
             .add_event::<OnExitEvent>();
 

@@ -40,14 +40,7 @@ fn it_set_level_infos() {
     press_key_and_update!(app, INPUT_PLAYER_REWIND);
     app.update();
 
-    assert_eq!(
-        resource!(app, LevelInformations),
-        &LevelInformations {
-            ghost_count: 1,
-            start_time: None,
-            elapsed_time_from_start_rewind: None,
-        }
-    );
+    assert_eq!(resource!(app, PlayingTime), &PlayingTime(0., 0.));
 
     app.update();
 }
