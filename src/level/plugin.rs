@@ -1,5 +1,6 @@
 use super::level_state::LevelState;
 use super::load_level::load_level;
+use super::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
 use super::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
 use super::systems::transitions::enter_rewind;
 use super::unload_level::unload_level;
@@ -8,7 +9,9 @@ use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::plugin::ItemsPlugin;
 use crate::log_transitions;
 use crate::player::plugin::PlayerPlugin;
+use crate::player::GhostActions;
 use bevy::prelude::*;
+use bevy_inspector_egui::quick::ResourceInspectorPlugin;
 
 pub struct LevelPlugin;
 
@@ -33,7 +36,23 @@ impl Plugin for LevelPlugin {
         self.register_transition(app);
 
         #[cfg(debug_assertions)]
-        app.add_systems(Update, log_transitions::<LevelState>);
+        app.add_systems(Update, log_transitions::<LevelState>)
+            .add_plugins(
+                ResourceInspectorPlugin::<StartPosition>::default()
+                    .run_if(in_state(GameState::InLevel)),
+            )
+            .add_plugins(
+                ResourceInspectorPlugin::<PlayingTime>::default()
+                    .run_if(in_state(LevelState::Playing)),
+            )
+            .add_plugins(
+                ResourceInspectorPlugin::<GhostActions>::default()
+                    .run_if(in_state(GameState::InLevel)),
+            )
+            .add_plugins(
+                ResourceInspectorPlugin::<GhostCount>::default()
+                    .run_if(in_state(GameState::InLevel)),
+            );
     }
 }
 

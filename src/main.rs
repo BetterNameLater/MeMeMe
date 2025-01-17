@@ -9,16 +9,13 @@ mod player;
 
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::plugin::LevelPlugin;
-use crate::level::ressources::level_informations::PlayingTime;
 use crate::menu::loading_screen::{error_screen, loading_screen, unload_message_screen};
-use crate::player::GhostActions;
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
-use bevy_inspector_egui::quick::{ResourceInspectorPlugin, WorldInspectorPlugin};
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use game_state::GameState;
-use level::ressources::level_informations::{GhostCount, StartPosition};
 use level_parser::{MapLoader, MapRepr};
 
 fn main() {
@@ -29,7 +26,9 @@ fn main() {
 
     app
         // systems
-        .add_systems(Startup, setup)
+        .add_systems(Startup, |mut commands: Commands| {
+            commands.spawn(Camera2d);
+        })
         .add_systems(Startup, loading_screen)
         .add_systems(OnExit(GameState::BootingGame), unload_message_screen)
         .add_systems(OnEnter(GameState::ErrorInitialLoad), error_screen)
@@ -72,17 +71,9 @@ fn main() {
 
     #[cfg(debug_assertions)]
     app.add_plugins(WorldInspectorPlugin::new())
-        .add_plugins(ResourceInspectorPlugin::<StartPosition>::default())
-        .add_plugins(ResourceInspectorPlugin::<PlayingTime>::default())
-        .add_plugins(ResourceInspectorPlugin::<GhostActions>::default())
-        .add_plugins(ResourceInspectorPlugin::<GhostCount>::default())
         .add_systems(Update, log_transitions::<GameState>);
 
     app.run();
-}
-
-fn setup(mut commands: Commands) {
-    commands.spawn(Camera2d);
 }
 
 #[derive(AssetCollection, Resource)]
@@ -91,6 +82,7 @@ struct LevelAssets {
     levels: Vec<Handle<MapRepr>>,
 }
 
+#[cfg(debug_assertions)]
 /// print when an Event transition happens
 pub fn log_transitions<T: States>(mut transitions: EventReader<StateTransitionEvent<T>>) {
     for transition in transitions.read() {
