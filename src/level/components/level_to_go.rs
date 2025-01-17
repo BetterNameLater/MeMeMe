@@ -1,4 +1,4 @@
-use bevy::prelude::Component;
+use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Resource)]
 pub struct LevelToGo(pub String);

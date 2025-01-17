@@ -35,23 +35,22 @@ pub fn load_level(
     level_assets: Res<LevelAssets>,
     custom_assets: Res<Assets<MapRepr>>,
     mut next_state: ResMut<NextState<GameState>>,
-    level_to_go_query: Query<(&LevelToGo, Entity)>,
+    level_to_go: Res<LevelToGo>,
 ) {
-    let level_to_go = level_to_go_query.single();
     let level_asset = level_assets
         .levels
         .iter()
         .find(|a| {
             if let Some(path) = a.path() {
                 if cfg!(target_os = "windows") {
-                    let level_path = level_to_go.0 .0.to_string().replace("/", "\\");
+                    let level_path = level_to_go.0.to_string().replace("/", "\\");
                     return format!("levels\\{}.json", level_path) == path.to_string();
                 }
-                return format!("levels/{}.json", level_to_go.0 .0) == path.to_string();
+                return format!("levels/{}.json", level_to_go.0) == path.to_string();
             }
             false
         })
-        .unwrap_or_else(|| panic!("could not find `levels/{}.json", level_to_go.0 .0));
+        .unwrap_or_else(|| panic!("could not find `levels/{}.json", level_to_go.0));
 
     let level = custom_assets.get(level_asset).unwrap();
 
@@ -95,7 +94,7 @@ pub fn load_level(
     commands.entity(level_tag).add_child(player);
 
     next_state.set(GameState::InLevel);
-    commands.entity(level_to_go.1).despawn();
+    commands.remove_resource::<LevelToGo>();
 
     // insert resources
     commands.insert_resource(GhostActions::default());

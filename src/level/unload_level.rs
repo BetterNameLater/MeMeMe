@@ -1,6 +1,5 @@
 use crate::game_state::GameState;
 use crate::level::components::level_tag::LevelTag;
-use crate::level::components::level_to_go::LevelToGo;
 use crate::level::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
 use crate::player::GhostActions;
 use crate::LevelAssets;
@@ -16,7 +15,6 @@ pub fn unload_level(
     _custom_assets: Res<Assets<MapRepr>>,
     mut next_state: ResMut<NextState<GameState>>,
     level_query: Query<Entity, With<LevelTag>>,
-    level_to_go_query: Query<&LevelToGo>,
 ) {
     info!("Unloading current level");
 
@@ -25,12 +23,8 @@ pub fn unload_level(
     commands.remove_resource::<PlayingTime>();
     commands.remove_resource::<StartPosition>();
 
-    // TODO pas tres elegant de verifier ca
-    if level_to_go_query.get_single().is_ok() {
-        next_state.set(GameState::LoadingLevel);
-    } else {
-        // TODO
-    }
+    next_state.set(GameState::LoadingLevel);
+
     let level = level_query.single();
     commands.entity(level).despawn_recursive();
     debug!("Current level recursively de-spawned");

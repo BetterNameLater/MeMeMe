@@ -75,7 +75,7 @@ fn main() {
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2d);
-    commands.spawn(LevelToGo("entry_point".to_string()));
+    commands.insert_resource(LevelToGo("entry_point".to_string()));
 }
 
 #[derive(AssetCollection, Resource)]
