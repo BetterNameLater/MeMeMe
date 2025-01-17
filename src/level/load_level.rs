@@ -98,9 +98,9 @@ pub fn load_level(
     commands.remove_resource::<LevelToGo>();
 
     // insert resources
-    commands.insert_resource(ActionStack::<Ghost>::default());
-    commands.insert_resource(ActionStack::<Player>::default());
-    commands.insert_resource(GhostCount(0));
+    commands.init_resource::<ActionStack<Ghost>>();
+    commands.init_resource::<ActionStack<Player>>();
+    commands.init_resource::<GhostCount>();
     commands.insert_resource(StartPosition::new(start_position));
 }
 

@@ -13,7 +13,7 @@ pub fn enter_rewind(
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
     mut ghost_count: ResMut<GhostCount>,
-    start_position: ResMut<StartPosition>,
+    start_position: Res<StartPosition>,
     mut ghost_actions: ResMut<ActionStack<Ghost>>,
     mut player_action_stack: ResMut<ActionStack<Player>>,
 ) {

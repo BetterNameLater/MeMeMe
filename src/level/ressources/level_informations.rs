@@ -16,7 +16,7 @@ impl StartPosition {
 }
 
 /// The quantity of ghost spawned. It also reflect the number of time the rewind action was done in a row
-#[derive(Reflect, Resource, Debug, PartialEq)]
+#[derive(Reflect, Resource, Debug, PartialEq, Default)]
 pub struct GhostCount(pub usize);
 
 /// Time information for the current run. Only available in LevelState::Playing
