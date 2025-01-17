@@ -27,28 +27,32 @@ impl Plugin for ItemsPlugin {
             Update,
             (
                 start_timer_system, // TODO order
+                visual_system,
                 cooldown_system
                     .after(actions_system::<Player, GhostOnly>)
                     .after(actions_system::<Ghost, PlayerOnly>),
                 update_is_usable_system.after(cooldown_system),
                 update_is_unusable_system.after(update_is_usable_system),
-                (
-                    level_teleporter_system,
-                    visual_system,
-                    button_pressed_system::<GhostOnly, Player>,
-                    button_pressed_system::<PlayerOnly, Ghost>,
-                    count_people_on_system::<GhostOnly, Player>,
-                    count_people_on_system::<PlayerOnly, Ghost>,
-                    teleporter_system::<PlayerOnly, Ghost>,
-                    teleporter_system::<GhostOnly, Player>,
-                    toggle_on_enter_system::<PlayerOnly, Ghost>,
-                    toggle_on_enter_system::<GhostOnly, Player>,
-                    toggle_on_interact_system::<PlayerOnly, Ghost>,
-                    toggle_on_interact_system::<GhostOnly, Player>,
-                )
-                    .after(update_is_unusable_system),
             )
                 .run_if(in_state(GameState::InLevel)),
+        )
+        .add_systems(
+            Update,
+            (
+                level_teleporter_system,
+                button_pressed_system::<GhostOnly, Player>,
+                button_pressed_system::<PlayerOnly, Ghost>,
+                count_people_on_system::<GhostOnly, Player>,
+                count_people_on_system::<PlayerOnly, Ghost>,
+                teleporter_system::<PlayerOnly, Ghost>,
+                teleporter_system::<GhostOnly, Player>,
+                toggle_on_enter_system::<PlayerOnly, Ghost>,
+                toggle_on_enter_system::<GhostOnly, Player>,
+                toggle_on_interact_system::<PlayerOnly, Ghost>,
+                toggle_on_interact_system::<GhostOnly, Player>,
+            )
+                .run_if(in_state(LevelState::Playing))
+                .after(update_is_unusable_system),
         );
         self.register_transitions(app);
     }
