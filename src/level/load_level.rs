@@ -56,11 +56,7 @@ pub fn load_level(
     let level = custom_assets.get(level_asset).unwrap();
 
     let level_tag = commands
-        .spawn((
-            LevelTag,
-            Sprite::default(),
-            Name::new(level_asset.path().unwrap().to_string()),
-        ))
+        .spawn((LevelTag, Name::new(level_asset.path().unwrap().to_string())))
         .id();
 
     let world_map_entity = commands
