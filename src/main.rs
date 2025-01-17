@@ -33,6 +33,14 @@ fn main() {
         .add_systems(Startup, loading_screen)
         .add_systems(OnExit(GameState::BootingGame), unload_message_screen)
         .add_systems(OnEnter(GameState::ErrorInitialLoad), error_screen)
+        .add_systems(
+            // we don't have any menu yet, so load direct hub level
+            OnEnter(GameState::Menu),
+            |mut commands: Commands, mut next_state: ResMut<NextState<GameState>>| {
+                commands.insert_resource(LevelToGo("entry_point".to_string()));
+                next_state.set(GameState::LoadingLevel);
+            },
+        )
         // plugins
         .add_plugins(
             DefaultPlugins
@@ -57,7 +65,7 @@ fn main() {
         .init_state::<GameState>()
         .add_loading_state(
             LoadingState::new(GameState::BootingGame)
-                .continue_to_state(GameState::LoadingLevel)
+                .continue_to_state(GameState::Menu)
                 .on_failure_continue_to_state(GameState::ErrorInitialLoad)
                 .load_collection::<LevelAssets>(),
         );
@@ -75,7 +83,6 @@ fn main() {
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2d);
-    commands.insert_resource(LevelToGo("entry_point".to_string()));
 }
 
 #[derive(AssetCollection, Resource)]
