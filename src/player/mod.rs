@@ -9,11 +9,11 @@ pub mod components {
     pub mod player;
 }
 pub mod systems {
-    pub mod ghost_actions_system;
+    pub mod actions_system;
     pub mod player_input_system;
     pub mod transitions;
 }
 pub mod move_direction;
 pub mod plugin;
 pub use components::ghost::Ghost;
-pub use systems::ghost_actions_system::ghost_actions_system;
+pub use systems::actions_system::actions_system;
