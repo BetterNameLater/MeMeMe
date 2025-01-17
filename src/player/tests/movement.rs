@@ -13,7 +13,7 @@ fn init() -> bevy::prelude::App {
 fn move_up() {
     let mut app = init();
 
-    press_key_and_update!(app, INPUT_PLAYER_UP);
+    press_key_and_update!(app, input::UP);
 
     assert_eq!(
         player_transform(&mut app),
@@ -26,8 +26,8 @@ fn move_up() {
 fn move_twice() {
     let mut app = init();
 
-    press_key_and_update!(app, INPUT_PLAYER_UP);
-    press_key_and_update!(app, INPUT_PLAYER_RIGHT);
+    press_key_and_update!(app, input::UP);
+    press_key_and_update!(app, input::RIGHT);
 
     assert_eq!(
         player_transform(&mut app),
@@ -40,10 +40,10 @@ fn move_twice() {
 fn move_back_to_start() {
     let mut app = init();
 
-    press_key_and_update!(app, INPUT_PLAYER_UP);
-    press_key_and_update!(app, INPUT_PLAYER_RIGHT);
-    press_key_and_update!(app, INPUT_PLAYER_DOWN);
-    press_key_and_update!(app, INPUT_PLAYER_LEFT);
+    press_key_and_update!(app, input::UP);
+    press_key_and_update!(app, input::RIGHT);
+    press_key_and_update!(app, input::DOWN);
+    press_key_and_update!(app, input::LEFT);
 
     assert_eq!(player_transform(&mut app), &PLAYER_ORIGIN);
     assert_eq!(player(&mut app).actions.len(), 4);
@@ -53,7 +53,7 @@ fn move_back_to_start() {
 fn moving_starts_level_time() {
     let mut app = init();
     advance_to!(app, Duration::from_secs(6));
-    press_key_and_update!(app, INPUT_PLAYER_UP);
+    press_key_and_update!(app, input::UP);
 
     assert_eq!(resource!(app, PlayingTime), &PlayingTime(6., 0.))
 }

@@ -25,8 +25,8 @@ fn init() -> bevy::prelude::App {
 fn it_reset_player() {
     let mut app = init();
 
-    press_key_and_update!(app, INPUT_PLAYER_UP);
-    press_key_and_update!(app, INPUT_PLAYER_REWIND);
+    press_key_and_update!(app, input::UP);
+    press_key_and_update!(app, input::REWIND);
     app.update();
 
     assert_eq!(player_transform(&mut app), &PLAYER_ORIGIN);
@@ -36,8 +36,8 @@ fn it_reset_player() {
 #[test]
 fn it_set_level_infos() {
     let mut app = init();
-    press_key_and_update!(app, INPUT_PLAYER_UP);
-    press_key_and_update!(app, INPUT_PLAYER_REWIND);
+    press_key_and_update!(app, input::UP);
+    press_key_and_update!(app, input::REWIND);
     app.update();
 
     assert_eq!(resource!(app, PlayingTime), &PlayingTime(0., 0.));

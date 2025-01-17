@@ -13,10 +13,10 @@ pub enum MoveDirection {
 impl MoveDirection {
     pub fn from_key_code(key_code: KeyCode) -> Self {
         match key_code {
-            INPUT_PLAYER_UP => Self::Up,
-            INPUT_PLAYER_DOWN => Self::Down,
-            INPUT_PLAYER_LEFT => Self::Left,
-            INPUT_PLAYER_RIGHT => Self::Right,
+            input::UP => Self::Up,
+            input::DOWN => Self::Down,
+            input::LEFT => Self::Left,
+            input::RIGHT => Self::Right,
             _ => unreachable!(),
         }
     }
@@ -34,10 +34,10 @@ impl MoveDirection {
 impl From<MoveDirection> for KeyCode {
     fn from(val: MoveDirection) -> Self {
         match val {
-            MoveDirection::Up => INPUT_PLAYER_UP,
-            MoveDirection::Left => INPUT_PLAYER_LEFT,
-            MoveDirection::Down => INPUT_PLAYER_DOWN,
-            MoveDirection::Right => INPUT_PLAYER_RIGHT,
+            MoveDirection::Up => input::UP,
+            MoveDirection::Left => input::LEFT,
+            MoveDirection::Down => input::DOWN,
+            MoveDirection::Right => input::RIGHT,
         }
     }
 }

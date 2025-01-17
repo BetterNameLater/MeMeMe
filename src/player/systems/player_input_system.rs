@@ -38,7 +38,7 @@ pub fn player_move_input_system(
     let move_key = key_inputs.get_just_pressed().find(|&&key_code| {
         matches!(
             key_code,
-            INPUT_PLAYER_DOWN | INPUT_PLAYER_UP | INPUT_PLAYER_LEFT | INPUT_PLAYER_RIGHT
+            input::DOWN | input::UP | input::LEFT | input::RIGHT
         )
     });
 
@@ -131,18 +131,18 @@ pub fn player_action_input_system(
 ) {
     let action_key = key_inputs
         .get_just_pressed()
-        .find(|key_code| matches!(**key_code, INPUT_PLAYER_REWIND | INPUT_PLAYER_INTERACT));
+        .find(|key_code| matches!(**key_code, input::REWIND | input::INTERACT));
     if let Some(action_key) = action_key {
         let (player_transform, player_entity) = player_transform_query.single_mut();
         match *action_key {
-            INPUT_PLAYER_REWIND => {
+            input::REWIND => {
                 if current_state.get() == &LevelState::Idle {
                     debug!("Trying rewind in Idle State");
                 } else {
                     next_state.set(LevelState::Rewind);
                 }
             }
-            INPUT_PLAYER_INTERACT => {
+            input::INTERACT => {
                 player_query.single_mut().actions.push(Action {
                     ghost_entity: player_entity,
                     action_type: ActionType::Interact,

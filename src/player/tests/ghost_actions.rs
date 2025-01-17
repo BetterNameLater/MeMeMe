@@ -67,7 +67,7 @@ fn transfer_actions_when_rewind() {
         .single(app.world());
     let actions = move_from_keys(keys, ghost_entity);
     resource_mut!(app, GhostActions).actions = actions.clone();
-    press_key_and_update!(app, INPUT_PLAYER_REWIND);
+    press_key_and_update!(app, input::REWIND);
     app.update();
 
     assert_eq!(
