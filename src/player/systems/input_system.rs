@@ -53,6 +53,22 @@ pub fn move_input_system(
     );
 }
 
+pub fn interact_input_system(
+    mut player_action_stack: ResMut<ActionStack<Player>>,
+    player_query: Query<Entity, With<Player>>,
+    playing_time: Res<PlayingTime>,
+) {
+    debug!("interact");
+    let player_entity = player_query.single();
+    player_action_stack.insert_new(
+        Action {
+            ghost_entity: player_entity,
+            action_type: ActionType::Interact,
+        },
+        playing_time.0.elapsed(),
+    );
+}
+
 fn get_move_key(key_inputs: Res<ButtonInput<KeyCode>>) -> KeyCode {
     *key_inputs
         .get_just_pressed()

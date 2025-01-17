@@ -1,5 +1,5 @@
 use super::systems::input_system::{
-    idle_move_input_system, is_move_input_pressed, move_input_system,
+    idle_move_input_system, interact_input_system, is_move_input_pressed, move_input_system,
 };
 use super::{actions_system, Ghost};
 use crate::constantes::*;
@@ -11,6 +11,7 @@ use crate::player::events::interact_event::InteractEvent;
 use crate::player::systems::transitions::{enter_playing, enter_rewind};
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
+use bevy::utils::tracing::field::debug;
 
 pub struct PlayerPlugin;
 
@@ -37,13 +38,11 @@ impl Plugin for PlayerPlugin {
             Update,
             (
                 (|mut next_state: ResMut<NextState<LevelState>>| {
+                    debug("rewind");
                     next_state.set(LevelState::Rewind);
                 })
                 .run_if(input_just_pressed(input::REWIND)),
-                (|| {
-                    debug!("interact");
-                })
-                .run_if(input_just_pressed(input::INTERACT)),
+                interact_input_system.run_if(input_just_pressed(input::INTERACT)),
             )
                 .run_if(in_state(LevelState::Playing)),
         )
