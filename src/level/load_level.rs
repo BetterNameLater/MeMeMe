@@ -6,8 +6,9 @@ use crate::items::primitive::colliding::Colliding;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::map::{ObjectMap, WorldMap};
+use crate::player::actions::ActionStack;
 use crate::player::components::player::Player;
-use crate::player::GhostActions;
+use crate::player::Ghost;
 use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::color::palettes::css;
@@ -97,7 +98,7 @@ pub fn load_level(
     commands.remove_resource::<LevelToGo>();
 
     // insert resources
-    commands.insert_resource(GhostActions::default());
+    commands.insert_resource(ActionStack::<Ghost>::default());
     commands.insert_resource(GhostCount(0));
     commands.insert_resource(StartPosition::new(start_position));
 }

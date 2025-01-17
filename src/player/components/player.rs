@@ -1,3 +1,4 @@
+use super::ghost::Ghost;
 use super::person::Person;
 use crate::constantes::{CELL_LENGTH, PLAYER_Z};
 use crate::player::actions::ActionStack;
@@ -9,7 +10,7 @@ use maths::Vec2i;
 #[derive(Component, Default, Debug)]
 #[require(Name(||Name::new("Player")))]
 pub struct Player {
-    pub actions: ActionStack,
+    pub actions: ActionStack<Ghost>,
 }
 
 impl Person for Player {}

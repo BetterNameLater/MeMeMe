@@ -1,6 +1,8 @@
+use super::components::person::Person;
 use crate::player::move_direction::MoveDirection;
 use bevy::prelude::{Entity, Reflect, Resource};
 use std::collections::HashMap;
+use std::marker::PhantomData;
 use std::time::Duration;
 
 #[derive(Debug, Reflect, PartialEq, Clone)]
@@ -18,19 +20,25 @@ pub enum ActionType {
 pub type Actions = HashMap<Duration, Vec<Action>>;
 
 #[derive(Debug, Resource, Clone, Reflect, Default, PartialEq)]
-pub struct ActionStack {
+pub struct ActionStack<T: Person> {
     new: Actions,
     played: Actions,
+    _person_marker: PhantomData<T>,
 }
 
-impl ActionStack {
+impl<T: Person> ActionStack<T> {
     pub fn rewind(self, other: &mut Self) -> Self {
         let Self {
             mut new,
             mut played,
+            ..
         } = self;
         Self::played_in_new(&mut new, &mut played);
-        let mut new_self = Self { new, played };
+        let mut new_self = Self {
+            new,
+            played,
+            _person_marker: PhantomData,
+        };
         assert_eq!(other.played.len(), 0);
         other.new.drain().for_each(|(k, v)| {
             new_self.insert_news(v, k);

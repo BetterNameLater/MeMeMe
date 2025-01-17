@@ -9,7 +9,6 @@ use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::plugin::ItemsPlugin;
 use crate::log_transitions;
 use crate::player::plugin::PlayerPlugin;
-use crate::player::GhostActions;
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::ResourceInspectorPlugin;
 
@@ -45,10 +44,10 @@ impl Plugin for LevelPlugin {
                 ResourceInspectorPlugin::<PlayingTime>::default()
                     .run_if(in_state(LevelState::Playing)),
             )
-            .add_plugins(
-                ResourceInspectorPlugin::<GhostActions>::default()
-                    .run_if(in_state(GameState::InLevel)),
-            )
+            // .add_plugins(
+            //     ResourceInspectorPlugin::<ActionStack<Ghost>>::default()
+            //         .run_if(in_state(GameState::InLevel)),
+            // )
             .add_plugins(
                 ResourceInspectorPlugin::<GhostCount>::default()
                     .run_if(in_state(GameState::InLevel)),

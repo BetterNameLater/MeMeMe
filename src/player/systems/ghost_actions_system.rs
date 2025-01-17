@@ -15,15 +15,10 @@ use crate::player::{systems::player_input_system::add_enter_exit_event, Ghost};
 use bevy::prelude::*;
 use maths::Vec2i;
 
-#[derive(Resource, Debug, Default, Reflect, PartialEq, Clone)]
-pub struct GhostActions {
-    pub actions: ActionStack,
-}
-
 /// Process the ghost actions
 #[allow(clippy::too_many_arguments)]
 pub fn ghost_actions_system(
-    mut ghost_actions: ResMut<GhostActions>,
+    mut ghost_actions: ResMut<ActionStack<Ghost>>,
     mut ghosts_query: Query<&mut Transform, With<Ghost>>,
     playing_time: Res<PlayingTime>,
     mut ghost_interact_event: EventWriter<InteractEvent<Ghost>>,
@@ -36,7 +31,7 @@ pub fn ghost_actions_system(
         (Without<PlayerOnly>, Without<Ghost>),
     >,
 ) {
-    while let Some(actions) = ghost_actions.actions.exec(playing_time.0.elapsed()) {
+    while let Some(actions) = ghost_actions.exec(playing_time.0.elapsed()) {
         for action in actions.iter() {
             let Action {
                 ghost_entity,

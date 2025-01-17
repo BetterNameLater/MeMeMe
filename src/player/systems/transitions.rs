@@ -1,8 +1,9 @@
 use crate::constantes::PLAYER_Z;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
+use crate::player::actions::ActionStack;
 use crate::player::components::player::Player;
-use crate::player::{Ghost, GhostActions};
+use crate::player::Ghost;
 use bevy::prelude::*;
 
 #[allow(clippy::too_many_arguments)]
@@ -13,7 +14,7 @@ pub fn enter_rewind(
     level_query: Query<Entity, With<LevelTag>>,
     ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
-    ghost_actions: ResMut<GhostActions>,
+    ghost_actions: ResMut<ActionStack<Ghost>>,
 ) {
     commands.remove_resource::<PlayingTime>();
 
@@ -40,16 +41,13 @@ fn rewind_system(
     level_query: Query<Entity, With<LevelTag>>,
     mut ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
-    mut ghost_actions: ResMut<GhostActions>,
+    mut ghost_actions: ResMut<ActionStack<Ghost>>,
 ) {
     debug!("Rewind");
     let (player_entity, mut player, mut player_transform, mut player_name) =
         player_query.single_mut();
 
-    let GhostActions { actions } = ghost_actions.clone(); // TODO remove clooone
-    *ghost_actions = GhostActions {
-        actions: actions.rewind(&mut player.actions),
-    };
+    *ghost_actions = ghost_actions.clone().rewind(&mut player.actions);
 
     let start_transform = start_position.get().to_transform(PLAYER_Z);
 
