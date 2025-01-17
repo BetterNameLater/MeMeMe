@@ -1,3 +1,4 @@
+use crate::constantes::PLAYER_Z;
 use crate::items::events::OnEnterEvent;
 use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::enterable::EnterAble;
@@ -5,7 +6,6 @@ use crate::items::primitive::is_usable::IsUsable;
 use crate::items::teleporter::Teleporter;
 use crate::player::components::person::Person;
 use bevy::prelude::*;
-use bevy::utils::HashSet;
 
 pub fn teleporter_system<W: InteractionType, T: Person>(
     teleporter_query: Query<&Teleporter, (With<IsUsable>, Without<W>, With<EnterAble>)>,
@@ -15,32 +15,9 @@ pub fn teleporter_system<W: InteractionType, T: Person>(
     for on_enter_event in on_enter_event_reader.read() {
         if let Ok(mut person) = person_query.get_mut(on_enter_event.person) {
             if let Ok(teleporter) = teleporter_query.get(on_enter_event.item) {
-                person.translation = Vec3::new(teleporter.0.x as f32, teleporter.0.y as f32, 1.);
+                person.translation =
+                    Vec3::new(teleporter.0.x as f32, teleporter.0.y as f32, PLAYER_Z);
             }
-        }
-    }
-}
-
-// TODO Might be Refactored
-// teleport all entities already on the teleporter if it's activated
-pub fn teleporter_activate_system<W: InteractionType, T: Person>(
-    teleporter_query: Query<(&Teleporter, &Transform), (Changed<IsUsable>, Without<W>)>,
-    mut entities_query: Query<(Entity, &mut Transform), (With<T>, Without<Teleporter>)>,
-) {
-    let mut moved: HashSet<Entity> = HashSet::new();
-    for (dest, src) in teleporter_query.iter() {
-        let mut entities: Vec<(Entity, Mut<'_, Transform>)> = entities_query
-            .iter_mut()
-            .filter(|(_, e)| {
-                e.translation.x == src.translation.x && e.translation.y == src.translation.y
-            })
-            .collect();
-        for (entity, transform) in entities.iter_mut() {
-            if moved.contains(entity) {
-                continue;
-            }
-            transform.translation = Vec3::new(dest.0.x as f32, dest.0.y as f32, 1.);
-            moved.insert(*entity);
         }
     }
 }

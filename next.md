@@ -9,3 +9,4 @@
 - sub-state pour in-level (genre : `Idle`, `Playing`, `Winning`, `Reseting`, ...)
 - renomer `IsActivated` en `IsEmitting`, ou quelque chose de plus clair (quand la plaque de pression est activée)
   - aussi, peut etre evité le `bool` dedans, pour juste faire avec les queries
+- logique du teleporteur qui s'active, alors qu'il y a des `Person` dessus

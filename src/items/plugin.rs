@@ -4,7 +4,7 @@ use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::systems::button_system::button_pressed_system;
 use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::level_teleporter_system;
-use crate::items::systems::teleporter_system::{teleporter_activate_system, teleporter_system};
+use crate::items::systems::teleporter_system::teleporter_system;
 use crate::items::systems::timer_system::cooldown_system;
 use crate::items::systems::timer_system::start_timer_system;
 use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_interact_system};
@@ -42,8 +42,6 @@ impl Plugin for ItemsPlugin {
                     count_people_on_system::<PlayerOnly, Ghost>,
                     teleporter_system::<PlayerOnly, Ghost>,
                     teleporter_system::<GhostOnly, Player>,
-                    teleporter_activate_system::<PlayerOnly, Ghost>,
-                    teleporter_activate_system::<GhostOnly, Player>,
                     toggle_on_enter_system::<PlayerOnly, Ghost>,
                     toggle_on_enter_system::<GhostOnly, Player>,
                     toggle_on_interact_system::<PlayerOnly, Ghost>,
