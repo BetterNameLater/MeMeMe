@@ -32,7 +32,7 @@ impl MapRepr {
 
     pub fn json_schema() {
         let schema: Schema = schema_for!(MapRepr);
-        let file = File::create("level_schema.json").expect("haha");
+        let file = File::create("doc/level_schema.json").expect("haha");
         let mut writer = BufWriter::new(file);
         serde_json::to_writer_pretty(&mut writer, &schema).expect("haha");
         writer.flush().expect("haha");

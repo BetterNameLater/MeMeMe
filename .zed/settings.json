@@ -18,7 +18,7 @@
             {
               "fileMatch": ["assets/levels/**/*.json"],
               "schema": {
-                "$ref": "file:///Users/quentin/perso/Games/MeMeMe/level_schema.json"
+                "$ref": "file:///Users/quentin/perso/Games/MeMeMe/doc/level_schema.json"
               }
             }
           ]
