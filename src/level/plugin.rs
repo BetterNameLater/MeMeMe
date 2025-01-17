@@ -1,7 +1,7 @@
 use super::level_state::LevelState;
 use super::load_level::load_level;
 use super::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
-use super::systems::elapsed_time_from_start_rewind_system::elapsed_time_from_start_rewind_system;
+use super::systems::tick_playing_time;
 use super::systems::transitions::enter_rewind;
 use super::unload_level::unload_level;
 use crate::game_state::GameState;
@@ -31,7 +31,7 @@ impl Plugin for LevelPlugin {
             .add_systems(OnEnter(GameState::LoadingLevel), load_level)
             .add_systems(
                 Update,
-                (elapsed_time_from_start_rewind_system).run_if(in_state(LevelState::Playing)),
+                (tick_playing_time).run_if(in_state(LevelState::Playing)),
             );
         self.register_transition(app);
 

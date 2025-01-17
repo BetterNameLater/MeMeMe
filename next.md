@@ -9,5 +9,3 @@
   - aussi, peut etre evité le `bool` dedans, pour juste faire avec les queries
 - logique du teleporteur qui s'active, alors qu'il y a des `Person` dessus
 - `ObjectMap` dans resource `InLevel` seulement
-- `LevelToGo` devrait etre un `Event`
-- `elapsed_time_from_start_rewind_system` : y'a surement un truc `Clock` qui permet de faire ca en fonction d'un state... // https://bevy-cheatbook.github.io/fundamentals/time.html // https://docs.rs/bevy/latest/bevy/time/struct.Stopwatch.html

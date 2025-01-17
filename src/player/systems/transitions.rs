@@ -28,8 +28,8 @@ pub fn enter_rewind(
     );
 }
 
-pub fn enter_playing(mut commands: Commands, time: Res<Time>) {
-    commands.insert_resource(PlayingTime(time.elapsed_secs(), 0.));
+pub fn enter_playing(mut commands: Commands) {
+    commands.init_resource::<PlayingTime>();
 }
 
 #[allow(clippy::too_many_arguments)]

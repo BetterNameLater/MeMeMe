@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, time::Stopwatch};
 use maths::Vec2i;
 
 /// Immutable level informations
@@ -23,4 +23,4 @@ pub struct GhostCount(pub usize);
 ///
 /// Tuple (start_time, elapsed_time_from_start_rewind)
 #[derive(Reflect, Resource, Debug, Default, PartialEq)]
-pub struct PlayingTime(pub f32, pub f32);
+pub struct PlayingTime(pub Stopwatch);

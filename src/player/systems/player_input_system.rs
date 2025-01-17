@@ -49,7 +49,7 @@ pub fn player_move_input_system(
         player_query.single_mut().actions.push(Action {
             ghost_entity: player_entity,
             action_type: ActionType::Move(move_direction),
-            timestamp_seconds: level_infos.map_or_else(|| 0., |i| i.1),
+            timestamp_seconds: level_infos.map_or_else(|| 0., |i| i.0.elapsed_secs()),
         });
         if current_state.get() == &LevelState::Idle {
             next_state.set(LevelState::Playing);
@@ -146,7 +146,7 @@ pub fn player_action_input_system(
                 player_query.single_mut().actions.push(Action {
                     ghost_entity: player_entity,
                     action_type: ActionType::Interact,
-                    timestamp_seconds: level_infos.1,
+                    timestamp_seconds: level_infos.0.elapsed_secs(),
                 });
                 let object_map = object_map_query.single();
                 let pos: Vec2i = player_transform.translation.into();

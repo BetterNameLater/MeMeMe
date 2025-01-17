@@ -46,7 +46,7 @@ pub fn ghost_actions_system(
             timestamp_seconds: action_time,
             action_type,
         } = &ghost_actions.actions[ghost_actions.index];
-        if action_time > &playing_time.1 {
+        if action_time > &playing_time.0.elapsed_secs() {
             return;
         }
         let mut ghost_transform = ghosts_query.get_mut(*ghost_id).unwrap();

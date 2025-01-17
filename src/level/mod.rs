@@ -7,8 +7,9 @@ pub mod ressources {
 }
 pub mod level_state;
 pub mod systems {
-    pub mod elapsed_time_from_start_rewind_system;
+    mod tick_playing_time;
     pub mod transitions;
+    pub use tick_playing_time::*;
 }
 pub mod load_level;
 pub mod plugin;
