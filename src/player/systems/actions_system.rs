@@ -12,7 +12,6 @@ use crate::player::actions::{Action, ActionType};
 use crate::player::components::person::Person;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEventData;
-use crate::player::systems::player_input_system::add_enter_exit_event;
 use bevy::prelude::*;
 use maths::Vec2i;
 
@@ -84,6 +83,43 @@ pub fn actions_system<P: Person, W: InteractionType>(
                     }
                 }
             }
+        }
+    }
+}
+
+fn add_enter_exit_event<W: InteractionType>(
+    new_position_event: NewPositionEventData,
+    object_map_query: &Query<&ObjectMap>,
+    player_only_people_on_query: &Query<(), (With<EnterAble>, Without<W>)>,
+    on_enter_event_writer: &mut EventWriter<OnEnterEvent>,
+    on_exit_event_writer: &mut EventWriter<OnExitEvent>,
+) {
+    let object_map = object_map_query.single();
+    if let Some(entered_cell) = object_map.0.get(&new_position_event.now) {
+        if player_only_people_on_query.contains(*entered_cell) {
+            debug!(
+                "{:?} was entered by {:?}!",
+                entered_cell, new_position_event.entity
+            );
+            on_enter_event_writer.send(OnEnterEvent {
+                _position: new_position_event.now,
+                item: *entered_cell,
+                person: new_position_event.entity,
+            });
+        }
+    }
+
+    if let Some(leaved_cell) = object_map.0.get(&new_position_event.before) {
+        if player_only_people_on_query.contains(*leaved_cell) {
+            debug!(
+                "{:?} was exit by {:?}!",
+                leaved_cell, new_position_event.entity
+            );
+            on_exit_event_writer.send(OnExitEvent {
+                _position: new_position_event.now,
+                item: *leaved_cell,
+                person: new_position_event.entity,
+            });
         }
     }
 }

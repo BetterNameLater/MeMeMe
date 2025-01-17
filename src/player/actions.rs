@@ -27,28 +27,19 @@ pub struct ActionStack<T: Person> {
 }
 
 impl<T: Person> ActionStack<T> {
-    pub fn rewind(self, other: &mut Self) -> Self {
-        let Self {
-            mut new,
-            mut played,
-            ..
-        } = self;
-        Self::played_in_new(&mut new, &mut played);
-        let mut new_self = Self {
-            new,
-            played,
-            _person_marker: PhantomData,
-        };
+    pub fn rewind<B: Person>(&mut self, other: &mut ActionStack<B>) {
+        self.played_in_new();
+        other.played_in_new();
         assert_eq!(other.played.len(), 0);
         other.new.drain().for_each(|(k, v)| {
-            new_self.insert_news(v, k);
+            self.insert_news(v, k);
         });
-        new_self
     }
 
-    fn played_in_new(new: &mut Actions, played: &mut Actions) {
-        (*played).drain().for_each(|(elapsed, actions)| {
-            Self::insert_many(new, elapsed, actions);
+    fn played_in_new(&mut self) {
+        let mut played: Actions = self.played.drain().collect();
+        played.drain().for_each(|(elapsed, actions)| {
+            Self::insert_many(&mut self.new, elapsed, actions);
         });
     }
 
@@ -83,7 +74,7 @@ impl<T: Person> ActionStack<T> {
     /// trouve la premiere liste d'action qui est dans le passé, par rapport au elapsed donné
     /// la met dans `played` et la renvoie en ref
     pub fn exec(&mut self, elapsed: Duration) -> Option<&Vec<Action>> {
-        if let Some(key) = self.new.keys().find(|&&k| elapsed > k) {
+        if let Some(key) = self.new.keys().find(|&&k| elapsed >= k) {
             let actions = self.new.remove(&key.clone()).unwrap();
             self.insert_played(actions, elapsed);
             self.played.get(&elapsed)

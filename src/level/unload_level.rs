@@ -2,6 +2,7 @@ use crate::game_state::GameState;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
 use crate::player::actions::ActionStack;
+use crate::player::components::player::Player;
 use crate::player::Ghost;
 use crate::LevelAssets;
 use bevy::asset::Assets;
@@ -20,6 +21,7 @@ pub fn unload_level(
     info!("Unloading current level");
 
     commands.remove_resource::<ActionStack<Ghost>>();
+    commands.remove_resource::<ActionStack<Player>>();
     commands.remove_resource::<GhostCount>();
     commands.remove_resource::<PlayingTime>();
     commands.remove_resource::<StartPosition>();

@@ -1,5 +1,6 @@
 use super::{actions_system, Ghost};
 use crate::game_state::GameState;
+use crate::items::interaction_type::ghost_only::GhostOnly;
 use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::level::level_state::LevelState;
 use crate::player::components::player::Player;
@@ -20,6 +21,7 @@ impl Plugin for PlayerPlugin {
             Update,
             (
                 actions_system::<Ghost, PlayerOnly>,
+                actions_system::<Player, GhostOnly>,
                 player_action_input_system,
             )
                 .run_if(in_state(LevelState::Playing)),

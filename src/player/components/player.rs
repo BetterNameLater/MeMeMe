@@ -1,7 +1,5 @@
-use super::ghost::Ghost;
 use super::person::Person;
 use crate::constantes::{CELL_LENGTH, PLAYER_Z};
-use crate::player::actions::ActionStack;
 use bevy::core::Name;
 use bevy::math::Vec2;
 use bevy::prelude::{default, Commands, Component, Entity, Sprite};
@@ -9,9 +7,7 @@ use maths::Vec2i;
 
 #[derive(Component, Default, Debug)]
 #[require(Name(||Name::new("Player")))]
-pub struct Player {
-    pub actions: ActionStack<Ghost>,
-}
+pub struct Player;
 
 impl Person for Player {}
 
@@ -21,7 +17,7 @@ impl Player {
 
         commands
             .spawn((
-                Player::default(),
+                Player,
                 Sprite {
                     color: bevy::color::palettes::css::BEIGE.into(),
                     custom_size: Some(Vec2::new(size, size)),

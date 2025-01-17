@@ -99,6 +99,7 @@ pub fn load_level(
 
     // insert resources
     commands.insert_resource(ActionStack::<Ghost>::default());
+    commands.insert_resource(ActionStack::<Player>::default());
     commands.insert_resource(GhostCount(0));
     commands.insert_resource(StartPosition::new(start_position));
 }

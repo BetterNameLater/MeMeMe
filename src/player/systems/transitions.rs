@@ -9,45 +9,20 @@ use bevy::prelude::*;
 #[allow(clippy::too_many_arguments)]
 pub fn enter_rewind(
     mut commands: Commands,
-    player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
-    ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
-    level_query: Query<Entity, With<LevelTag>>,
-    ghost_count: ResMut<GhostCount>,
-    start_position: ResMut<StartPosition>,
-    ghost_actions: ResMut<ActionStack<Ghost>>,
-) {
-    commands.remove_resource::<PlayingTime>();
-
-    rewind_system(
-        commands,
-        player_query,
-        ghost_transform_query,
-        level_query,
-        ghost_count,
-        start_position,
-        ghost_actions,
-    );
-}
-
-pub fn enter_playing(mut commands: Commands) {
-    commands.init_resource::<PlayingTime>();
-}
-
-#[allow(clippy::too_many_arguments)]
-fn rewind_system(
-    mut commands: Commands,
-    mut player_query: Query<(Entity, &mut Player, &mut Transform, &mut Name)>,
+    mut player_query: Query<(Entity, &mut Transform, &mut Name), (With<Player>, Without<Ghost>)>,
     mut ghost_transform_query: Query<&mut Transform, (Without<Player>, With<Ghost>)>,
     level_query: Query<Entity, With<LevelTag>>,
     mut ghost_count: ResMut<GhostCount>,
     start_position: ResMut<StartPosition>,
     mut ghost_actions: ResMut<ActionStack<Ghost>>,
+    mut player_action_stack: ResMut<ActionStack<Player>>,
 ) {
-    debug!("Rewind");
-    let (player_entity, mut player, mut player_transform, mut player_name) =
-        player_query.single_mut();
+    commands.remove_resource::<PlayingTime>();
 
-    *ghost_actions = ghost_actions.clone().rewind(&mut player.actions);
+    debug!("Rewind");
+    let (player_entity, mut player_transform, mut player_name) = player_query.single_mut();
+
+    ghost_actions.rewind(&mut player_action_stack);
 
     let start_transform = start_position.get().to_transform(PLAYER_Z);
 
@@ -73,4 +48,8 @@ fn rewind_system(
         });
 
     ghost_count.0 += 1;
+}
+
+pub fn enter_playing(mut commands: Commands) {
+    commands.init_resource::<PlayingTime>();
 }
