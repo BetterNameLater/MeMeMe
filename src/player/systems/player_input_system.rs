@@ -16,6 +16,7 @@ use crate::player::events::new_position_event::NewPositionEventData;
 use crate::player::move_direction::MoveDirection;
 use bevy::prelude::*;
 use maths::Vec2i;
+use std::time::Duration;
 
 #[allow(clippy::too_many_arguments)]
 pub fn player_move_input_system(
@@ -46,11 +47,13 @@ pub fn player_move_input_system(
         let (mut player_transform, player_entity) = player_transform_query.single_mut();
         let move_direction = MoveDirection::from_key_code(*move_key);
         let before: Vec2i = player_transform.translation.into();
-        player_query.single_mut().actions.push(Action {
-            ghost_entity: player_entity,
-            action_type: ActionType::Move(move_direction),
-            timestamp_seconds: level_infos.map_or_else(|| 0., |i| i.0.elapsed_secs()),
-        });
+        player_query.single_mut().actions.insert_new(
+            Action {
+                ghost_entity: player_entity,
+                action_type: ActionType::Move(move_direction),
+            },
+            level_infos.map_or_else(|| Duration::ZERO, |i| i.0.elapsed()),
+        );
         if current_state.get() == &LevelState::Idle {
             next_state.set(LevelState::Playing);
         }
@@ -143,11 +146,14 @@ pub fn player_action_input_system(
                 }
             }
             input::INTERACT => {
-                player_query.single_mut().actions.push(Action {
-                    ghost_entity: player_entity,
-                    action_type: ActionType::Interact,
-                    timestamp_seconds: level_infos.0.elapsed_secs(),
-                });
+                player_query.single_mut().actions.insert_new(
+                    Action {
+                        ghost_entity: player_entity,
+                        action_type: ActionType::Interact,
+                    },
+                    level_infos.0.elapsed(),
+                );
+
                 let object_map = object_map_query.single();
                 let pos: Vec2i = player_transform.translation.into();
                 if let Some(item) = object_map.0.get(&pos) {

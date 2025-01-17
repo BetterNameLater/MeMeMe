@@ -45,13 +45,11 @@ fn rewind_system(
     debug!("Rewind");
     let (player_entity, mut player, mut player_transform, mut player_name) =
         player_query.single_mut();
-    ghost_actions.actions.append(&mut player.actions);
-    ghost_actions.actions.sort_by(|a, b| {
-        a.timestamp_seconds
-            .partial_cmp(&b.timestamp_seconds)
-            .unwrap()
-    });
-    ghost_actions.index = 0;
+
+    let GhostActions { actions } = ghost_actions.clone(); // TODO remove clooone
+    *ghost_actions = GhostActions {
+        actions: actions.rewind(&mut player.actions),
+    };
 
     let start_transform = start_position.get().to_transform(PLAYER_Z);
 
