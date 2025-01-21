@@ -270,7 +270,6 @@ pub enum InteractionType {
 #[serde(tag = "type")]
 pub enum ObjectType {
     PressurePlate,
-    PressurePlateOnOff,
     Door,
     Teleporter { destination: Vec2i },
     LevelTeleporter { destination: String },

@@ -6,7 +6,6 @@ use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::level_teleporter::LevelTeleporter;
 use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
-use crate::items::pressure_plate_on_off::PressurePlateOnOff;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::item::{ItemOutline, OutlineType};
 use crate::items::primitive::killing::Killing;
@@ -45,7 +44,6 @@ pub fn populate_items(
                         ObjectType::LevelTeleporter { .. } => {
                             bevy::color::palettes::css::ALICE_BLUE.into()
                         }
-                        ObjectType::PressurePlateOnOff => bevy::color::palettes::css::AZURE.into(),
                         ObjectType::Button => bevy::color::palettes::css::DARK_GRAY.into(),
                     },
                     custom_size: Some(Vec2::new(ITEM_SIZE, ITEM_SIZE)),
@@ -87,9 +85,6 @@ pub fn populate_items(
                 commands
                     .entity(item)
                     .insert(LevelTeleporter(destination.clone()));
-            }
-            ObjectType::PressurePlateOnOff => {
-                commands.entity(item).insert(PressurePlateOnOff);
             }
             ObjectType::Button => {
                 commands.entity(item).insert(ButtonItem);

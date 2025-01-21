@@ -34,5 +34,4 @@ pub mod door;
 pub mod level_teleporter;
 pub mod lever;
 pub mod pressure_plate;
-pub mod pressure_plate_on_off;
 pub mod teleporter;
