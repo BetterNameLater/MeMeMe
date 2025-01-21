@@ -7,7 +7,3 @@
   - aussi, peut etre evité le `bool` dedans, pour juste faire avec les queries
 - logique du teleporteur qui s'active, alors qu'il y a des `Person` dessus
 - `ObjectMap` dans resource `InLevel` seulement
-
-# EN COURS
-
-- Juste passer tous les niveaux json en ldtk

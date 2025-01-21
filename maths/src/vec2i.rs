@@ -1,9 +1,8 @@
-use std::ops::Mul;
-
 use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{Reflect, Transform};
 use schemars::JsonSchema;
 use serde::Deserialize;
+use std::ops::Mul;
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Default, Deserialize, Debug, Reflect, JsonSchema)]
 pub struct Vec2i {
