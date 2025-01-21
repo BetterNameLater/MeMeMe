@@ -18,4 +18,7 @@ pub mod input {
     pub const REWIND: KeyCode = KeyCode::Space;
     pub const INTERACT: KeyCode = KeyCode::KeyE;
     pub const RESET: KeyCode = KeyCode::KeyR;
+
+    #[cfg(debug_assertions)]
+    pub const HOME_DEBUG: KeyCode = KeyCode::KeyH;
 }

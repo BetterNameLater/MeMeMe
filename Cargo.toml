@@ -14,7 +14,7 @@ resolver = "2"
 members = ["level_parser", "maths"]
 
 [workspace.dependencies]
-bevy = { version = "^0.15", features = ["dynamic_linking"] }
+bevy = { version = "^0.15", features = ["dynamic_linking", "file_watcher"] }
 bevy_asset_loader = "^0.22"
 
 # not bevy-related

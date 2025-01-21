@@ -6,8 +6,9 @@ use crate::constantes::*;
 use crate::game_state::GameState;
 use crate::items::interaction_type::ghost_only::GhostOnly;
 use crate::items::interaction_type::player_only::PlayerOnly;
+use crate::level::components::level_tag::LevelTag;
+use crate::level::components::level_to_go::LevelToGo;
 use crate::level::level_state::LevelState;
-use crate::level::unload_level::reset_level;
 use crate::player::components::player::Player;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::systems::transitions::{enter_playing, enter_rewind};
@@ -49,12 +50,28 @@ impl Plugin for PlayerPlugin {
         )
         .add_systems(
             Update,
-            (reset_level)
-                .run_if(input_just_pressed(input::RESET))
-                .run_if(in_state(GameState::InLevel)),
+            (|mut commands: Commands,
+              mut next_state: ResMut<NextState<GameState>>,
+              level_name: Query<&Name, With<LevelTag>>| {
+                commands.insert_resource(LevelToGo(level_name.single().to_string()));
+                next_state.set(GameState::LoadingLevel);
+            })
+            .run_if(input_just_pressed(input::RESET))
+            .run_if(in_state(GameState::InLevel)),
         )
         .add_event::<InteractEvent<Player>>()
         .add_event::<InteractEvent<Ghost>>();
+
+        #[cfg(debug_assertions)]
+        app.add_systems(
+            Update,
+            (|mut commands: Commands, mut next_state: ResMut<NextState<GameState>>| {
+                commands.insert_resource(LevelToGo("entry_point".to_string()));
+                next_state.set(GameState::LoadingLevel);
+            })
+            .run_if(input_just_pressed(input::HOME_DEBUG))
+            .run_if(in_state(GameState::InLevel)),
+        );
 
         self.register_transitions(app);
     }
