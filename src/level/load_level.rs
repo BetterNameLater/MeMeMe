@@ -13,50 +13,24 @@ use crate::LevelAssets;
 use bevy::asset::Assets;
 use bevy::color::palettes::css;
 use bevy::prelude::*;
-use level_parser::{BackgroundType, MapRepr};
+use level_parser::BackgroundType;
+use level_parser::WorldRepr;
 use maths::Vec2i;
-
-fn find_start_position(map: &[Vec<BackgroundType>]) -> Vec2i {
-    for (y, row) in map.iter().rev().enumerate() {
-        for (x, background_type) in row.iter().enumerate() {
-            if background_type == &BackgroundType::Start {
-                return Vec2i::new(
-                    (x * CELL_LENGTH_USIZE) as i32,
-                    (y * CELL_LENGTH_USIZE) as i32,
-                );
-            }
-        }
-    }
-    Vec2i::default()
-}
 
 #[allow(clippy::too_many_arguments)]
 pub fn load_level(
     mut commands: Commands,
     level_assets: Res<LevelAssets>,
-    custom_assets: Res<Assets<MapRepr>>,
+    custom_assets: Res<Assets<WorldRepr>>,
     mut next_state: ResMut<NextState<GameState>>,
     level_to_go: Res<LevelToGo>,
 ) {
-    let level_asset = level_assets
-        .levels
-        .iter()
-        .find(|a| {
-            if let Some(path) = a.path() {
-                if cfg!(target_os = "windows") {
-                    let level_path = level_to_go.0.to_string().replace("/", "\\");
-                    return format!("levels\\{}.json", level_path) == path.to_string();
-                }
-                return format!("levels/{}.json", level_to_go.0) == path.to_string();
-            }
-            false
-        })
-        .unwrap_or_else(|| panic!("could not find `levels/{}.json", level_to_go.0));
-
-    let level = custom_assets.get(level_asset).unwrap();
+    let world = custom_assets.get(level_assets.world.id()).unwrap();
+    println!("{:?}", world);
+    let level = world.levels.get(&level_to_go.0).unwrap();
 
     let level_tag = commands
-        .spawn((LevelTag, Name::new(level_asset.path().unwrap().to_string())))
+        .spawn((LevelTag, Name::new(level_to_go.0.clone())))
         .id();
 
     let world_map_entity = commands
@@ -85,7 +59,9 @@ pub fn load_level(
 
     commands.entity(level_tag).add_child(world_map_entity);
 
-    let start_position = find_start_position(&map);
+    let start_position = level.start * CELL_LENGTH as i32;
+    // let goal_position = level.goal.map(|v| v * CELL_LENGTH as i32);
+    // println!("{:?}", goal_position);
 
     let items_map_entity = commands
         .spawn((ObjectMap(items), Name::new("ObjectMap")))

@@ -1,17 +1,36 @@
+use crate::ldtk_json::{EntityInstance, GridPoint, LdtkJson, Level, ReferenceToAnEntityInstance};
 use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, LoadContext};
 use bevy::prelude::TypePath;
 use maths::Vec2i;
-use schemars::{schema_for, JsonSchema, Schema};
+use schemars::JsonSchema;
 use serde::Deserialize;
+use serde_json::Value;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufWriter, Write};
+
+#[derive(Asset, TypePath, Deserialize, Debug)]
+pub struct WorldRepr {
+    pub levels: HashMap<String, MapRepr>,
+}
+
+impl WorldRepr {
+    pub fn from_ldtk(world: LdtkJson) -> Self {
+        Self {
+            levels: world
+                .levels
+                .into_iter()
+                .map(|level| (level.identifier.clone(), MapRepr::from_ldtk(level)))
+                .collect(),
+        }
+    }
+}
 
 #[derive(Asset, TypePath, Deserialize, Debug, JsonSchema)]
 pub struct MapRepr {
     map: Vec<String>,
     pub objects: HashMap<String, ObjectRepr>,
+    pub start: Vec2i,
+    pub goal: Option<Vec2i>,
 }
 
 impl MapRepr {
@@ -30,12 +49,56 @@ impl MapRepr {
             .collect()
     }
 
-    pub fn json_schema() {
-        let schema: Schema = schema_for!(MapRepr);
-        let file = File::create("doc/level_schema.json").expect("haha");
-        let mut writer = BufWriter::new(file);
-        serde_json::to_writer_pretty(&mut writer, &schema).expect("haha");
-        writer.flush().expect("haha");
+    pub fn from_ldtk(level: Level) -> Self {
+        let (width, height) = ((level.px_wid / 16), (level.px_hei / 16));
+        let layer_instances = level.layer_instances.clone().unwrap();
+
+        let start = {
+            let [x, y] = layer_instances[1]
+                .entity_instances
+                .iter()
+                .find(|entity| entity.identifier == "start")
+                .unwrap()
+                .grid[0..2]
+            else {
+                panic!();
+            };
+            let y = height - y - 1;
+            Vec2i::from((x, y))
+        };
+
+        let goal = {
+            if let Some(entity) = layer_instances[1]
+                .entity_instances
+                .iter()
+                .find(|entity| entity.identifier == "goal")
+            {
+                let [x, y] = entity.grid[0..2] else { panic!() };
+                let y = height - y - 1;
+                Some(Vec2i::from((x, y)))
+            } else {
+                None
+            }
+        };
+
+        Self {
+            map: layer_instances[2]
+                .int_grid_csv
+                .iter()
+                .map(|i| i.to_string())
+                .collect::<Vec<String>>()
+                .chunks(width as usize)
+                .map(|line| line.concat())
+                .collect(),
+            objects: layer_instances[0]
+                .entity_instances
+                .clone()
+                .into_iter()
+                .map(|entity| (entity.iid.clone(), ObjectRepr::from_ldtk(entity, height)))
+                .collect(),
+            start,
+            goal,
+        }
     }
 }
 
@@ -43,7 +106,7 @@ impl MapRepr {
 pub struct MapLoader;
 
 impl AssetLoader for MapLoader {
-    type Asset = MapRepr;
+    type Asset = WorldRepr;
     type Settings = ();
     type Error = std::io::Error;
 
@@ -55,14 +118,14 @@ impl AssetLoader for MapLoader {
     ) -> Result<Self::Asset, Self::Error> {
         let mut bytes = Vec::new();
         reader.read_to_end(&mut bytes).await?;
-        match serde_json::from_slice::<MapRepr>(&bytes) {
-            Ok(r) => Ok(r),
+        match serde_json::from_slice::<LdtkJson>(&bytes) {
+            Ok(r) => Ok(WorldRepr::from_ldtk(r)),
             Err(e) => Err(e.into()),
         }
     }
 
     fn extensions(&self) -> &[&str] {
-        &["json"]
+        &["ldtk"]
     }
 }
 
@@ -79,12 +142,11 @@ impl TryFrom<char> for BackgroundType {
     type Error = ();
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
+        bevy::prelude::info!("the char : '{value}'");
         match value {
-            ' ' => Ok(BackgroundType::Void),
-            '0' | '+' | '-' => Ok(BackgroundType::Floor),
+            ' ' | '0' => Ok(BackgroundType::Void),
+            '2' | '+' | '-' => Ok(BackgroundType::Floor),
             '1' => Ok(BackgroundType::Wall),
-            '2' => Ok(BackgroundType::Start),
-            '3' => Ok(BackgroundType::End),
             _ => Err(()),
         }
     }
@@ -105,6 +167,94 @@ pub struct ObjectRepr {
     pub killing: bool,
     #[serde(default)]
     pub start_timer: Option<f32>,
+}
+
+impl ObjectRepr {
+    pub fn from_ldtk(entity: EntityInstance, height: i64) -> Self {
+        let position = {
+            let [x, y] = entity.grid[0..2] else {
+                panic!();
+            };
+            let y = height - y - 1;
+            Vec2i::from((x, y))
+        };
+
+        Self {
+            position,
+            object_type: match entity.identifier.as_str() {
+                "pressure_plate" => ObjectType::PressurePlate,
+                "level_teleporter" => ObjectType::LevelTeleporter {
+                    destination: get_string_field(&entity, "destination"),
+                },
+                "door" => ObjectType::Door,
+                "teleporter" => ObjectType::Teleporter {
+                    destination: {
+                        let r = get_field_ref(&entity, "destination");
+                        let a: GridPoint = serde_json::from_value(r.clone()).unwrap();
+                        Vec2i::from((a.cx, height - a.cy - 1))
+                    },
+                },
+                "lever" => ObjectType::Lever,
+                "button" => ObjectType::Button,
+                _ => panic!("what is a \"{}\" ?", entity.identifier),
+            },
+            interaction_type: InteractionType::All,
+            single_use: get_bool_field(&entity, "single_use"), // TODO to enum
+            killing: get_bool_field(&entity, "killing"),
+            depends_on: get_depends_on(&entity),
+            start_timer: None,
+        }
+    }
+}
+
+fn get_field_ref<'a>(entity: &'a EntityInstance, name: &str) -> &'a Value {
+    entity
+        .field_instances
+        .iter()
+        .find(|f| f.identifier == name)
+        .unwrap()
+        .value
+        .as_ref()
+        .unwrap()
+}
+
+fn get_bool_field(entity: &EntityInstance, name: &str) -> bool {
+    if let Some(prop) = entity.field_instances.iter().find(|f| f.identifier == name) {
+        prop.value.as_ref().unwrap().as_bool().unwrap()
+    } else {
+        false
+    }
+}
+
+fn get_string_field(entity: &EntityInstance, name: &str) -> String {
+    get_field_ref(entity, name).as_str().unwrap().to_string()
+}
+
+fn get_depends_on(entity: &EntityInstance) -> HashMap<String, bool> {
+    if let Some(props) = entity
+        .field_instances
+        .iter()
+        .find(|f| f.identifier == "depends_on" || f.identifier == "depends_off")
+    {
+        props
+            .value
+            .as_ref()
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| {
+                (
+                    serde_json::from_value::<ReferenceToAnEntityInstance>(v.clone())
+                        .unwrap()
+                        .entity_iid,
+                    props.identifier == "depends_on",
+                )
+            })
+            .collect()
+    } else {
+        HashMap::new()
+    }
 }
 
 #[derive(Deserialize, Debug, Default, JsonSchema)]

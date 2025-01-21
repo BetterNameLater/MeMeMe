@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 pub const CELL_Z: f32 = 1.0;
 pub const ITEMS_Z: f32 = 4.0;
 pub const PLAYER_Z: f32 = 5.0;

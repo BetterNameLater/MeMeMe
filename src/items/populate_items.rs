@@ -14,7 +14,7 @@ use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
 use crate::items::teleporter::Teleporter;
 use bevy::prelude::*;
-use level_parser::map_repr::{InteractionType, ObjectRepr, ObjectType};
+use level_parser::{InteractionType, ObjectRepr, ObjectType};
 use maths::Vec2i;
 use std::collections::HashMap;
 

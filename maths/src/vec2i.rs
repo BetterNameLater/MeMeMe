@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{Reflect, Transform};
 use schemars::JsonSchema;
@@ -33,5 +35,25 @@ impl Vec2i {
     }
     pub fn to_transform(self, z: f32) -> Transform {
         Transform::from_xyz(self.x as f32, self.y as f32, z)
+    }
+}
+
+impl From<(i64, i64)> for Vec2i {
+    fn from((x, y): (i64, i64)) -> Self {
+        Self {
+            x: x as i32,
+            y: y as i32,
+        }
+    }
+}
+
+impl Mul<i32> for Vec2i {
+    type Output = Self;
+
+    fn mul(self, rhs: i32) -> Self::Output {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
     }
 }

@@ -16,12 +16,10 @@ use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use game_state::GameState;
-use level_parser::{MapLoader, MapRepr};
+use level_parser::MapLoader;
+use level_parser::WorldRepr;
 
 fn main() {
-    #[cfg(debug_assertions)]
-    MapRepr::json_schema();
-
     let mut app = App::new();
 
     app
@@ -59,7 +57,7 @@ fn main() {
         .add_plugins(LevelPlugin)
         // assets
         .init_asset_loader::<MapLoader>()
-        .init_asset::<MapRepr>()
+        .init_asset::<WorldRepr>()
         // states
         .init_state::<GameState>()
         .add_loading_state(
@@ -78,8 +76,8 @@ fn main() {
 
 #[derive(AssetCollection, Resource)]
 struct LevelAssets {
-    #[asset(path = "levels", collection(typed))]
-    levels: Vec<Handle<MapRepr>>,
+    #[asset(path = "levels.ldtk")]
+    pub world: Handle<WorldRepr>,
 }
 
 #[cfg(debug_assertions)]

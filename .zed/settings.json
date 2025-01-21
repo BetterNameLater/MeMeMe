@@ -9,21 +9,5 @@
         }
       }
     }
-  },
-  "lsp": {
-    "json-language-server": {
-      "settings": {
-        "json": {
-          "schemas": [
-            {
-              "fileMatch": ["assets/levels/**/*.json"],
-              "schema": {
-                "$ref": "file:///Users/quentin/perso/Games/MeMeMe/doc/level_schema.json"
-              }
-            }
-          ]
-        }
-      }
-    }
   }
 }
