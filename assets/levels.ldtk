@@ -921,11 +921,8 @@
 							"defUid": 10,
 							"px": [96,48],
 							"fieldInstances": [
-								{ "__identifier": "interaction_type", "__type": "LocalEnum.interaction_type", "__value": "all", "__tile": null, "defUid": 37, "realEditorValues": [] },
-								{ "__identifier": "usage_type", "__type": "LocalEnum.usage_type", "__value": "any", "__tile": null, "defUid": 40, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["any"]
-								}] }
+								{ "__identifier": "interaction_type", "__type": "LocalEnum.interaction_type", "__value": "all", "__tile": null, "defUid": 37, "realEditorValues": [null] },
+								{ "__identifier": "usage_type", "__type": "LocalEnum.usage_type", "__value": "any", "__tile": null, "defUid": 40, "realEditorValues": [null] }
 							],
 							"__worldX": 240,
 							"__worldY": 48

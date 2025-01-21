@@ -5,7 +5,7 @@ use bevy::prelude::TypePath;
 use maths::Vec2i;
 use schemars::JsonSchema;
 use serde::Deserialize;
-use serde_json::Value;
+use serde_json::{json, Value};
 use std::collections::HashMap;
 
 #[derive(Asset, TypePath, Deserialize, Debug)]
@@ -142,7 +142,6 @@ impl TryFrom<char> for BackgroundType {
     type Error = ();
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
-        bevy::prelude::info!("the char : '{value}'");
         match value {
             ' ' | '0' => Ok(BackgroundType::Void),
             '2' | '+' | '-' => Ok(BackgroundType::Floor),
@@ -189,9 +188,10 @@ impl ObjectRepr {
                 "door" => ObjectType::Door,
                 "teleporter" => ObjectType::Teleporter {
                     destination: {
-                        let r = get_field_ref(&entity, "destination");
-                        let a: GridPoint = serde_json::from_value(r.clone()).unwrap();
-                        Vec2i::from((a.cx, height - a.cy - 1))
+                        let destination = get_field_ref(&entity, "destination").unwrap();
+                        let destination: GridPoint =
+                            serde_json::from_value(destination.clone()).unwrap();
+                        Vec2i::from((destination.cx, height - destination.cy - 1))
                     },
                 },
                 "lever" => ObjectType::Lever,
@@ -199,35 +199,34 @@ impl ObjectRepr {
                 _ => panic!("what is a \"{}\" ?", entity.identifier),
             },
             interaction_type: InteractionType::All,
-            single_use: get_bool_field(&entity, "single_use"), // TODO to enum
-            killing: get_bool_field(&entity, "killing"),
+            single_use: get_single_use(&entity),
+            killing: false,
             depends_on: get_depends_on(&entity),
             start_timer: None,
         }
     }
 }
 
-fn get_field_ref<'a>(entity: &'a EntityInstance, name: &str) -> &'a Value {
-    entity
-        .field_instances
-        .iter()
-        .find(|f| f.identifier == name)
-        .unwrap()
-        .value
-        .as_ref()
-        .unwrap()
+fn get_field_ref<'a>(entity: &'a EntityInstance, name: &str) -> Option<&'a Value> {
+    let Some(field) = &entity.field_instances.iter().find(|f| f.identifier == name) else {
+        return None;
+    };
+    Some(field.value.as_ref().unwrap())
 }
 
-fn get_bool_field(entity: &EntityInstance, name: &str) -> bool {
-    if let Some(prop) = entity.field_instances.iter().find(|f| f.identifier == name) {
-        prop.value.as_ref().unwrap().as_bool().unwrap()
-    } else {
-        false
-    }
+fn get_single_use(entity: &EntityInstance) -> bool {
+    get_field_ref(&entity, "usage_type")
+        .unwrap_or(&json!("nope"))
+        .as_str()
+        == Some("single_use")
 }
 
 fn get_string_field(entity: &EntityInstance, name: &str) -> String {
-    get_field_ref(entity, name).as_str().unwrap().to_string()
+    get_field_ref(entity, name)
+        .unwrap()
+        .as_str()
+        .unwrap()
+        .to_string()
 }
 
 fn get_depends_on(entity: &EntityInstance) -> HashMap<String, bool> {

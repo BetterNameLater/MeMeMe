@@ -26,7 +26,6 @@ pub fn load_level(
     level_to_go: Res<LevelToGo>,
 ) {
     let world = custom_assets.get(level_assets.world.id()).unwrap();
-    println!("{:?}", world);
     let level = world.levels.get(&level_to_go.0).unwrap();
 
     let level_tag = commands
@@ -61,7 +60,6 @@ pub fn load_level(
 
     let start_position = level.start * CELL_LENGTH as i32;
     // let goal_position = level.goal.map(|v| v * CELL_LENGTH as i32);
-    // println!("{:?}", goal_position);
 
     let items_map_entity = commands
         .spawn((ObjectMap(items), Name::new("ObjectMap")))
