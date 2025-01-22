@@ -14,7 +14,6 @@ use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use bevy::window::WindowResolution;
 use bevy_asset_loader::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use game_state::GameState;
 use level_parser::MapLoader;
 use level_parser::WorldRepr;
@@ -68,7 +67,7 @@ fn main() {
         );
 
     #[cfg(debug_assertions)]
-    app.add_plugins(WorldInspectorPlugin::new())
+    app.add_plugins(bevy_inspector_egui::quick::WorldInspectorPlugin::new())
         .add_systems(Update, log_transitions::<GameState>);
 
     app.run();

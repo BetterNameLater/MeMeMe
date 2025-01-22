@@ -1,6 +1,5 @@
 use super::level_state::LevelState;
 use super::load_level::load_level;
-use super::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
 use super::systems::tick_playing_time;
 use super::systems::transitions::enter_rewind;
 use super::unload_level::unload_level;
@@ -9,10 +8,6 @@ use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::plugin::ItemsPlugin;
 use crate::player::plugin::PlayerPlugin;
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::ResourceInspectorPlugin;
-
-#[cfg(debug_assertions)]
-use crate::log_transitions;
 
 pub struct LevelPlugin;
 
@@ -37,23 +32,29 @@ impl Plugin for LevelPlugin {
         self.register_transition(app);
 
         #[cfg(debug_assertions)]
-        app.add_systems(Update, log_transitions::<LevelState>)
-            .add_plugins(
-                ResourceInspectorPlugin::<StartPosition>::default()
-                    .run_if(in_state(GameState::InLevel)),
-            )
-            .add_plugins(
-                ResourceInspectorPlugin::<PlayingTime>::default()
-                    .run_if(in_state(LevelState::Playing)),
-            )
-            // .add_plugins(
-            //     ResourceInspectorPlugin::<ActionStack<Ghost>>::default()
-            //         .run_if(in_state(GameState::InLevel)),
-            // )
-            .add_plugins(
-                ResourceInspectorPlugin::<GhostCount>::default()
-                    .run_if(in_state(GameState::InLevel)),
-            );
+        {
+            use super::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
+            use crate::log_transitions;
+            use bevy_inspector_egui::quick::ResourceInspectorPlugin;
+
+            app.add_systems(Update, log_transitions::<LevelState>)
+                .add_plugins(
+                    ResourceInspectorPlugin::<StartPosition>::default()
+                        .run_if(in_state(GameState::InLevel)),
+                )
+                .add_plugins(
+                    ResourceInspectorPlugin::<PlayingTime>::default()
+                        .run_if(in_state(LevelState::Playing)),
+                )
+                // .add_plugins(
+                //     ResourceInspectorPlugin::<ActionStack<Ghost>>::default()
+                //         .run_if(in_state(GameState::InLevel)),
+                // )
+                .add_plugins(
+                    ResourceInspectorPlugin::<GhostCount>::default()
+                        .run_if(in_state(GameState::InLevel)),
+                );
+        }
     }
 }
 

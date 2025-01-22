@@ -53,8 +53,7 @@ pub fn populate_items(
             ))
             .id();
 
-        #[cfg(debug_assertions)]
-        add_debug_outlines(commands, item);
+        add_item_state_outlines(commands, item);
         commands.entity(parent).add_child(item);
         items_by_vec2i.insert(position, item);
         items_by_name.insert(key.clone(), item);
@@ -152,8 +151,8 @@ pub fn populate_items(
     items_by_vec2i
 }
 
-#[cfg(debug_assertions)]
-fn add_debug_outlines(commands: &mut Commands, item: Entity) {
+/// Add a visuale marker indicating state off the item
+fn add_item_state_outlines(commands: &mut Commands, item: Entity) {
     const DISTANCE: f32 = 8.;
 
     let outline_usable = commands
