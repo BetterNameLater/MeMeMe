@@ -7,10 +7,12 @@ use super::unload_level::unload_level;
 use crate::game_state::GameState;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
 use crate::items::plugin::ItemsPlugin;
-use crate::log_transitions;
 use crate::player::plugin::PlayerPlugin;
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::ResourceInspectorPlugin;
+
+#[cfg(debug_assertions)]
+use crate::log_transitions;
 
 pub struct LevelPlugin;
 
