@@ -4,9 +4,9 @@ use crate::items::events::OnExitEvent;
 use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
+use crate::items::primitive::interactible::Interactible;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::PlayingTime;
-use crate::map::ObjectMap;
 use crate::player::actions::ActionStack;
 use crate::player::actions::{Action, ActionType};
 use crate::player::components::person::Person;
@@ -27,9 +27,8 @@ pub fn actions_system<P: Person, W: InteractionType>(
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
 
-    object_map_query: Query<&ObjectMap>,
-
-    player_only_people_on_query: Query<(), (With<EnterAble>, Without<W>)>,
+    enterables_query: Query<(Entity, &Transform), (With<EnterAble>, Without<W>, Without<P>)>,
+    interactibles_query: Query<(Entity, &Transform), (With<Interactible>, Without<W>, Without<P>)>,
     colliding_query: Query<(&Colliding, &Transform, Option<&IsUsable>), (Without<W>, Without<P>)>,
 ) {
     while let Some(actions) = action_stack.exec(playing_time.0.elapsed()) {
@@ -64,62 +63,60 @@ pub fn actions_system<P: Person, W: InteractionType>(
                         };
                         add_enter_exit_event(
                             new_position_event,
-                            &object_map_query,
-                            &player_only_people_on_query,
+                            &enterables_query,
                             &mut on_enter_event_writer,
                             &mut on_exit_event_writer,
                         );
                     }
                 }
                 ActionType::Interact => {
-                    let object_map = object_map_query.single();
-                    let pos: Vec2i = person_transform.translation.into();
-                    if let Some(item) = object_map.0.get(&pos) {
-                        interact_event.send(InteractEvent::new(
-                            person_transform.translation.into(),
-                            *ghost_entity,
-                            *item,
-                        ));
-                    }
+                    interactibles_query
+                        .iter()
+                        .filter(|(_, t)| person_transform.translation.xy() == t.translation.xy())
+                        .for_each(|(item, _)| {
+                            debug!("{:?} interacted with {:?}!", ghost_entity, item);
+                            interact_event.send(InteractEvent::new(*ghost_entity, item));
+                        });
                 }
             }
         }
     }
 }
 
-fn add_enter_exit_event<W: InteractionType>(
+fn add_enter_exit_event<P: Person, W: InteractionType>(
     new_position_event: NewPositionEventData,
-    object_map_query: &Query<&ObjectMap>,
-    player_only_people_on_query: &Query<(), (With<EnterAble>, Without<W>)>,
+    player_only_people_on_query: &Query<
+        (Entity, &Transform),
+        (With<EnterAble>, Without<W>, Without<P>),
+    >,
     on_enter_event_writer: &mut EventWriter<OnEnterEvent>,
     on_exit_event_writer: &mut EventWriter<OnExitEvent>,
 ) {
-    let object_map = object_map_query.single();
-    if let Some(entered_cell) = object_map.0.get(&new_position_event.now) {
-        if player_only_people_on_query.contains(*entered_cell) {
+    player_only_people_on_query
+        .iter()
+        .filter(|(_, t)| new_position_event.now == Vec2i::from(t.translation))
+        .for_each(|(entered_cell, _)| {
             debug!(
                 "{:?} was entered by {:?}!",
                 entered_cell, new_position_event.entity
             );
             on_enter_event_writer.send(OnEnterEvent {
-                _position: new_position_event.now,
-                item: *entered_cell,
+                item: entered_cell,
                 person: new_position_event.entity,
             });
-        }
-    }
+        });
 
-    if let Some(leaved_cell) = object_map.0.get(&new_position_event.before) {
-        if player_only_people_on_query.contains(*leaved_cell) {
+    player_only_people_on_query
+        .iter()
+        .filter(|(_, t)| new_position_event.before == Vec2i::from(t.translation))
+        .for_each(|(leaved_cell, _)| {
             debug!(
                 "{:?} was exit by {:?}!",
                 leaved_cell, new_position_event.entity
             );
             on_exit_event_writer.send(OnExitEvent {
-                _position: new_position_event.now,
-                item: *leaved_cell,
+                item: leaved_cell,
                 person: new_position_event.entity,
             });
-        }
-    }
+        });
 }

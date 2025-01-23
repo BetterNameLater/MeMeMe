@@ -23,8 +23,7 @@ pub fn populate_items(
     commands: &mut Commands,
     parent: Entity,
     objects: &HashMap<String, ObjectRepr>,
-) -> HashMap<Vec2i, Entity> {
-    let mut items_by_vec2i: HashMap<Vec2i, Entity> = HashMap::new();
+) {
     let mut items_by_name: HashMap<String, Entity> = HashMap::new();
 
     for (key, object) in objects.iter() {
@@ -55,7 +54,6 @@ pub fn populate_items(
 
         add_item_state_outlines(commands, item);
         commands.entity(parent).add_child(item);
-        items_by_vec2i.insert(position, item);
         items_by_name.insert(key.clone(), item);
 
         debug!(
@@ -148,7 +146,6 @@ pub fn populate_items(
     }
 
     trace!("Items has been populated");
-    items_by_vec2i
 }
 
 /// Add a visuale marker indicating state off the item

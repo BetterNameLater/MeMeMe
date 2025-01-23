@@ -17,6 +17,7 @@ pub mod primitive {
     pub mod cooldown;
     pub mod dependencies;
     pub mod enterable;
+    pub mod interactible;
     pub mod is_activated;
     pub mod is_usable;
     pub mod item;

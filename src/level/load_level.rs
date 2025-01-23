@@ -5,7 +5,7 @@ use crate::items::populate_items::populate_items;
 use crate::items::primitive::colliding::Colliding;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
-use crate::map::{ObjectMap, WorldMap};
+use crate::map::WorldMap;
 use crate::player::actions::ActionStack;
 use crate::player::components::player::Player;
 use crate::player::Ghost;
@@ -36,7 +36,7 @@ pub fn load_level(
         .spawn((WorldMap, Sprite::default(), Name::new("WorldMap")))
         .id();
 
-    let items = populate_items(&mut commands, level_tag, &level.objects);
+    populate_items(&mut commands, level_tag, &level.objects);
     let map = level.map();
     map.iter().rev().enumerate().for_each(|(y, map_slice)| {
         map_slice
@@ -61,10 +61,6 @@ pub fn load_level(
     let start_position = level.start * CELL_LENGTH as i32;
     // let goal_position = level.goal.map(|v| v * CELL_LENGTH as i32);
 
-    let items_map_entity = commands
-        .spawn((ObjectMap(items), Name::new("ObjectMap")))
-        .id();
-    commands.entity(level_tag).add_child(items_map_entity);
     let player = Player::spawn_player(&mut commands, start_position);
     commands.entity(level_tag).add_child(player);
 
