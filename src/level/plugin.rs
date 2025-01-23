@@ -1,7 +1,7 @@
 use super::level_state::LevelState;
 use super::load_level::load_level;
 use super::systems::tick_playing_time;
-use super::systems::transitions::enter_rewind;
+use super::systems::transitions::{enter_rewind, enter_won};
 use super::unload_level::unload_level;
 use crate::game_state::GameState;
 use crate::items::events::{OnEnterEvent, OnExitEvent};
@@ -25,6 +25,7 @@ impl Plugin for LevelPlugin {
             // systems
             .add_systems(OnExit(GameState::InLevel), unload_level)
             .add_systems(OnEnter(GameState::LoadingLevel), load_level)
+            .add_systems(OnEnter(LevelState::Won), enter_won)
             .add_systems(
                 Update,
                 (tick_playing_time).run_if(in_state(LevelState::Playing)),

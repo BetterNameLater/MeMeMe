@@ -11,4 +11,6 @@ pub enum LevelState {
     Playing,
     /// One tick state, the player pressed the rewind button, it will rewind and transition to [`LevelState::Idle`] next
     Rewind,
+    /// Player reached the goal
+    Won,
 }

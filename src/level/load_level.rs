@@ -3,6 +3,8 @@ use crate::constantes::*;
 use crate::game_state::GameState;
 use crate::items::populate_items::populate_items;
 use crate::items::primitive::colliding::Colliding;
+use crate::items::primitive::is_activated::IsActivated;
+use crate::items::win::Win;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::map::WorldMap;
@@ -59,7 +61,20 @@ pub fn load_level(
     commands.entity(level_tag).add_child(world_map_entity);
 
     let start_position = level.start * CELL_LENGTH as i32;
-    // let goal_position = level.goal.map(|v| v * CELL_LENGTH as i32);
+    let goal_position = level.goal.map(|v| v * CELL_LENGTH as i32);
+
+    if let Some(goal_position) = goal_position {
+        commands.entity(level_tag).with_child((
+            Win,
+            IsActivated(true),
+            goal_position.to_transform(FLAG_Z),
+            Sprite {
+                color: bevy::color::palettes::css::GREEN.into(),
+                custom_size: Some(Vec2::new(CELL_LENGTH - CELL_GAP, CELL_LENGTH - CELL_GAP)),
+                ..default()
+            },
+        ));
+    }
 
     let player = Player::spawn_player(&mut commands, start_position);
     commands.entity(level_tag).add_child(player);

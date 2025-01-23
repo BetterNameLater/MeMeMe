@@ -36,3 +36,4 @@ pub mod level_teleporter;
 pub mod lever;
 pub mod pressure_plate;
 pub mod teleporter;
+pub mod win;

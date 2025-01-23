@@ -1,10 +1,12 @@
 #![allow(unused)]
 
 pub const CELL_Z: f32 = 1.0;
+pub const FLAG_Z: f32 = 2.0;
 pub const ITEMS_Z: f32 = 4.0;
 pub const PLAYER_Z: f32 = 5.0;
 
 pub const CELL_LENGTH: f32 = 32.;
+pub const ITEM_LENGHT: f32 = CELL_LENGTH / 2.;
 pub const CELL_LENGTH_USIZE: usize = CELL_LENGTH as usize;
 pub const CELL_GAP: f32 = 8.;
 
