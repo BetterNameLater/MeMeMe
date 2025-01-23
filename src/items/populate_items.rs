@@ -13,7 +13,6 @@ use crate::items::primitive::start_timer::StartTimer;
 use crate::items::teleporter::Teleporter;
 use bevy::prelude::*;
 use level_parser::{InteractionType, ObjectRepr, ObjectType};
-use maths::Vec2i;
 use std::collections::HashMap;
 
 const ITEM_SIZE: f32 = CELL_LENGTH / 3.;
@@ -26,7 +25,7 @@ pub fn populate_items(
     let mut items_by_name: HashMap<String, Entity> = HashMap::new();
 
     for (key, object) in objects.iter() {
-        let position = Vec2i::new(
+        let position = IVec2::new(
             object.position.x * CELL_LENGTH as i32,
             object.position.y * CELL_LENGTH as i32,
         );
@@ -47,7 +46,7 @@ pub fn populate_items(
                     custom_size: Some(Vec2::new(ITEM_SIZE, ITEM_SIZE)),
                     ..default()
                 },
-                position.to_transform(ITEMS_Z),
+                Transform::from_translation(position.as_vec2().extend(ITEMS_Z)),
             ))
             .id();
 
@@ -66,7 +65,7 @@ pub fn populate_items(
                 commands.entity(item).insert(PressurePlate);
             }
             ObjectType::Teleporter { destination } => {
-                commands.entity(item).insert(Teleporter(Vec2i::new(
+                commands.entity(item).insert(Teleporter(IVec2::new(
                     destination.x * 32,
                     destination.y * 32,
                 )));

@@ -1,9 +1,9 @@
 use crate::ldtk_json::{EntityInstance, GridPoint, LdtkJson, Level, ReferenceToAnEntityInstance};
 use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, LoadContext};
+use bevy::math::I64Vec2;
+use bevy::prelude::IVec2;
 use bevy::prelude::TypePath;
-use maths::Vec2i;
-use schemars::JsonSchema;
 use serde::Deserialize;
 use serde_json::{json, Value};
 use std::collections::HashMap;
@@ -25,12 +25,12 @@ impl WorldRepr {
     }
 }
 
-#[derive(Asset, TypePath, Deserialize, Debug, JsonSchema)]
+#[derive(Asset, TypePath, Deserialize, Debug)]
 pub struct MapRepr {
     map: Vec<String>,
     pub objects: HashMap<String, ObjectRepr>,
-    pub start: Vec2i,
-    pub goal: Option<Vec2i>,
+    pub start: IVec2,
+    pub goal: Option<IVec2>,
 }
 
 impl MapRepr {
@@ -64,7 +64,7 @@ impl MapRepr {
                 panic!();
             };
             let y = height - y - 1;
-            Vec2i::from((x, y))
+            I64Vec2::from((x, y)).as_ivec2()
         };
 
         let goal = {
@@ -75,7 +75,7 @@ impl MapRepr {
             {
                 let [x, y] = entity.grid[0..2] else { panic!() };
                 let y = height - y - 1;
-                Some(Vec2i::from((x, y)))
+                Some(I64Vec2::from((x, y)).as_ivec2())
             } else {
                 None
             }
@@ -129,7 +129,7 @@ impl AssetLoader for MapLoader {
     }
 }
 
-#[derive(Deserialize, Debug, PartialEq, JsonSchema)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub enum BackgroundType {
     Void,
     Floor,
@@ -151,9 +151,9 @@ impl TryFrom<char> for BackgroundType {
     }
 }
 
-#[derive(Deserialize, Debug, JsonSchema)]
+#[derive(Deserialize, Debug)]
 pub struct ObjectRepr {
-    pub position: Vec2i,
+    pub position: IVec2,
     #[serde(default)]
     pub interaction_type: InteractionType,
     #[serde(rename = "data")]
@@ -173,7 +173,7 @@ impl ObjectRepr {
                 panic!();
             };
             let y = height - y - 1;
-            Vec2i::from((x, y))
+            I64Vec2::from((x, y)).as_ivec2()
         };
 
         Self {
@@ -189,7 +189,7 @@ impl ObjectRepr {
                         let destination = get_field_ref(&entity, "destination").unwrap();
                         let destination: GridPoint =
                             serde_json::from_value(destination.clone()).unwrap();
-                        Vec2i::from((destination.cx, height - destination.cy - 1))
+                        I64Vec2::from((destination.cx, height - destination.cy - 1)).as_ivec2()
                     },
                 },
                 "lever" => ObjectType::Lever,
@@ -253,7 +253,7 @@ fn get_depends_on(entity: &EntityInstance) -> HashMap<String, bool> {
     }
 }
 
-#[derive(Deserialize, Debug, Default, JsonSchema)]
+#[derive(Deserialize, Debug, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum InteractionType {
     #[default]
@@ -262,13 +262,13 @@ pub enum InteractionType {
     PlayerOnly,
 }
 
-#[derive(Deserialize, Debug, JsonSchema)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum ObjectType {
     PressurePlate,
     Door,
-    Teleporter { destination: Vec2i },
+    Teleporter { destination: IVec2 },
     LevelTeleporter { destination: String },
     Lever,
     Button, // TODO avec le temps de cool-down variable ?

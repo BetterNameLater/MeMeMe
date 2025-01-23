@@ -17,7 +17,6 @@ use bevy::color::palettes::css;
 use bevy::prelude::*;
 use level_parser::BackgroundType;
 use level_parser::WorldRepr;
-use maths::Vec2i;
 
 #[allow(clippy::too_many_arguments)]
 pub fn load_level(
@@ -49,7 +48,7 @@ pub fn load_level(
                 spawn_cell_into_parent(
                     &mut commands,
                     world_map_entity,
-                    Vec2i {
+                    IVec2 {
                         x: x as i32,
                         y: y as i32,
                     },
@@ -67,7 +66,7 @@ pub fn load_level(
         commands.entity(level_tag).with_child((
             Win,
             IsActivated(true),
-            goal_position.to_transform(FLAG_Z),
+            Transform::from_translation(goal_position.as_vec2().extend(FLAG_Z)),
             Sprite {
                 color: bevy::color::palettes::css::GREEN.into(),
                 custom_size: Some(Vec2::new(CELL_LENGTH - CELL_GAP, CELL_LENGTH - CELL_GAP)),
@@ -89,7 +88,7 @@ pub fn load_level(
     commands.insert_resource(StartPosition::new(start_position));
 }
 
-fn map_to_local(pos: Vec2i) -> Vec2 {
+fn map_to_local(pos: IVec2) -> Vec2 {
     Vec2 {
         x: CELL_LENGTH * pos.x as f32,
         y: CELL_LENGTH * pos.y as f32,
@@ -99,10 +98,10 @@ fn map_to_local(pos: Vec2i) -> Vec2 {
 fn spawn_cell_into_parent(
     commands: &mut Commands,
     parent: Entity,
-    pos: Vec2i,
+    pos: IVec2,
     background_type: &BackgroundType,
 ) {
-    let Vec2 { x, y } = map_to_local(Vec2i::new(pos.x, pos.y));
+    let Vec2 { x, y } = map_to_local(IVec2::new(pos.x, pos.y));
 
     commands.entity(parent).with_children(|parent| {
         let _ = parent

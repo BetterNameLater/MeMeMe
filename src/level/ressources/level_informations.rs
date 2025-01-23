@@ -1,16 +1,15 @@
 use bevy::{prelude::*, time::Stopwatch};
-use maths::Vec2i;
 
 /// Immutable level informations
 #[derive(Reflect, Resource, Debug, PartialEq)]
-pub struct StartPosition(Vec2i);
+pub struct StartPosition(IVec2);
 
 impl StartPosition {
-    pub fn new(player_start_position: Vec2i) -> Self {
+    pub fn new(player_start_position: IVec2) -> Self {
         Self(player_start_position)
     }
 
-    pub fn get(&self) -> &Vec2i {
+    pub fn get(&self) -> &IVec2 {
         &self.0
     }
 }

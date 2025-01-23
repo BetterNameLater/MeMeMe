@@ -13,7 +13,6 @@ use crate::player::components::person::Person;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEventData;
 use bevy::prelude::*;
-use maths::Vec2i;
 
 /// Process the ghost actions
 #[allow(clippy::too_many_arguments)]
@@ -42,7 +41,7 @@ pub fn actions_system<P: Person, W: InteractionType>(
 
             match action_type {
                 ActionType::Move(move_direction) => {
-                    let before: Vec2i = person_transform.translation.into();
+                    let before: IVec2 = person_transform.translation.xy().as_ivec2();
                     let new_position =
                         person_transform.translation + CELL_LENGTH * move_direction.to_vec3();
 
@@ -58,7 +57,7 @@ pub fn actions_system<P: Person, W: InteractionType>(
                         person_transform.translation = new_position;
                         let new_position_event = NewPositionEventData {
                             before,
-                            now: person_transform.translation.into(),
+                            now: person_transform.translation.xy().as_ivec2(),
                             entity: *ghost_entity,
                         };
                         add_enter_exit_event(
@@ -94,7 +93,7 @@ fn add_enter_exit_event<P: Person, W: InteractionType>(
 ) {
     player_only_people_on_query
         .iter()
-        .filter(|(_, t)| new_position_event.now == Vec2i::from(t.translation))
+        .filter(|(_, t)| new_position_event.now == t.translation.xy().as_ivec2())
         .for_each(|(entered_cell, _)| {
             debug!(
                 "{:?} was entered by {:?}!",
@@ -108,7 +107,7 @@ fn add_enter_exit_event<P: Person, W: InteractionType>(
 
     player_only_people_on_query
         .iter()
-        .filter(|(_, t)| new_position_event.before == Vec2i::from(t.translation))
+        .filter(|(_, t)| new_position_event.before == t.translation.xy().as_ivec2())
         .for_each(|(leaved_cell, _)| {
             debug!(
                 "{:?} was exit by {:?}!",

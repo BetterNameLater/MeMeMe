@@ -24,7 +24,8 @@ pub fn enter_rewind(
 
     ghost_actions.rewind(&mut player_action_stack);
 
-    let start_transform = start_position.get().to_transform(PLAYER_Z);
+    let start_transform =
+        Transform::from_translation(start_position.get().as_vec2().extend(PLAYER_Z));
 
     // reset the position of the current player, before turning im to a ghost
     *player_transform = start_transform;
