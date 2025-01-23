@@ -162,8 +162,6 @@ pub struct ObjectRepr {
     pub depends_on: HashMap<String, bool>,
     #[serde(default)]
     pub single_use: bool,
-    #[serde(default)]
-    pub start_timer: Option<f32>,
 }
 
 impl ObjectRepr {
@@ -199,7 +197,6 @@ impl ObjectRepr {
             interaction_type: InteractionType::All,
             single_use: get_single_use(&entity),
             depends_on: get_depends_on(&entity),
-            start_timer: None,
         }
     }
 }

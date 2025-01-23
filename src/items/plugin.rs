@@ -5,8 +5,7 @@ use crate::items::systems::button_system::button_pressed_system;
 use crate::items::systems::count_people_on_system::count_people_on_system;
 use crate::items::systems::level_teleporter_system::{level_teleporter_system, win_system};
 use crate::items::systems::teleporter_system::teleporter_system;
-use crate::items::systems::timer_system::cooldown_system;
-use crate::items::systems::timer_system::start_timer_system;
+use crate::items::systems::cooldown_system::cooldown_system;
 use crate::items::systems::toggle_on_system::{toggle_on_enter_system, toggle_on_interact_system};
 use crate::items::systems::transitions::enter_rewind;
 use crate::items::systems::update_is_usable_system::{
@@ -26,7 +25,6 @@ impl Plugin for ItemsPlugin {
         app.add_systems(
             Update,
             (
-                start_timer_system, // TODO order
                 visual_system,
                 cooldown_system
                     .after(actions_system::<Player, GhostOnly>)

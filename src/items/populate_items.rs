@@ -9,7 +9,6 @@ use crate::items::pressure_plate::PressurePlate;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::item::{ItemOutline, OutlineType};
 use crate::items::primitive::single_use::SingleUse;
-use crate::items::primitive::start_timer::StartTimer;
 use crate::items::teleporter::Teleporter;
 use bevy::prelude::*;
 use level_parser::{InteractionType, ObjectRepr, ObjectType};
@@ -98,13 +97,6 @@ pub fn populate_items(
 
         if object.single_use {
             commands.entity(item).insert(SingleUse);
-        }
-
-        if let Some(start_timer) = object.start_timer {
-            commands.entity(item).insert(StartTimer(Timer::from_seconds(
-                start_timer,
-                TimerMode::Once,
-            )));
         }
     }
 

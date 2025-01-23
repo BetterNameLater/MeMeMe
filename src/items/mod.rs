@@ -6,7 +6,7 @@ pub mod systems {
     pub mod count_people_on_system;
     pub mod level_teleporter_system;
     pub mod teleporter_system;
-    pub mod timer_system;
+    pub mod cooldown_system;
     pub mod toggle_on_system;
     pub mod transitions;
     pub mod update_is_usable_system;
@@ -24,7 +24,6 @@ pub mod primitive {
     pub mod people_on;
     pub mod pressable;
     pub mod single_use;
-    pub mod start_timer;
     pub mod toggle;
 }
 pub mod interaction_type;
