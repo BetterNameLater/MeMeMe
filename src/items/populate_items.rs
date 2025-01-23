@@ -8,7 +8,6 @@ use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::item::{ItemOutline, OutlineType};
-use crate::items::primitive::killing::Killing;
 use crate::items::primitive::single_use::SingleUse;
 use crate::items::primitive::start_timer::StartTimer;
 use crate::items::teleporter::Teleporter;
@@ -100,10 +99,6 @@ pub fn populate_items(
 
         if object.single_use {
             commands.entity(item).insert(SingleUse);
-        }
-
-        if object.killing {
-            commands.entity(item).insert(Killing);
         }
 
         if let Some(start_timer) = object.start_timer {

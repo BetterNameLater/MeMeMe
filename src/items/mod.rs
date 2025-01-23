@@ -21,7 +21,6 @@ pub mod primitive {
     pub mod is_activated;
     pub mod is_usable;
     pub mod item;
-    pub mod killing;
     pub mod people_on;
     pub mod pressable;
     pub mod single_use;
