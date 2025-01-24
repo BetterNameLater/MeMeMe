@@ -1347,6 +1347,22 @@
 							"fieldInstances": [],
 							"__worldX": 528,
 							"__worldY": 32
+						},
+						{
+							"__identifier": "goal",
+							"__grid": [1,0],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#55FF09",
+							"iid": "0df02750-c210-11ef-b86a-bdbd05468c37",
+							"width": 16,
+							"height": 16,
+							"defUid": 5,
+							"px": [16,0],
+							"fieldInstances": [],
+							"__worldX": 368,
+							"__worldY": 0
 						}
 					]
 				},
