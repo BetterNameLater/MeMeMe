@@ -24,8 +24,11 @@ impl Plugin for ItemsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
+            (visual_system,).run_if(in_state(GameState::InLevel)),
+        )
+        .add_systems(
+            FixedUpdate,
             (
-                visual_system,
                 cooldown_system
                     .after(actions_system::<Player, GhostOnly>)
                     .after(actions_system::<Ghost, PlayerOnly>),
@@ -35,7 +38,7 @@ impl Plugin for ItemsPlugin {
                 .run_if(in_state(GameState::InLevel)),
         )
         .add_systems(
-            Update,
+            FixedUpdate,
             (
                 win_system,
                 level_teleporter_system,

@@ -27,7 +27,7 @@ impl Plugin for LevelPlugin {
             .add_systems(OnEnter(GameState::LoadingLevel), load_level)
             .add_systems(OnEnter(LevelState::Won), enter_won)
             .add_systems(
-                Update,
+                FixedUpdate,
                 (tick_playing_time).run_if(in_state(LevelState::Playing)),
             );
         self.register_transition(app);

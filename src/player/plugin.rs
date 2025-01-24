@@ -9,6 +9,7 @@ use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::level_state::LevelState;
+use crate::level::systems::tick_playing_time;
 use crate::player::components::player::Player;
 use crate::player::events::interact_event::InteractEvent;
 use crate::player::systems::transitions::{enter_playing, enter_rewind};
@@ -28,13 +29,14 @@ impl Plugin for PlayerPlugin {
                 .run_if(is_move_input_pressed),
         )
         .add_systems(
-            Update,
+            FixedUpdate,
             (
                 actions_system::<Ghost, PlayerOnly>,
                 actions_system::<Player, GhostOnly>,
             )
                 .run_if(in_state(LevelState::Playing))
-                .after(move_input_system),
+                .after(move_input_system)
+                .after(idle_move_input_system),
         )
         .add_systems(
             Update,
