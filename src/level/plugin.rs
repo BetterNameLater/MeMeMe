@@ -36,25 +36,24 @@ impl Plugin for LevelPlugin {
         {
             use super::ressources::level_informations::{GhostCount, PlayingTime, StartPosition};
             use crate::log_transitions;
+            use crate::player::actions::ActionStack;
+            use crate::player::components::player::Player;
+            use crate::player::Ghost;
             use bevy_inspector_egui::quick::ResourceInspectorPlugin;
 
             app.add_systems(Update, log_transitions::<LevelState>)
-                .add_plugins(
+                .add_plugins((
                     ResourceInspectorPlugin::<StartPosition>::default()
                         .run_if(in_state(GameState::InLevel)),
-                )
-                .add_plugins(
                     ResourceInspectorPlugin::<PlayingTime>::default()
                         .run_if(in_state(LevelState::Playing)),
-                )
-                // .add_plugins(
-                //     ResourceInspectorPlugin::<ActionStack<Ghost>>::default()
-                //         .run_if(in_state(GameState::InLevel)),
-                // )
-                .add_plugins(
                     ResourceInspectorPlugin::<GhostCount>::default()
                         .run_if(in_state(GameState::InLevel)),
-                );
+                    ResourceInspectorPlugin::<ActionStack<Player>>::default()
+                        .run_if(in_state(GameState::InLevel)),
+                    ResourceInspectorPlugin::<ActionStack<Ghost>>::default()
+                        .run_if(in_state(GameState::InLevel)),
+                ));
         }
     }
 }

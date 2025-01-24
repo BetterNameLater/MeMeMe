@@ -3,7 +3,7 @@ use crate::constantes::{CELL_LENGTH, PLAYER_Z};
 use bevy::core::Name;
 use bevy::prelude::*;
 
-#[derive(Component, Default, Debug)]
+#[derive(Component, Default, Debug, Reflect)]
 #[require(Name(||Name::new("Player")))]
 pub struct Player;
 

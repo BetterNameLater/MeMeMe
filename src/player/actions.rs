@@ -23,6 +23,7 @@ pub type Actions = HashMap<Duration, Vec<Action>>;
 pub struct ActionStack<T: Person> {
     new: Actions,
     played: Actions,
+    #[reflect(ignore)]
     _person_marker: PhantomData<T>,
 }
 
