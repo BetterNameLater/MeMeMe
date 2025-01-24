@@ -6,7 +6,7 @@ use bevy::prelude::*;
 pub fn enter_rewind(
     commands: Commands,
     is_activated_query: Query<&mut IsActivated>,
-    cooldown_query: Query<Entity, With<Cooldown<IsActivated>>>,
+    cooldown_query: Query<Entity, With<Cooldown>>,
     player_only_people_on_query: Query<&mut PeopleOn>,
 ) {
     reset_level_items(
@@ -21,12 +21,12 @@ pub fn enter_rewind(
 fn reset_level_items(
     mut commands: Commands,
     mut is_activated_query: Query<&mut IsActivated>,
-    cooldown_query: Query<Entity, With<Cooldown<IsActivated>>>,
+    cooldown_query: Query<Entity, With<Cooldown>>,
     mut player_only_people_on_query: Query<&mut PeopleOn>,
 ) {
     debug!("Reset level itmes");
     for item in cooldown_query.iter() {
-        commands.entity(item).remove::<Cooldown<IsActivated>>();
+        commands.entity(item).remove::<Cooldown>();
     }
     for mut people_on in player_only_people_on_query.iter_mut() {
         // TODO check count on initial

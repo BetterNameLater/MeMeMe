@@ -10,7 +10,7 @@ use bevy::prelude::*;
 pub fn button_pressed_system<W: InteractionType, T: Person>(
     mut commands: Commands,
     mut cooldown_query: Query<
-        (Option<&mut Cooldown<IsActivated>>, &mut IsActivated),
+        (Option<&mut Cooldown>, &mut IsActivated),
         (Without<W>, With<Pressable>, With<IsUsable>),
     >,
     person: Query<(), With<T>>,
@@ -29,7 +29,7 @@ pub fn button_pressed_system<W: InteractionType, T: Person>(
                 is_activated.0 = true;
                 commands
                     .entity(on_interact_event.item)
-                    .insert(Cooldown::<IsActivated>::new(1.));
+                    .insert(Cooldown::new());
                 debug!("Pressing a button and adding a Cooldown");
             }
         }

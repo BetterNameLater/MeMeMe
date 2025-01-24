@@ -3,10 +3,10 @@ pub mod plugin;
 pub mod populate_items;
 pub mod systems {
     pub mod button_system;
+    pub mod cooldown_system;
     pub mod count_people_on_system;
     pub mod level_teleporter_system;
     pub mod teleporter_system;
-    pub mod cooldown_system;
     pub mod toggle_on_system;
     pub mod transitions;
     pub mod update_is_usable_system;
