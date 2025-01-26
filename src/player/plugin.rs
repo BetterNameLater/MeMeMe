@@ -39,6 +39,15 @@ impl Plugin for PlayerPlugin {
         .add_systems(
             Update,
             ((|mut next_state: ResMut<NextState<LevelState>>| {
+                debug!("start");
+                next_state.set(LevelState::Playing);
+            })
+            .run_if(input_just_pressed(input::REWIND)))
+            .run_if(in_state(LevelState::Idle)),
+        )
+        .add_systems(
+            Update,
+            ((|mut next_state: ResMut<NextState<LevelState>>| {
                 debug!("rewind");
                 next_state.set(LevelState::Rewind);
             })

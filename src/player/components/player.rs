@@ -1,5 +1,6 @@
 use super::person::Person;
 use crate::constantes::{CELL_LENGTH, PLAYER_Z};
+use crate::items::primitive::colliding::Colliding;
 use bevy::core::Name;
 use bevy::prelude::*;
 
@@ -16,6 +17,7 @@ impl Player {
         commands
             .spawn((
                 Player,
+                Colliding,
                 Sprite {
                     color: bevy::color::palettes::css::BEIGE.into(),
                     custom_size: Some(Vec2::new(size, size)),

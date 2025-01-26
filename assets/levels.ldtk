@@ -754,8 +754,8 @@
 			"worldX": 192,
 			"worldY": 0,
 			"worldDepth": 0,
-			"pxWid": 208,
-			"pxHei": 112,
+			"pxWid": 144,
+			"pxHei": 96,
 			"__bgColor": "#696A79",
 			"bgColor": null,
 			"useAutoIdentifier": false,
@@ -771,8 +771,8 @@
 				{
 					"__identifier": "items",
 					"__type": "Entities",
-					"__cWid": 13,
-					"__cHei": 7,
+					"__cWid": 9,
+					"__cHei": 6,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -791,61 +791,13 @@
 					"seed": 6881251,
 					"overrideTilesetUid": null,
 					"gridTiles": [],
-					"entityInstances": [
-						{
-							"__identifier": "pressure_plate",
-							"__grid": [6,3],
-							"__pivot": [0,0],
-							"__tags": ["Emitter"],
-							"__tile": null,
-							"__smartColor": "#AF43D7",
-							"iid": "d7b41830-c210-11ef-9087-516572b466dd",
-							"width": 16,
-							"height": 16,
-							"defUid": 10,
-							"px": [96,48],
-							"fieldInstances": [
-								{ "__identifier": "interaction_type", "__type": "LocalEnum.interaction_type", "__value": "all", "__tile": null, "defUid": 37, "realEditorValues": [null] },
-								{ "__identifier": "usage_type", "__type": "LocalEnum.usage_type", "__value": "any", "__tile": null, "defUid": 40, "realEditorValues": [null] }
-							],
-							"__worldX": 288,
-							"__worldY": 48
-						},
-						{
-							"__identifier": "door",
-							"__grid": [10,0],
-							"__pivot": [0,0],
-							"__tags": ["Activable"],
-							"__tile": null,
-							"__smartColor": "#BE4A2F",
-							"iid": "e0ca0870-c210-11ef-9087-b148e3d16908",
-							"width": 16,
-							"height": 16,
-							"defUid": 7,
-							"px": [160,0],
-							"fieldInstances": [
-								{ "__identifier": "depends_on", "__type": "Array<EntityRef>", "__value": [{
-									"entityIid": "d7b41830-c210-11ef-9087-516572b466dd",
-									"layerIid": "cc752d70-c210-11ef-9087-dbf1bb5fc42d",
-									"levelIid": "1e5ca470-c210-11ef-9087-c5bac26e503f",
-									"worldIid": "1e5c2f40-c210-11ef-9087-fb4d8508d117"
-								}], "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["d7b41830-c210-11ef-9087-516572b466dd"]
-								}] },
-								{ "__identifier": "depends_off", "__type": "Array<EntityRef>", "__value": [], "__tile": null, "defUid": 19, "realEditorValues": [] },
-								{ "__identifier": "interaction_type", "__type": "LocalEnum.interaction_type", "__value": "all", "__tile": null, "defUid": 36, "realEditorValues": [] }
-							],
-							"__worldX": 352,
-							"__worldY": 0
-						}
-					]
+					"entityInstances": []
 				},
 				{
 					"__identifier": "start_end",
 					"__type": "Entities",
-					"__cWid": 13,
-					"__cHei": 7,
+					"__cWid": 9,
+					"__cHei": 6,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -867,7 +819,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "start",
-							"__grid": [2,3],
+							"__grid": [1,4],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
@@ -876,14 +828,14 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 6,
-							"px": [32,48],
+							"px": [16,64],
 							"fieldInstances": [],
-							"__worldX": 224,
-							"__worldY": 48
+							"__worldX": 208,
+							"__worldY": 64
 						},
 						{
 							"__identifier": "goal",
-							"__grid": [10,0],
+							"__grid": [4,1],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
@@ -892,18 +844,18 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 5,
-							"px": [160,0],
+							"px": [64,16],
 							"fieldInstances": [],
-							"__worldX": 352,
-							"__worldY": 0
+							"__worldX": 256,
+							"__worldY": 16
 						}
 					]
 				},
 				{
 					"__identifier": "background",
 					"__type": "IntGrid",
-					"__cWid": 13,
-					"__cHei": 7,
+					"__cWid": 9,
+					"__cHei": 6,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -918,9 +870,60 @@
 					"visible": true,
 					"optionalRules": [],
 					"intGridCsv": [
-						1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,
-						2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,
-						2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+						0,
+						0,
+						0,
+						1,
+						1,
+						1,
+						0,
+						0,
+						0,
+						1,
+						1,
+						1,
+						1,
+						2,
+						1,
+						1,
+						1,
+						1,
+						1,
+						2,
+						2,
+						2,
+						2,
+						2,
+						2,
+						2,
+						1,
+						1,
+						2,
+						2,
+						2,
+						2,
+						2,
+						2,
+						2,
+						1,
+						1,
+						2,
+						2,
+						2,
+						2,
+						2,
+						2,
+						2,
+						1,
+						1,
+						1,
+						1,
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
 					"autoLayerTiles": [],
 					"seed": 3521933,
@@ -978,7 +981,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "level_teleporter",
-							"__grid": [1,4],
+							"__grid": [1,1],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
@@ -987,13 +990,13 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 13,
-							"px": [16,64],
+							"px": [16,16],
 							"fieldInstances": [{ "__identifier": "destination", "__type": "String", "__value": "level_0", "__tile": null, "defUid": 16, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["level_0"]
 							}] }],
 							"__worldX": 16,
-							"__worldY": 64
+							"__worldY": 16
 						}
 					]
 				},

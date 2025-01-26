@@ -18,12 +18,14 @@ pub fn actions_system<P: Person, W: InteractionType>(
     mut action_stack: ResMut<ActionStack<P>>,
     playing_time: Res<PlayingTime>,
 
-    mut person_transform_query: Query<&mut Transform, With<P>>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
 
     enterables_query: Query<(Entity, &Transform), (With<EnterAble>, Without<W>, Without<P>)>,
-    colliding_query: Query<(&Colliding, &Transform, Option<&IsUsable>), (Without<W>, Without<P>)>,
+    mut transforms: ParamSet<(
+        Query<&mut Transform, With<P>>,
+        Query<(&Colliding, &Transform, Option<&IsUsable>), Without<W>>,
+    )>,
 ) {
     while let Some(actions) = action_stack.exec(playing_time.0.elapsed()) {
         for action in actions.iter() {
@@ -32,40 +34,64 @@ pub fn actions_system<P: Person, W: InteractionType>(
                 action_type,
             } = action;
 
-            let mut person_transform = person_transform_query.get_mut(*ghost_entity).unwrap();
+            let person_transform = transforms.p0().get(*ghost_entity).unwrap().translation;
 
             match action_type {
                 ActionType::Move(move_direction) => {
-                    let before: IVec2 = person_transform.translation.xy().as_ivec2();
-                    let new_position =
-                        person_transform.translation + CELL_LENGTH * move_direction.to_vec3();
+                    let before: IVec2 = transforms
+                        .p0()
+                        .get(*ghost_entity)
+                        .unwrap()
+                        .translation
+                        .xy()
+                        .as_ivec2();
+                    let Some(blocking) =
+                        raycast_2d(person_transform, move_direction.to_vec3(), &transforms.p1())
+                    else {
+                        unimplemented!("go into void");
+                    };
+                    let new_position = blocking - CELL_LENGTH * move_direction.to_vec3();
 
-                    let collide =
-                        colliding_query
-                            .iter()
-                            .any(|(_, colliding_transform, is_usable)| {
-                                colliding_transform.translation.x == new_position.x
-                                    && colliding_transform.translation.y == new_position.y
-                                    && is_usable.is_none()
-                            });
-                    if !collide {
-                        person_transform.translation = new_position;
-                        let new_position_event = NewPositionEventData {
-                            before,
-                            now: person_transform.translation.xy().as_ivec2(),
-                            entity: *ghost_entity,
-                        };
-                        add_enter_exit_event(
-                            new_position_event,
-                            &enterables_query,
-                            &mut on_enter_event_writer,
-                            &mut on_exit_event_writer,
-                        );
-                    }
+                    transforms.p0().get_mut(*ghost_entity).unwrap().translation = new_position;
+
+                    let new_position_event = NewPositionEventData {
+                        before,
+                        now: new_position.xy().as_ivec2(),
+                        entity: *ghost_entity,
+                    };
+                    add_enter_exit_event(
+                        new_position_event,
+                        &enterables_query,
+                        &mut on_enter_event_writer,
+                        &mut on_exit_event_writer,
+                    );
                 }
             }
         }
     }
+}
+
+const LIMIT: usize = 24;
+fn raycast_2d<W: InteractionType>(
+    base_position: Vec3,
+    move_direction: Vec3,
+    colliding_query: &Query<(&Colliding, &Transform, Option<&IsUsable>), Without<W>>,
+) -> Option<Vec3> {
+    (1..LIMIT).find_map(|i| {
+        let new_position = base_position + (CELL_LENGTH * move_direction * i as f32);
+        if colliding_query
+            .iter()
+            .any(|(_, colliding_transform, is_usable)| {
+                colliding_transform.translation.x == new_position.x
+                    && colliding_transform.translation.y == new_position.y
+                    && is_usable.is_none() // door not usable, so blocking
+            })
+        {
+            Some(new_position)
+        } else {
+            None
+        }
+    })
 }
 
 fn add_enter_exit_event<P: Person, W: InteractionType>(
