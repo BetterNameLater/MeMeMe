@@ -1,10 +1,8 @@
 use crate::constantes::{CELL_LENGTH, ITEMS_Z};
-use crate::items::button::Button as ButtonItem;
 use crate::items::door::Door;
 use crate::items::interaction_type::ghost_only::GhostOnly;
 use crate::items::interaction_type::player_only::PlayerOnly;
 use crate::items::level_teleporter::LevelTeleporter;
-use crate::items::lever::Lever;
 use crate::items::pressure_plate::PressurePlate;
 use crate::items::primitive::dependencies::{Dependencies, Off, On};
 use crate::items::primitive::item::{ItemOutline, OutlineType};
@@ -35,12 +33,10 @@ pub fn populate_items(
                     color: match object.object_type {
                         ObjectType::PressurePlate => bevy::color::palettes::css::GREEN.into(),
                         ObjectType::Teleporter { .. } => bevy::color::palettes::css::GOLD.into(),
-                        ObjectType::Lever => bevy::color::palettes::css::YELLOW.into(),
                         ObjectType::Door => bevy::color::palettes::css::MIDNIGHT_BLUE.into(),
                         ObjectType::LevelTeleporter { .. } => {
                             bevy::color::palettes::css::ALICE_BLUE.into()
                         }
-                        ObjectType::Button => bevy::color::palettes::css::DARK_GRAY.into(),
                     },
                     custom_size: Some(Vec2::new(ITEM_SIZE, ITEM_SIZE)),
                     ..default()
@@ -69,9 +65,6 @@ pub fn populate_items(
                     destination.y * 32,
                 )));
             }
-            ObjectType::Lever => {
-                commands.entity(item).insert(Lever);
-            }
             ObjectType::Door => {
                 commands.entity(item).insert(Door);
             }
@@ -79,9 +72,6 @@ pub fn populate_items(
                 commands
                     .entity(item)
                     .insert(LevelTeleporter(destination.clone()));
-            }
-            ObjectType::Button => {
-                commands.entity(item).insert(ButtonItem);
             }
         };
 

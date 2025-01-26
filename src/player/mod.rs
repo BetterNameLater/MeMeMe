@@ -1,6 +1,5 @@
 pub mod actions;
 pub mod events {
-    pub mod interact_event;
     pub mod new_position_event;
 }
 pub mod components {

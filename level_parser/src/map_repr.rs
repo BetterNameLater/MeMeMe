@@ -190,8 +190,6 @@ impl ObjectRepr {
                         I64Vec2::from((destination.cx, height - destination.cy - 1)).as_ivec2()
                     },
                 },
-                "lever" => ObjectType::Lever,
-                "button" => ObjectType::Button,
                 _ => panic!("what is a \"{}\" ?", entity.identifier),
             },
             interaction_type: InteractionType::All,
@@ -267,6 +265,4 @@ pub enum ObjectType {
     Door,
     Teleporter { destination: IVec2 },
     LevelTeleporter { destination: String },
-    Lever,
-    Button, // TODO avec le temps de cool-down variable ?
 }

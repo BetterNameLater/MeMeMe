@@ -1,5 +1,5 @@
 use super::systems::input_system::{
-    idle_move_input_system, interact_input_system, is_move_input_pressed, move_input_system,
+    idle_move_input_system, is_move_input_pressed, move_input_system,
 };
 use super::{actions_system, Ghost};
 use crate::constantes::*;
@@ -10,7 +10,6 @@ use crate::level::components::level_tag::LevelTag;
 use crate::level::components::level_to_go::LevelToGo;
 use crate::level::level_state::LevelState;
 use crate::player::components::player::Player;
-use crate::player::events::interact_event::InteractEvent;
 use crate::player::systems::transitions::{enter_playing, enter_rewind};
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
@@ -39,15 +38,12 @@ impl Plugin for PlayerPlugin {
         )
         .add_systems(
             Update,
-            (
-                (|mut next_state: ResMut<NextState<LevelState>>| {
-                    debug!("rewind");
-                    next_state.set(LevelState::Rewind);
-                })
-                .run_if(input_just_pressed(input::REWIND)),
-                interact_input_system.run_if(input_just_pressed(input::INTERACT)),
-            )
-                .run_if(in_state(LevelState::Playing)),
+            ((|mut next_state: ResMut<NextState<LevelState>>| {
+                debug!("rewind");
+                next_state.set(LevelState::Rewind);
+            })
+            .run_if(input_just_pressed(input::REWIND)))
+            .run_if(in_state(LevelState::Playing)),
         )
         .add_systems(
             Update,
@@ -59,9 +55,7 @@ impl Plugin for PlayerPlugin {
             })
             .run_if(input_just_pressed(input::RESET))
             .run_if(in_state(GameState::InLevel)),
-        )
-        .add_event::<InteractEvent<Player>>()
-        .add_event::<InteractEvent<Ghost>>();
+        );
 
         #[cfg(debug_assertions)]
         app.add_systems(

@@ -14,7 +14,6 @@ pub struct Action {
 #[derive(Debug, Reflect, PartialEq, Clone)]
 pub enum ActionType {
     Move(MoveDirection),
-    Interact,
 }
 
 pub type Actions = HashMap<Duration, Vec<Action>>;

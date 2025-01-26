@@ -4,13 +4,11 @@ use crate::items::events::OnExitEvent;
 use crate::items::interaction_type::InteractionType;
 use crate::items::primitive::colliding::Colliding;
 use crate::items::primitive::enterable::EnterAble;
-use crate::items::primitive::interactible::Interactible;
 use crate::items::primitive::is_usable::IsUsable;
 use crate::level::ressources::level_informations::PlayingTime;
 use crate::player::actions::ActionStack;
 use crate::player::actions::{Action, ActionType};
 use crate::player::components::person::Person;
-use crate::player::events::interact_event::InteractEvent;
 use crate::player::events::new_position_event::NewPositionEventData;
 use bevy::prelude::*;
 
@@ -20,14 +18,11 @@ pub fn actions_system<P: Person, W: InteractionType>(
     mut action_stack: ResMut<ActionStack<P>>,
     playing_time: Res<PlayingTime>,
 
-    mut interact_event: EventWriter<InteractEvent<P>>,
-
     mut person_transform_query: Query<&mut Transform, With<P>>,
     mut on_enter_event_writer: EventWriter<OnEnterEvent>,
     mut on_exit_event_writer: EventWriter<OnExitEvent>,
 
     enterables_query: Query<(Entity, &Transform), (With<EnterAble>, Without<W>, Without<P>)>,
-    interactibles_query: Query<(Entity, &Transform), (With<Interactible>, Without<W>, Without<P>)>,
     colliding_query: Query<(&Colliding, &Transform, Option<&IsUsable>), (Without<W>, Without<P>)>,
 ) {
     while let Some(actions) = action_stack.exec(playing_time.0.elapsed()) {
@@ -67,15 +62,6 @@ pub fn actions_system<P: Person, W: InteractionType>(
                             &mut on_exit_event_writer,
                         );
                     }
-                }
-                ActionType::Interact => {
-                    interactibles_query
-                        .iter()
-                        .filter(|(_, t)| person_transform.translation.xy() == t.translation.xy())
-                        .for_each(|(item, _)| {
-                            debug!("{:?} interacted with {:?}!", ghost_entity, item);
-                            interact_event.send(InteractEvent::new(*ghost_entity, item));
-                        });
                 }
             }
         }
